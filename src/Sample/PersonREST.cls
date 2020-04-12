@@ -63,8 +63,11 @@ ClassMethod GetAllPersons() As %Status
 /// Return one record fo Sample.Person
 ClassMethod GeneratePersons(amount As %Integer = 10) As %Status
 {
-    s tSC=##class(Sample.Person).Populate(amount)
-    Quit tSC
+    do ##class(Sample.Person).Populate(amount)
+    SET ret = {
+    "Records": (amount)  
+  }
+    RETURN ..%ProcessResult($$$OK, ret)
 }
 
 /// Return one record fo Sample.Person
