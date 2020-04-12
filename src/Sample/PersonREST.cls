@@ -1,7 +1,7 @@
 Class Sample.PersonREST Extends Sample.REST.Base
 {
 
-Parameter Version = "1.0.5";
+Parameter Version = "1.0.0";
 
 XData UrlMap [ XMLNamespace = "http://www.intersystems.com/urlmap" ]
 {
@@ -18,6 +18,9 @@ XData UrlMap [ XMLNamespace = "http://www.intersystems.com/urlmap" ]
 <Route Url="/persons/:id" Method="PUT" Call="UpdatePerson"/>
 <!-- Delete a person with id-->
 <Route Url="/persons/:id" Method="DELETE" Call="DeletePerson"/>
+<!-- GET method to return JSON for a given person id-->
+<Route Url="/persons/generate/:amount" Method="GET" Call="GeneratePersons"/>
+
 <!-- Create a person-->
 <Route Url="/persons/" Method="POST" Call="CreatePerson"/>
 
@@ -54,6 +57,13 @@ ClassMethod GetAllPersons() As %Status
         Do person.%JSONExport()
     }
     Write "]"
+    Quit tSC
+}
+
+/// Return one record fo Sample.Person
+ClassMethod GeneratePersons(amount As %Integer = 10) As %Status
+{
+    s tSC=##class(Sample.Person).Populate(amount)
     Quit tSC
 }
 
