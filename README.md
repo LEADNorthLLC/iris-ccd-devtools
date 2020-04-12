@@ -2,6 +2,25 @@
 This is a template for for a InterSystems IRIS REST API Contest.
 It has an example of REST API with CRUD actions for a Sample Person peristent class.
 
+## Inspiration
+To make an easy template to start building REST API in IRIS
+
+## What it does
+Creates /crud web app in IRIS and CRUD endpoints to play with persistent data in Sample.Person class. 
+It uses [swagger-ui](https://openexchange.intersystems.com/package/iris-web-swagger-ui) module to provide documentation and test environment for API.
+
+## Challenges I ran into
+no challenges
+
+## Accomplishments that I proud of
+Easy template with self documented API spec installed with one ZPM command or docker-compose build
+
+## What I learned
+a lot!
+
+## Built with
+Using VSCode and ObjectScript plugin, IRIS Community Edition in Docker, ZPM, IRIS openapi API
+
 ## Installation with ZPM
 
 zpm:USER>install rest-api-contest-template
