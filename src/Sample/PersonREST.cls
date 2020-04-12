@@ -65,7 +65,7 @@ ClassMethod GeneratePersons(amount As %Integer = 10) As %Status
 {
     do ##class(Sample.Person).Populate(amount)
     SET ret = {
-    "Records": (amount)  
+    "New records generated": (amount)  
   }
     RETURN ..%ProcessResult($$$OK, ret)
 }
