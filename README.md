@@ -1,16 +1,21 @@
-## intersystems-iris-docker-rest-template
-This is a template for for a REST API application with  ObjectScript using Docker container for InterSystems IRIS
-The template goes also with a few files which let you immedietly compile your ObjecScript files in InterSystems IRIS Community Edition in a docker container
+## rest-api-contest-template
+This is a template for for a InterSystems IRIS REST API Contest.
+It has an example of REST API with CRUD actions for a Sample Person peristent class.
+
+## Installation with ZPM
+
+zpm:USER>install rest-api-contest-template
+
+## Installation with Docker
 
 ## Prerequisites
-This needs to have git and docker installed.
+Make sure you have [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) and [Docker desktop](https://www.docker.com/products/docker-desktop) installed.
 
-## Installation 
 
 Clone/git pull the repo into any local directory e.g. like it is shown below:
 
 ```
-$ git clone git@github.com:intersystems-community/objectscript-rest-docker-template.git
+$ git clone git@github.com:intersystems-community/rest-api-contest-template.git
 ```
 
 Open the terminal in this directory and run:
@@ -19,19 +24,12 @@ Open the terminal in this directory and run:
 $ docker-compose up -d --build
 ```
 
-or install it with ZPM client:
-```
-zpm:USER>install objectscript-rest-template
-```
-
-or open the folder in VSCode and do the following:
-![rest](https://user-images.githubusercontent.com/2781759/78183327-63569800-7470-11ea-8561-c3b547ce9001.gif)
-
-
 ## How to Work With it
 
 This template creates /crud REST web-application on IRIS which implements 4 types of communication: GET, POST, PUT and DELETE aka CRUD operations.
-These interface works with a sample persistent class Sample.Person.
+
+The application also installs [swagger-ui](https://openexchange.intersystems.com/package/iris-web-swagger-ui) module which creates /swagger-ui web page so you can get all the documenation of the REST-API and test it on localhost:52773/swagger-ui/index.html
+
 
 # Testing GET requests
 
@@ -104,8 +102,10 @@ localhost:52773/crud/persons/5
 ```
 
 ## How to start coding
-This repository is ready to code in VSCode with ObjectScript plugin.
+This is a template, so you can use a template button on Github to create your own copy of this repository.
+The repository is ready to code in VSCode with ObjectScript plugin.
 Install [VSCode](https://code.visualstudio.com/) and [ObjectScript](https://marketplace.visualstudio.com/items?itemName=daimor.vscode-objectscript) plugin and open the folder in VSCode.
+Once you start IRIS container VSCode connects to it and you can edit, compile and debug ObjectScript code.
 Open /src/cls/PackageSample/ObjectScript.cls class and try to make changes - it will be compiled in running IRIS docker container.
 
 Feel free to delete PackageSample folder and place your ObjectScript classes in a form
@@ -113,20 +113,5 @@ Feel free to delete PackageSample folder and place your ObjectScript classes in 
 
 The script in Installer.cls will import everything you place under /src/cls into IRIS.
 
-## What's insde the repo
-
-# Dockerfile
-
-The simplest dockerfile to start IRIS and load ObjectScript from /src/cls folder
-Use the related docker-compose.yml to easily setup additional parametes like port number and where you map keys and host folders.
-
-# Dockerfile-zpm
-
-Dockerfile-zpm builds for you a container which contains ZPM package manager client so you are able to install packages from ZPM in this container
-
-# .vscode/settings.json
-
-Settings file to let you immedietly code in VSCode with [VSCode ObjectScript plugin](https://marketplace.visualstudio.com/items?itemName=daimor.vscode-objectscript))
-
-# .vscode/launch.json
-Config file if you want to debug with VSCode ObjectScript
+## Collaboration 
+Any collaboration is very welcome! Fork and send Pull requests!
