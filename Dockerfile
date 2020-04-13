@@ -32,7 +32,8 @@ RUN \
   write sc \
   write "Web application "_webName_" has been created!" \
   zn "IRISAPP" \
-  zpm "install swagger-ui"
+  zpm "install swagger-ui" \
+  zpm "install webterminal"
 
 # bringing the standard shell back
 SHELL ["/bin/bash", "-c"]
