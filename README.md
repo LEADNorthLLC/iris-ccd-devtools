@@ -57,7 +57,7 @@ The application also installs [swagger-ui](https://openexchange.intersystems.com
 To test GET you need to have some data. You can create it with POST request (see below), or you can create some fake testing data. to do that open IRIS terminal or web terminal on /localhost:52773/terminal/  and call:
 
 ```
-USER>do ##class(Sample.Person).AddTestData(10)
+IRISAPP>do ##class(Sample.Person).AddTestData(10)
 ```
 This will create 10 random records in Sample.Person class.
 
