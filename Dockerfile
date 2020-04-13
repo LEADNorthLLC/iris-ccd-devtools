@@ -30,10 +30,10 @@ RUN \
   set webProperties("AutheEnabled") = 32 \
   set sc = ##class(Security.Applications).Create(webName, .webProperties) \
   write sc \
-  write "Web application "_webName_" has been created!" \
-  zn "IRISAPP" \
-  zpm "install swagger-ui" \
-  zpm "install webterminal"
+  write "Web application "_webName_" has been created!" 
+  #zn "IRISAPP" \
+  #zpm "install swagger-ui" \
+  #zpm "install webterminal"
 
 # bringing the standard shell back
 SHELL ["/bin/bash", "-c"]
