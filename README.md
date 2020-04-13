@@ -8,6 +8,8 @@ To make an easy template to start building REST API in IRIS
 ## What it does
 Creates /crud web app in IRIS and CRUD endpoints to play with persistent data in Sample.Person class. 
 It uses [swagger-ui](https://openexchange.intersystems.com/package/iris-web-swagger-ui) module to provide documentation and test environment for API.
+![rest_contest](https://user-images.githubusercontent.com/2781759/79133636-084c6b80-7db5-11ea-8a2c-eab346ea70f9.gif)
+
 
 ## Challenges I ran into
 no challenges
