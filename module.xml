@@ -3,7 +3,7 @@
   <Document name="contest-rest-template.ZPM">
     <Module>
       <Name>contest-rest-template</Name>
-      <Version>1.0.2</Version>
+      <Version>1.0.3</Version>
       <Packaging>module</Packaging>
       <Dependencies>
         <ModuleReference>
@@ -18,8 +18,6 @@
        <CSPApplication 
         Url="/crud"
         Recurse="1"
-        SourcePath="/web"
-        DeployPath="{$cspdir}/crud" 
         MatchRoles=":{$dbrole}"
         PasswordAuthEnabled="0"
         UnauthenticatedEnabled="0"
