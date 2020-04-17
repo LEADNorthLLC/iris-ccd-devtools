@@ -5,12 +5,6 @@
       <Name>contest-rest-template</Name>
       <Version>1.0.3</Version>
       <Packaging>module</Packaging>
-      <Dependencies>
-        <ModuleReference>
-          <Name>swagger-ui</Name>
-          <Version>*</Version>
-        </ModuleReference>
-      </Dependencies>
       <SourcesRoot>src</SourcesRoot>
       
       <Resource Name="Sample.PKG"/>
