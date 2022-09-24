@@ -1,4 +1,6 @@
 ## rest-api-contest-template
+[![Quality Gate Status](https://community.objectscriptquality.com/api/project_badges/measure?project=intersystems_iris_community%2Frest-api-contest-template&metric=alert_status)](https://community.objectscriptquality.com/dashboard?id=intersystems_iris_community%2Frest-api-contest-template) 
+
 This is a template for for a InterSystems IRIS REST API Contest.
 It has an example of REST API with CRUD actions for a Sample Person peristent class.
 
