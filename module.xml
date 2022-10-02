@@ -3,7 +3,7 @@
   <Document name="contest-rest-template.ZPM">
     <Module>
       <Name>contest-rest-template</Name>
-      <Version>1.0.4</Version>
+      <Version>1.0.5</Version>
       <Description>Template repository for InterSystems IIRS REST API Programming Contest</Description>
       <Packaging>module</Packaging>
       <SourcesRoot>src</SourcesRoot>
