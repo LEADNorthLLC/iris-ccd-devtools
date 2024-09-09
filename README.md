@@ -1,33 +1,32 @@
-## rest-api-contest-template
-[![Quality Gate Status](https://community.objectscriptquality.com/api/project_badges/measure?project=intersystems_iris_community%2Frest-api-contest-template&metric=alert_status)](https://community.objectscriptquality.com/dashboard?id=intersystems_iris_community%2Frest-api-contest-template) 
+## iris-ccd-tools
 
-This is a template for for a InterSystems IRIS REST API Contest.
-It has an example of REST API with CRUD actions for a Sample Person peristent class.
+This is a project based off of the IRIS REST API Contest template.
+
+The REST API with CRUD actions for a Sample Person peristent class has been kept in the project temporarily for reference.
 
 ## Inspiration
-To make an easy template to start building REST API in IRIS
+To create a user-friendly front-end to organize several testing utilities and methods used to facility CCD transform development
 
 ## What it does
-Creates /crud web app in IRIS and CRUD endpoints to play with persistent data in Sample.Person class. 
-It uses [swagger-ui](https://openexchange.intersystems.com/package/iris-web-swagger-ui) module to provide documentation and test environment for API.
-![rest_contest](https://user-images.githubusercontent.com/2781759/79133636-084c6b80-7db5-11ea-8a2c-eab346ea70f9.gif)
+Creates /csp/visualizer/service web app in IRIS with endpoints for XPath testing, XSLT testing, and CCD to SDA transform testing. 
 
+It uses [swagger-ui](https://openexchange.intersystems.com/package/iris-web-swagger-ui) module to provide documentation and test environment for API.
 
 ## Challenges I ran into
-no challenges
+tbd
 
 ## Accomplishments that I proud of
-Easy template with self documented API spec installed with one ZPM command or docker-compose build
+tbd
 
 ## What I learned
-a lot!
+tbd
 
 ## Built with
 Using VSCode and ObjectScript plugin, IRIS Community Edition in Docker, ZPM, IRIS openapi API
 
 ## Installation with ZPM
 
-zpm:USER>install rest-api-contest-template
+zpm:USER>install iris-ccd-tools
 
 ## Installation with Docker
 
@@ -38,7 +37,7 @@ Make sure you have [git](https://git-scm.com/book/en/v2/Getting-Started-Installi
 Clone/git pull the repo into any local directory e.g. like it is shown below:
 
 ```
-$ git clone git@github.com:intersystems-community/rest-api-contest-template.git
+$ git clone git@github.com:LEADNorthLLC/iris-ccd-tools.git/
 ```
 
 Open the terminal in this directory and run:
@@ -49,8 +48,22 @@ $ docker-compose up -d --build
 
 ## How to Work With it
 
+# Management portal: 
+
+The management portal is available at: 
+[Management portal](http://localhost:62773/csp/sys/UtilHome.csp)
+
+Login: _system/SYS
+
+The API is available on localhost:62773/csp/visusalier/service
+
+API documentation <TBD>
+
+
+# Sample Testing - this will be updated with our current project #
 This template creates /crud REST web-application on IRIS which implements 4 types of communication: GET, POST, PUT and DELETE aka CRUD operations. 
-The API is available on localhost:52773/crud/
+
+The API is available on localhost:62773/crud/
 This REST API goes with  OpenAPI (swagger) documentation. you can check it localhost:52773/crud/_spec
 THis spec can be examined with different tools, such as [SwaggerUI](https://swagger.io/tools/swagger-ui/), [Postman](postman.com), etc.
 Or you can install [swagger-ui](https://openexchange.intersystems.com/package/iris-web-swagger-ui) with:
@@ -82,7 +95,7 @@ To get all the data in JSON call:
 localhost:62773/crud/persons/all
 ```
 
-To request the data for a particular record provide the id in GET request like 'localhost:52773/crud/persons/id' . E.g.:
+To request the data for a particular record provide the id in GET request like 'localhost:62773/crud/persons/id' . E.g.:
 
 ```
 localhost:62773/crud/persons/1
@@ -104,7 +117,7 @@ Create a POST request e.g. in Postman with raw data in JSON. e.g.
 
 Adjust the authorisation if needed - it is basic for container with default login and password for IRIR Community edition container
 
-and send the POST request to localhost:52773/crud/persons/
+and send the POST request to localhost:62773/crud/persons/
 
 This will create a record in Sample.Person class of IRIS.
 
@@ -119,7 +132,7 @@ E.g. we want to change the record with id=5. Prepare in Postman the JSON in raw 
 
 and send the put request to:
 ```
-localhost:52773/crud/persons/5
+localhost:62773/crud/persons/5
 ```
 
 # Testing DELETE request
