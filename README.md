@@ -79,13 +79,13 @@ This REST API exposes two GET requests: all the data and one record.
 To get all the data in JSON call:
 
 ```
-localhost:52773/crud/persons/all
+localhost:62773/crud/persons/all
 ```
 
 To request the data for a particular record provide the id in GET request like 'localhost:52773/crud/persons/id' . E.g.:
 
 ```
-localhost:52773/crud/persons/1
+localhost:62773/crud/persons/1
 ```
 
 This will return JSON data for the person with ID=1, something like that:

@@ -1,6 +1,9 @@
 Class Sample.PersonREST Extends Sample.REST.Base
 {
 
+/// Require Cross-origin resource sharing handling.
+Parameter HandleCorsRequest = 1;
+
 Parameter Version = "1.0.0";
 
 XData UrlMap [ XMLNamespace = "http://www.intersystems.com/urlmap" ]
