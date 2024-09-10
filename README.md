@@ -12,6 +12,38 @@ Creates /csp/visualizer/service web app in IRIS with endpoints for XPath testing
 
 It uses [swagger-ui](https://openexchange.intersystems.com/package/iris-web-swagger-ui) module to provide documentation and test environment for API.
 
+## REST APIs
+An export for a Postman Collection to test the available APIs is located in the **testing** folder of this project. 
+Import `Visualizer.postman_collection.json` in Postman to run tests. The `Person` API tests are for the Sample REST API. 
+
+# XPath Evaluation Test #
+Often times when evaluating CCDs and building mappings, developers need to test an XPATH to see if it's pointing to the expected location. This XPath evaluation uses the same mechanism as the utilities and transformations within IRIS to locate the XPath so a developer can test that the syntax of the XPath is correct. 
+
+Request-type: POST
+Content-type: multipart-form
+CONTENT1: {"XPathForEval": "/hl7:ClinicalDocument/hl7:recordTarget/hl7:patientRole/hl7:id[1]/@root"}
+CONTENT2: <ClinicalDocument xsi:schemaLocat ..... />
+
+
+Notes: Quoted values in the XPath must use single quotes in order to not mess with JSON parsing
+CONTENT2 should contain the entire XML document, no escaping required. 
+
+# CCD to SDA Transform #
+A CCD can be passed to a standard CCDA to SDA transform to see the results from the IRIS transformation. 
+
+Request-type: POST
+Content-type: multipart-form
+CONTENT1: {"TransformName": "SDA3/CCDAv21-to-SDA.xsl"}
+CONTENT2: <ClinicalDocument xsi:schemaLocat ..... />
+
+Notes: CONTENT2 should contain the entire CCD document, no escaping required. 
+Possible values for TransformName: 
+SDA/CCDA-to-SDA.xsl
+SDA/CCDAv21-to-SDA.xsl
+SDA/CDA-toSDA.xsl
+SDA/AU-CDA-to-SDA.xsl
+
+
 ## Challenges I ran into
 tbd
 
