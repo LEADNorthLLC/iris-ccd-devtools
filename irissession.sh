@@ -9,10 +9,12 @@ if '\$Get(sc) do ##class(%SYSTEM.Process).Terminate(, 1)
 zn "%SYS"
 do ##class(SYS.Container).QuiesceForBundling()
 Do ##class(Security.Users).UnExpireUserPasswords("*")
+s props("Database")="HSLIB",sc=##Class(Config.MapPackages).Create("%ALL","HS",.props)
 halt
 EOF
 
 exit=$?
+
 
 iris stop $ISC_PACKAGE_INSTANCENAME quietly
 

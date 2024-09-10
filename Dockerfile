@@ -48,7 +48,9 @@ RUN \
   #zpm "install swagger-ui" \
   #zpm "install webterminal"
 
-# bringing the standard shell back
+
+
+  # bringing the standard shell back
 SHELL ["/bin/bash", "-c"]
 CMD [ "-l", "/usr/irissys/mgr/messages.log" ]
 
