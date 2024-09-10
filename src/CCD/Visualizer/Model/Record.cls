@@ -1,11 +1,11 @@
 Class CCD.Visualizer.Model.Record Extends (%Persistent, %XML.Adaptor, %JSON.Adaptor)
 {
 
-// Property TransformName As %String(MAXLEN = 100) [ InitialExpression = "SDA3/CCDv21-to-SDA.xsl" ];
+Property TransformName As %String(MAXLEN = 100) [ InitialExpression = "SDA3/CCDv21-to-SDA.xsl" ];
 
 Property XPathForEval As %String(MAXLEN = 500);
 
-// Property XPathValue As %String(MAXLEN = 500);
+Property Response As %String(MAXLEN = 1024);
 
 // Property Error As %Status [ InitialExpression = {$$$OK} ];
 
@@ -23,7 +23,7 @@ Property XPathForEval As %String(MAXLEN = 500);
 /// CCD XML Content
 Property CCDContentXML As %String(MAXLEN = 500);
 
-// Property SDAContentXML As %Stream.Object;
+Property SDAContentXML As %Stream.Object;
 
 /// SDA XML Content
 Storage Default

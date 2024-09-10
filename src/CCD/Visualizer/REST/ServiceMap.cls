@@ -16,74 +16,11 @@ XData UrlMap [ XMLNamespace = "http://www.intersystems.com/urlmap" ]
 <Routes>
     <Route Url="/transform/:pType" Method="POST" Call="CCD.Visualizer.REST.Transform:TransformRouter"/>
 	<Route Url="/xpath/" Method="POST" Call="GetXPathValue"/>
+	<Route Url="/transform/" Method="POST" Call="TransformCCD"/>
+	<Route Url="/xslt/" Method="POST" Call="TestXSL"/>
   </Routes>
 }
 
-ClassMethod GetXPath() As %Status
-{
-	Set tSC = $$$OK
-	
-		set ^zJLog = "Get XPath"
-		//Get the XPath value -- this is already a dynamic object
-		set ^zJDataRaw = %request.Content
-		set ^zJLog = "Set data"
-		Set data = %request.Content
-		
-		//set ^zJData = data
-		Set tRequest = ##class(CCD.Visualizer.Model.Record).%New()
-		set ^zJLog = "json PARSE"
-    	$$$THROWONERROR(tSC,tRequest.%JSONImport(data))
-		set ^zJLog = "JSON IMPORT"
-		//set tXPath = %request.ContentGet("XPathForEval")
-		//set tXML = %request.ContentGet("CCDContentXML")
-		set tXPath = tRequest.XPathForEval
-		set ^zJLog = "Got content"
-		set ^zJData = tXPath
-		set tCCDContent = tRequest.CCDContentXML
-		set ^zJData2 = tCCDContent
-		#;Dispatch request to production
-		#Dim tResponse as CCD.Visualizer.Model.Record
-
-		Set pRequest = ##class(CCD.Visualizer.Model.Record).%New()
-		#;CNR: Need to grab input stream off of the request and copy it to pRequest object
-		
-		#dim oStream As %Stream.GlobalCharacter = ##class(%Stream.GlobalCharacter).%New()
-		
-		
-		//do oStream.CopyFrom(tXML)
-		Set pRequest.XPathForEval = tXPath
-		//Set pRequest.CCDContentXML=oStream
-		set ^zJLog="Calling Transform"
-		set ^zJXPath=tXPath
-		//set ^zJContent = oStream.Read()
-		//do oStream.Rewind()
-
-		//If $$$ISERR(tResponse.Status) {
-		//	Set %response.Status = ..#HTTP500INTERNALSERVERERROR
-		//}
-		//Set tResponse = ##class(CCD.Visualizer.Model.Record).%New()
-		
-		#;Write response
-		//Set %response.ContentType="application/xml"
-		//$$$ThrowOnError(tResponse.XMLExportToStream(.tStream))
-		
-		
-		//If $Get(%request.CgiEnvs("HTTP_ACCEPT"),"*/*") [ "application/xml" {
-		//	Set %response.ContentType="application/xml"
-		//	$$$ThrowOnError(tResponse.XMLExportToStream(.tStream))
-		//} 
-		//Else {
-		//	Set %response.ContentType="application/json"
-		//	#;Write output 
-		//	Set tStream=##class(%Stream.GlobalCharacter).%New()		
-		//	$$$ThrowOnError(##class(HS.Local.Visualizer.Model.Record).toJSON(tResponse, .tStream))
-		//}
-		
-
-		//Do tStream.OutputToDevice()
-
-	Quit tSC
-}
 
 
 ClassMethod GetXPathValue() As %Status
@@ -105,36 +42,29 @@ ClassMethod GetXPathValue() As %Status
 		{
 			Set name=""
 			set name = %request.Next(name)
-			set ^zName1 = name
+			
 			if (name = "") $$$ThrowStatus($$$ERROR($$$GeneralError,"Unable to identify Data Sections."))
 			Set stream = %request.Get(name)
-			set ^zStreamContent1 = stream
-			//do stream.Rewind()
+			
 			Set tRequest = ##class(CCD.Visualizer.Model.Record).%New()
-			set ^zJLog = "json PARSE"
     		$$$THROWONERROR(tSC,tRequest.%JSONImport(stream))
 
 			#; Pull elements from API call
 			set tXPath = tRequest.XPathForEval
-			set ^zJLog = "Got content"
-			set ^zJData = tXPath
 			
 			Set name = %request.Next(name) 
 
 			if (name = "") $$$ThrowStatus($$$ERROR($$$GeneralError,"Unable to identify Data Sections."))
 			Set stream = %request.Get(name)
-			set ^zStreamContent2 = stream
 			//CNR: even though it's not an SDA, the CCD data is being saved to the HS.SDA3.QuickStream?
 			if ('$ISOBJECT(stream))
 			{
-				set ^zCopyFrom = 0
 				set tFileStream = ##class(HS.SDA3.QuickStream).%New()
 				$$$ThrowOnError(tFileStream.Write(stream))
 				do tFileStream.Rewind()
 			}
 			else
 			{
-				set ^zCopyFrom = 1
 				set tFileStream = ##class(HS.SDA3.QuickStream).%New()
 				do tFileStream.CopyFrom(stream)
 				do tFileStream.Rewind()
@@ -151,7 +81,6 @@ ClassMethod GetXPathValue() As %Status
 		
 		Set %response.Status = ..#HTTP200STATUSOK
 		
-
 		//If $$$ISERR(tResponse.Status) {
 		//	Set %response.Status = ..#HTTP500INTERNALSERVERERROR
 		//}
@@ -164,18 +93,11 @@ ClassMethod GetXPathValue() As %Status
 			//$$$ThrowOnError(tResponse.XMLExportToStream(.tStream))
 		} 
 		Else {
-			//execute GetXPathValue
-			//Set tExpressionRight = "/hl7:ClinicalDocument/hl7:recordTarget/hl7:patientRole/hl7:id[1]"
-	
-			//Set tItem = "@root"
-	
-			//Set tStatus = ##class(HS.IHE.Util).GetXPathValue(tFileStream,tXPath,tItem,.tValue)
-			//$$$ThrowOnError(tStatus)
 			do ..GetLocationValue(tFileStream,tXPath, .tValue)
 
 			Set %response.ContentType="application/json"
 			Set tStream=##class(%Stream.GlobalCharacter).%New()	
-			do tStream.Write("The value of the XPath Expression is: ")
+			
 			do tStream.Write(tValue)
 			//Do he evaluation
 		}
@@ -199,6 +121,104 @@ ClassMethod GetXPathValue() As %Status
 	Quit tSC
 }
 
+ClassMethod TransformCCD() As %Status
+{
+	Set tSC = $$$OK
+	try {
+		If (%request.ContentType '= "multipart/form-data") {	
+			//If $$$TESTMODE W "Request header type not supported, change to 'multipart/form-data'"
+			Set %response.Status = ..#HTTP406NOTACCEPTABLE
+			QUIT
+		}
+		
+		// The Data should contain 2 parts, the first is JSON metadata, the second is the file data.
+		// If we have MIME Data, then this is coming from Ensemble.  If we have Data then it is coming over from Angular / JQuery.
+		
+		#dim tFileStream As HS.SDA3.QuickStream
+		if ($D(%request.Data)) 
+		{
+			Set name=""
+			set name = %request.Next(name)
+			
+			if (name = "") $$$ThrowStatus($$$ERROR($$$GeneralError,"Unable to identify Data Sections."))
+			Set stream = %request.Get(name)
+			
+			Set tRequest = ##class(CCD.Visualizer.Model.Record).%New()
+    		$$$THROWONERROR(tSC,tRequest.%JSONImport(stream))
+
+			#; Pull elements from API call
+			set tTransformName = tRequest.TransformName
+			set ^zTransformName = tTransformName
+			Set name = %request.Next(name) 
+
+			if (name = "") $$$ThrowStatus($$$ERROR($$$GeneralError,"Unable to identify Data Sections."))
+			Set stream = %request.Get(name)
+			//CNR: even though it's not an SDA, the CCD data is being saved to the HS.SDA3.QuickStream?
+			if ('$ISOBJECT(stream))
+			{
+				set tFileStream = ##class(HS.SDA3.QuickStream).%New()
+				$$$ThrowOnError(tFileStream.Write(stream))
+				do tFileStream.Rewind()
+			}
+			else
+			{
+				set tFileStream = ##class(HS.SDA3.QuickStream).%New()
+				do tFileStream.CopyFrom(stream)
+				do tFileStream.Rewind()
+			}
+		}
+		else
+		{
+			If $$$TESTMODE W "Request header type not supported, change to 'multipart/form-data'"
+			Set %response.Status = ..#HTTP406NOTACCEPTABLE
+			QUIT
+		}
+		
+	
+		Set %response.Status = ..#HTTP200STATUSOK
+		
+
+		Set transformer = ##class(HS.Util.XSLTTransformer).%New()
+		
+		$$$ThrowOnError(transformer.Transform(tFileStream, tTransformName, .tOutputSDA))
+		
+
+		Set tResponse = ##class(CCD.Visualizer.Model.Record).%New()
+		set tResponse.SDAContentXML = tOutputSDA
+
+		//If $$$ISERR(tResponse.Status) {
+		//	Set %response.Status = ..#HTTP500INTERNALSERVERERROR
+		//}
+		//Set tResponse.Status = ""
+		
+		#;Write response
+		Set %response.ContentType="application/xml"
+		$$$ThrowOnError(tResponse.XMLExportToStream(.tStream))
+		
+		
+		//If $Get(%request.CgiEnvs("HTTP_ACCEPT"),"*/*") [ "application/xml" {
+		//	Set %response.ContentType="application/xml"
+		//	$$$ThrowOnError(tResponse.XMLExportToStream(.tStream))
+		//} 
+		//Else {
+		//	Set %response.ContentType="application/json"
+		//	#;Write output 
+		//	Set tStream=##class(%Stream.GlobalCharacter).%New()		
+		//	$$$ThrowOnError(##class(HS.Local.Visualizer.Model.Record).toJSON(tResponse, .tStream))
+		//}
+		
+
+		Do tStream.OutputToDevice()
+	}
+	Catch Ex {
+		Set tSC = Ex.AsStatus()
+		
+		Set %response.Status = ..#HTTP500INTERNALSERVERERROR
+		set ^zJStatus=tSC
+		
+	}
+	Quit tSC
+}
 
 
 /// Handle Cross-origin resource sharing
