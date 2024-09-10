@@ -3,8 +3,16 @@
 
 export const links = [
     {
-        to: '',
-        display: ''
-    }
+        to: '/xpath',
+        display: 'XPath Evaluator'
+    },
+    {
+        to: '/transform',
+        display: 'CCDA to SDA Transorms'
+    },
+    {
+        to: '/xsl',
+        display: 'XSL Template Tester'
+    },
 ]
 
