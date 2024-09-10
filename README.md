@@ -19,6 +19,7 @@ Import `Visualizer.postman_collection.json` in Postman to run tests. The `Person
 # XPath Evaluation Test #
 Often times when evaluating CCDs and building mappings, developers need to test an XPATH to see if it's pointing to the expected location. This XPath evaluation uses the same mechanism as the utilities and transformations within IRIS to locate the XPath so a developer can test that the syntax of the XPath is correct. 
 
+[URL](http://localhost:62773/csp/visualizer/service/xpath/) 
 Request-type: POST
 Content-type: multipart-form
 CONTENT1: {"XPathForEval": "/hl7:ClinicalDocument/hl7:recordTarget/hl7:patientRole/hl7:id[1]/@root"}
@@ -31,6 +32,7 @@ CONTENT2 should contain the entire XML document, no escaping required.
 # CCD to SDA Transform #
 A CCD can be passed to a standard CCDA to SDA transform to see the results from the IRIS transformation. 
 
+[URL](http://localhost:62773/csp/visualizer/service/transform/) 
 Request-type: POST
 Content-type: multipart-form
 CONTENT1: {"TransformName": "SDA3/CCDAv21-to-SDA.xsl"}
