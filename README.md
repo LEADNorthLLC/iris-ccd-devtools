@@ -64,13 +64,13 @@ API documentation <TBD>
 This template creates /crud REST web-application on IRIS which implements 4 types of communication: GET, POST, PUT and DELETE aka CRUD operations. 
 
 The API is available on localhost:62773/crud/
-This REST API goes with  OpenAPI (swagger) documentation. you can check it localhost:52773/crud/_spec
+This REST API goes with  OpenAPI (swagger) documentation. you can check it localhost:62773/crud/_spec
 THis spec can be examined with different tools, such as [SwaggerUI](https://swagger.io/tools/swagger-ui/), [Postman](postman.com), etc.
 Or you can install [swagger-ui](https://openexchange.intersystems.com/package/iris-web-swagger-ui) with:
 ```
 zpm:IRISAPP>install swagger-ui
 ``` 
-And check the documentation on localhost:52773/swagger-ui/index.html
+And check the documentation on localhost:62773/swagger-ui/index.html
 
 
 # Testing GET requests
@@ -140,7 +140,7 @@ localhost:62773/crud/persons/5
 For delete request this REST API expects only the id of the record to delete. E.g. if the id=5 the following DELETE call will delete the record:
 
 ```
-localhost:52773/crud/persons/5
+localhost:62773/crud/persons/5
 ```
 
 ## How to start coding

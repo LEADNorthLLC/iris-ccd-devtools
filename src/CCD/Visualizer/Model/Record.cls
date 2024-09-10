@@ -1,7 +1,7 @@
 Class CCD.Visualizer.Model.Record Extends (%Persistent, %XML.Adaptor, %JSON.Adaptor)
 {
 
-Property TransformName As %String(MAXLEN = 100) [ InitialExpression = "SDA3/CCDv21-to-SDA.xsl" ];
+Property TransformName As %String(MAXLEN = 100) [ InitialExpression = "SDA3/CCDAv21-to-SDA.xsl" ];
 
 Property XPathForEval As %String(MAXLEN = 500);
 
