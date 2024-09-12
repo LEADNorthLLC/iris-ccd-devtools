@@ -56,7 +56,7 @@ const TestComponent = ({ options, url }) => {
                 <datalist id="citynames">
                     {
                         options && options.map((item) => (
-                            <option value={item.value}>{item.desc}</option>
+                            <option key={item.value} value={item.value}>{item.desc}</option>
                         ))
                     }
                 </datalist>

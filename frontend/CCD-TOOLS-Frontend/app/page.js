@@ -11,7 +11,7 @@ export default function Home() {
         <div class="flex justify-evenly items-center w-full h-full">
         {
           links && links.map((link) => (
-              <Link href={link.to}>
+              <Link key={link.to} href={link.to}>
                     <div class="relative cursor-pointer ">
                         <span class="absolute top-0 left-0 w-full h-full mt-1 ml-1 bg-indigo-500 rounded-lg "></span>
                         <div
