@@ -9,7 +9,7 @@ import './index.css'
 
 const ex = "<note><to>Tove</to><from>Jani</from><heading>Reminder</heading><body>Don't forget me this weekend!</body></note>"
 
-const TestComponent = ({ options, url }) => {
+const TestComponent = ({ options, url, labels, largeInput }) => {
     const [inputOne, setInputOne] = useState('')
     const [texAreaOne, setTexAreaOne] = useState('')
     const [texAreaTwo, setTexAreaTwo] = useState('')
@@ -51,21 +51,29 @@ const TestComponent = ({ options, url }) => {
     <div className='comp m-5'>
         <div className='m-5 '>
             <div className='m-5 comp-input flex justify-between bg-slate-400 rounded-md'>
-                <h2>Appropriate Label</h2>
-                <input className='w-4/5 h-8' type="text" name="city" list="citynames" onChange={(e) => setInputOne(e.target.value)} />
-                <datalist id="citynames">
-                    {
-                        options && options.map((item) => (
-                            <option key={item.value} value={item.value}>{item.desc}</option>
-                        ))
-                    }
-                </datalist>
+                <h2>{labels.inputLabelOne}</h2>
+                {
+                    largeInput ? (
+                        <textarea rows={3} className='w-full h-full' value={inputOne} onChange={(e) => setInputOne(e.target.value)} />
+                    ) : (
+                        <>
+                            <input className='w-4/5 h-8' type="text" name="option" list="options" onChange={(e) => setInputOne(e.target.value)} />
+                            <datalist id="options">
+                                {
+                                    options && options.map((item) => (
+                                        <option key={item.value} value={item.value}>{item.desc}</option>
+                                    ))
+                                }
+                            </datalist>
+                        </>
+                    )
+                }
             </div>
 
             <div className='m-5 flex flex-col justify-center w-64 h-4/6 bg-slate-400 comp-area rounded-md'>
                 <div className='flex justify-around m-4'>
-                    <h2>Appropriate Label</h2>
-                    <h2>Appropriate Label</h2>
+                    <h2>{labels.inputLabelTwo}</h2>
+                    <h2>{labels.outputLabelOne}</h2>
                 </div>
 
                 <div className='flex'>
@@ -79,7 +87,7 @@ const TestComponent = ({ options, url }) => {
                             viewer ? 
                             <XMLViewer collapsible xml={texAreaOne} /> 
                                 :
-                            <textarea className='w-full h-full' value={texAreaOne} onChange={(e) => setTexAreaOne(e.target.value)} />
+                            <textarea rows={15} className='w-full h-full' value={texAreaOne} onChange={(e) => setTexAreaOne(e.target.value)} />
                         }
                     </div>
                     <div className='col relative  h-full'>
@@ -101,7 +109,6 @@ const TestComponent = ({ options, url }) => {
                     </div>    
                 </div>
             </div>
-            {/* <button onClick={() => setCCDSchema()}>CCD to SDA</button> */}
         </div>
     </div>
   )
