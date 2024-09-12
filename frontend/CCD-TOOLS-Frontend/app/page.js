@@ -1,60 +1,37 @@
-"use client"
 
 import Image from "next/image";
-import axios from "axios";
-import { useState } from "react";
+import { links } from '@/constants/nav'
+import Link from "next/link";
 
 export default function Home() {
-  const [xPath, setXPath] = useState('')
-  const [xPathSchema, setXPathSchema] = useState('')
-  const [CCD, setCCD] = useState('')
-  const [CCDSchema, setCCDSchema] = useState('')
   
-  const postXPath = async () => {
-    let data1 = {
-      "XPathForEval": "/hl7:ClinicalDocument/hl7:recordTarget/hl7:patientRole/hl7:id[1]/@root"
-    }
-    let data2 = '<ClinicalDocument xsi:schemaLocat ..... />'
-  
-    let response = await axios.post('/csp/visualizer/service/xpath/', {
-      CONTENT1: data1,
-      CONTENT2: data2
-    })
-  
-    console.log(response)
-  }
-  
-  const postCCDToSDA = async () => {
-  
-    let data1 = {
-      "TransformName": "SDA3/CCDAv21-to-SDA.xsl"
-    }
-    let data2 = '<ClinicalDocument xsi:schemaLocat ..... />'
-  
-    let response = await axios.post('/csp/visualizer/service/transform/', {
-      CONTENT1: data1,
-      CONTENT2: data2
-    })
-  
-    console.log(response)
-  }
-
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <div>
-        <input onChange={(e) => setXPath(e.target.value)} />
-        <textarea onChange={(e) => setXPathSchema(e.target.value)} />
-       <button onClick={() => postXPath()}>XPath</button>
-      </div>
-
-      <div>
-        <select onChange={(e) => setXPath(e.target.value)}>
-          <option value="someOption">Some option</option>
-          <option value="otherOption">Other option</option>
-        </select>
-        <textarea onChange={(e) => setCCD(e.target.value)} />
-       <button onClick={() => setCCDSchema()}>CCD to SDA</button>
-      </div>
+    <div className="w-full h-full m-5">
+        Home Page
+        <div class="flex justify-evenly items-center w-full h-full">
+        {
+          links && links.map((link) => (
+              <Link href={link.to}>
+                    <div class="relative cursor-pointer ">
+                        <span class="absolute top-0 left-0 w-full h-full mt-1 ml-1 bg-indigo-500 rounded-lg "></span>
+                        <div
+                            class="relative p-6 bg-white  border-2 border-indigo-500 dark:border-gray-300 rounded-lg hover:scale-105 transition duration-500">
+                            <div class="flex items-center">
+                                <h3 class="my-2 ml-3 text-lg font-bold text-gray-800 ">{link.display}</h3>
+                            </div>
+                            {
+                              link.desc && (
+                                <p class="text-gray-600 ">
+                                    {link.desc}
+                                </p>
+                              )
+                            }
+                        </div>
+                    </div>
+              </Link>
+            ))
+          }
+        </div>
     </div>
   );
 }

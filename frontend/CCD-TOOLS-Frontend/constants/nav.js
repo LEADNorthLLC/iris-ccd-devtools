@@ -4,7 +4,8 @@
 export const links = [
     {
         to: '/xpath',
-        display: 'XPath Evaluator'
+        display: 'XPath Evaluator',
+        desc: 'Some description or other'
     },
     {
         to: '/transform',
@@ -12,7 +13,8 @@ export const links = [
     },
     {
         to: '/xsl',
-        display: 'XSL Template Tester'
+        display: 'XSL Template Tester',
+        desc: 'Some description or other'
     },
 ]
 

@@ -1,0 +1,43 @@
+* {
+    color: black;
+}
+
+.comp {
+    width: 80vw;
+    height: 90vw;
+    /* background-color: brown; */
+}
+
+.comp-input {
+    width: 70vw;
+    /* height: 4rem; */
+    padding: 2rem;
+}
+
+.comp-area {
+    padding: 2rem;
+    width: 70vw;
+    height: 60vh;
+}
+
+.btn {
+    width: 6rem;
+    height: 3rem;
+    margin: 0 auto;
+    /* left: 40%; */
+}
+
+.col {
+    width: 8.8%;
+}
+
+.big-col {
+    width: 45%;
+}
+
+button {
+    margin: .15em;
+    padding: .15em;
+    z-index: 99;
+    border-radius: .5em;
+}
