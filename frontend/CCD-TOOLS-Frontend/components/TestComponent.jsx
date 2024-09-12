@@ -71,9 +71,9 @@ const TestComponent = ({ options, url, labels, largeInput }) => {
             </div>
 
             <div className='m-5 flex flex-col justify-center w-64 h-4/6 bg-slate-400 comp-area rounded-md'>
-                <div className='flex justify-around m-4'>
+                <div className='flex justify-around mb-4'>
                     <h2>{labels.inputLabelTwo}</h2>
-                    <h2>{labels.outputLabelOne}</h2>
+                    <h2>{labels.outputLabel}</h2>
                 </div>
 
                 <div className='flex'>

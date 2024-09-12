@@ -6,8 +6,8 @@ import { xpathLabels } from '@/constants/labels'
 const XPath = () => {
   return (
     <div className='m-5 bg-slate-300 rounded-md'>
-      <h1 className='m-4'>
-        {xpathLabels.pageTitle}
+      <h1 className='m-4 text-lg'>
+      {xpathLabels.pageTitle}
       </h1>
       <TestComponent options={xpaths} labels={xpathLabels} />
     </div>
