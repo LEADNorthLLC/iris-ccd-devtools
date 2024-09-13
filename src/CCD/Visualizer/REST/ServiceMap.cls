@@ -241,16 +241,14 @@ ClassMethod OnHandleCorsRequest(pURL As %String) As %Status
         
         #; Get the origin
         Set tOrigin=$Get(%request.CgiEnvs("HTTP_ORIGIN"))
-        #; set tRestrictCORS=$GET(^DQAT.RESTRICTCORS,1) 
-        set tRestrictCORS=0 
-		#; set tAllowedOrigin=$GET(^DQAT.ALLOWEDORIGIN,"http://localhost:3000") 
+        set tRestrictCORS=0
 		set tAllowedOrigin="http://localhost:3000"
+		Set ^zCors="CORS called:HandleRequest"
 		Do %response.SetHeader("Access-Control-Allow-Origin","*")
-		set ^zCors = tAllowedOrigin
-		#; if ((tAllowedOrigin=tOrigin) || (tRestrictCORS=0))
-		#; {       
-	    #;     #; Allow requested origin
-	    #;     Do ..SetResponseHeaderIfEmpty("Access-Control-Allow-Origin",tOrigin)
+		if ((tAllowedOrigin=tOrigin) || (tRestrictCORS=0))
+		{       
+	        #; Allow requested origin
+	        Do ..SetResponseHeaderIfEmpty("Access-Control-Allow-Origin",tOrigin)
 	       
 	    #;     #; Set allow credentials to be true
 	    #;     Do ..SetResponseHeaderIfEmpty("Access-Control-Allow-Credentials","true")
@@ -262,7 +260,7 @@ ClassMethod OnHandleCorsRequest(pURL As %String) As %Status
 	    #;     #; Allow requested method
 	    #;     Set tMethod=$Get(%request.CgiEnvs("HTTP_ACCESS_CONTROL_REQUEST_METHOD"))
 	    #;     Do ..SetResponseHeaderIfEmpty("Access-Control-Allow-Methods",tMethod)
-		#; }
+		}
         
     } Catch (e) {
         Set tSC=e.AsStatus()
