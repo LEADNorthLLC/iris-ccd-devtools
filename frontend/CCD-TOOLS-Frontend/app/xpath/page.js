@@ -5,11 +5,11 @@ import { xpathLabels } from '@/constants/labels'
 
 const XPath = () => {
   return (
-    <div className='m-5 bg-slate-300 rounded-md'>
-      <h1 className='m-4 text-lg'>
+    <div className='m-5 bg-slate-400 rounded-md'>
+      <h1 className='m-4 title'>
       {xpathLabels.pageTitle}
       </h1>
-      <TestComponent options={xpaths} labels={xpathLabels} />
+      <TestComponent options={xpaths} labels={xpathLabels} baseUrl='http://localhost:62773' url='/csp/visualizer/service/xpath/' />
     </div>
   )
 }

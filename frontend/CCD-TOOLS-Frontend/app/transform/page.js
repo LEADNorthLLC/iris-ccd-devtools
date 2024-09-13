@@ -5,11 +5,11 @@ import { transformLabels } from '@/constants/labels'
 
 const Transform = () => {
   return (
-    <div className='m-5 bg-slate-300 rounded-md'>
-      <h1 className='m-4 text-lg'>
+    <div className='m-5 bg-slate-400 rounded-md'>
+      <h1 className='m-4 title'>
       {transformLabels.pageTitle}
         </h1>
-      <TestComponent options={transforms} labels={transformLabels} />
+      <TestComponent options={transforms} labels={transformLabels} baseUrl='http://localhost:62773' url='/csp/visualizer/service/transform/' />
     </div>
   )
 }

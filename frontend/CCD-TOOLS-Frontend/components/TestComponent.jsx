@@ -9,7 +9,7 @@ import './index.css'
 
 const ex = "<note><to>Tove</to><from>Jani</from><heading>Reminder</heading><body>Don't forget me this weekend!</body></note>"
 
-const TestComponent = ({ options, url, labels, largeInput }) => {
+const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://localhost:3000/" }) => {
     const [inputOne, setInputOne] = useState('')
     const [texAreaOne, setTexAreaOne] = useState('')
     const [texAreaTwo, setTexAreaTwo] = useState('')
@@ -18,14 +18,21 @@ const TestComponent = ({ options, url, labels, largeInput }) => {
     const inputRef = useRef(null);
 
     const postReqest = async () => {
+
+        const axiosInstance = axios.create({
+            'Access-Control-Allow-Origin': '*',
+            baseURL: baseUrl,
+            timeout: 1000,
+          });
+        
         let data1 = {
           "TransformName": inputOne
         }
-        let data2 = setTexAreaOne
+        let data2 = texAreaOne
       
-        let response = await axios.post(url, {
-          CONTENT1: data1,
-          CONTENT2: data2
+        let response = await axiosInstance.post(url, {
+          'CONTENT1': data1,
+          'CONTENT2': data2
         })
       
         console.log(response)
@@ -46,12 +53,13 @@ const TestComponent = ({ options, url, labels, largeInput }) => {
         const blob = new Blob([texAreaTwo], { type : 'plain/text' });
         saveAs(blob, 'LEAD.txt')
     }
+
     
   return (
     <div className='comp m-5'>
         <div className='m-5 '>
-            <div className='m-5 comp-input flex justify-between bg-slate-400 rounded-md'>
-                <h2>{labels.inputLabelOne}</h2>
+            <div className='m-5 comp-input flex justify-between bg-slate-300 rounded-md'>
+                <h2 className='subTitle'>{labels.inputLabelOne}</h2>
                 {
                     largeInput ? (
                         <textarea rows={3} className='w-full h-full' value={inputOne} onChange={(e) => setInputOne(e.target.value)} />
@@ -70,10 +78,11 @@ const TestComponent = ({ options, url, labels, largeInput }) => {
                 }
             </div>
 
-            <div className='m-5 flex flex-col justify-center w-64 h-4/6 bg-slate-400 comp-area rounded-md'>
+            <div className='m-5 flex flex-col justify-center w-64 h-4/6 bg-slate-300 comp-area rounded-md'>
                 <div className='flex justify-around mb-4'>
-                    <h2>{labels.inputLabelTwo}</h2>
-                    <h2>{labels.outputLabel}</h2>
+                    <h2 className='big-col subTitle'>{labels.inputLabelTwo}</h2>
+                    <div className='w-1/12'></div>
+                    <h2 className='big-col subTitle'>{labels.outputLabel}</h2>
                 </div>
 
                 <div className='flex'>
@@ -83,15 +92,17 @@ const TestComponent = ({ options, url, labels, largeInput }) => {
                             <button onClick={() => fileUploadAction()} className='bg-slate-200 z-40'>Upload</button>
                             <button onClick={() => setViewer(!viewer)} className='bg-slate-200 z-40'>Viewer</button>
                         </div>
-                        {
-                            viewer ? 
-                            <XMLViewer collapsible xml={texAreaOne} /> 
-                                :
-                            <textarea rows={15} className='w-full h-full' value={texAreaOne} onChange={(e) => setTexAreaOne(e.target.value)} />
-                        }
+                        <div className='w-full xml'>
+                            {
+                                viewer ? 
+                                <XMLViewer collapsible xml={texAreaOne} /> 
+                                    :
+                                <textarea rows={15} className='w-full h-full p-2' value={texAreaOne} onChange={(e) => setTexAreaOne(e.target.value)} />
+                            }
+                        </div>
                     </div>
-                    <div className='col relative  h-full'>
-                        <div className='absolute top-3 btn  h-full'>
+                    <div className='col relative  h-full flex justify-center'>
+                        <div className='absolute top-3 btn h-full'>
                             <button onClick={() => postReqest()} className='bg-slate-200 h-8 w-20 z-50'>Transform</button>
                         </div>
                     </div>
@@ -104,7 +115,7 @@ const TestComponent = ({ options, url, labels, largeInput }) => {
                             viewerTwo ? 
                             <XMLViewer collapsible xml={texAreaTwo} /> 
                                 :
-                            <textarea contentEditable={false} className='w-full h-full' value={texAreaTwo}  />
+                            <textarea contentEditable={false} className='w-full h-full p-2' value={texAreaTwo}  />
                         }
                     </div>    
                 </div>

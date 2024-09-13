@@ -5,11 +5,11 @@ import { xslLabels } from '@/constants/labels';
 
 const XSL = () => {
   return (
-    <div className='m-5 bg-slate-300 rounded-md'>
-      <h1 className='m-4 text-lg'>
+    <div className='m-5 bg-slate-400 rounded-md'>
+      <h1 className='m-4 title'>
         {xslLabels.pageTitle}
       </h1>
-      <TestComponent options={xsl} labels={xslLabels}  largeInput={false}/>
+      <TestComponent options={xsl} labels={xslLabels}  largeInput={false} baseUrl='http://localhost:62773' url='/csp/visualizer/service/xpath/'/>
     </div>
   )
 }

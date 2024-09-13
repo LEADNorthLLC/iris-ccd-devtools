@@ -2,6 +2,14 @@
     color: black;
 }
 
+.home {
+    height: 80vh;
+}
+
+textarea, input {
+    border-radius: .5em;
+}
+
 .comp {
     width: 80vw;
     height: 90vw;
@@ -35,6 +43,22 @@
 
 .big-col {
     width: 45%;
+}
+
+.xml {
+    height: 40vh;
+}
+
+.title {
+    font-size: 2rem;
+}
+
+.subTitle {
+    font-size: 1.5rem;
+}
+
+.custom-bg {
+    background-color: rgb(194, 219, 251);
 }
 
 button {

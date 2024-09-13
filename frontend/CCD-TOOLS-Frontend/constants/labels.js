@@ -1,21 +1,21 @@
 const transformLabels = {
     pageTitle: "CCDA to SDA Transforms Tester",
-    inputLabelOne: "Transform Location",
-    inputLabelTwo: "Transform",
+    inputLabelOne: "CCDA to SDA Transform",
+    inputLabelTwo: "Input Document",
     outputLabel: "Output"
 }
 
 const xpathLabels = {
     pageTitle: "XPath Evaluator",
-    inputLabelOne: "XPath Location",
-    inputLabelTwo: "XPath",
+    inputLabelOne: "XPath Expression",
+    inputLabelTwo: "Input Document",
     outputLabel: "Output"
 }
 
 const xslLabels = {
     pageTitle: "XSL Tempate Tester",
-    inputLabelOne: "XSL Location",
-    inputLabelTwo: "XSL",
+    inputLabelOne: "XSL Template to Test",
+    inputLabelTwo: "Input Document",
     outputLabel: "Output"
 }
 
