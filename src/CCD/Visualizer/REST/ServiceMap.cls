@@ -237,8 +237,10 @@ ClassMethod OnHandleCorsRequest(pURL As %String) As %Status
         
         #; Get the origin
         Set tOrigin=$Get(%request.CgiEnvs("HTTP_ORIGIN"))
-        set tRestrictCORS=$GET(^DQAT.RESTRICTCORS,0) 
-		set tAllowedOrigin=$GET(^DQAT.ALLOWEDORIGIN,"http://localhost:63772") 
+        set tRestrictCORS=0
+		set tAllowedOrigin="http://localhost:3000"
+		Set ^zCors="CORS called:HandleRequest"
+		Do %response.SetHeader("Access-Control-Allow-Origin","*")
 		if ((tAllowedOrigin=tOrigin) || (tRestrictCORS=0))
 		{       
 	        #; Allow requested origin
