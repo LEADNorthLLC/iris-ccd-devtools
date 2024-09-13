@@ -17,10 +17,14 @@ RUN chown ${ISC_PACKAGE_MGRUSER}:${ISC_PACKAGE_IRISGROUP} /opt/irisapp
 
 USER irisowner
 
-COPY  Installer.cls .
-COPY  src src
+COPY Installer.cls .
+
+COPY src src
+COPY misc/csp /usr/irissys/csp
 COPY irissession.sh /
-SHELL ["/irissession.sh"]
+SHELL ["/irissession.sh"] 
+
+
 
 RUN \
   do $SYSTEM.OBJ.Load("Installer.cls", "ck") \
@@ -43,6 +47,16 @@ RUN \
   set webProperties("AutheEnabled") = 32 \
   set sc = ##class(Security.Applications).Create(webName, .webProperties) \
   write sc \
+  write "Web application "_webName_" has been created!" \
+  write "Create web application ..." \
+  set webName = "/csp/ccdtools" \
+  set webProperties("Path") = "/usr/irissys/csp/out"\
+  set webProperties("DispatchClass") = "" \
+  set webProperties("NameSpace") = "IRISAPP" \
+  set webProperties("Enabled") = 1 \
+  set webProperties("AutheEnabled") = 32 \
+  set sc = ##class(Security.Applications).Create(webName, .webProperties) \
+  write sc \
   write "Web application "_webName_" has been created!" 
   #zn "IRISAPP" \
   #zpm "install swagger-ui" \
@@ -54,9 +68,13 @@ RUN \
 SHELL ["/bin/bash", "-c"]
 CMD [ "-l", "/usr/irissys/mgr/messages.log" ]
 
+
+
 FROM $IMAGE as final
 
 ADD --chown=${ISC_PACKAGE_MGRUSER}:${ISC_PACKAGE_IRISGROUP} https://github.com/grongierisc/iris-docker-multi-stage-script/releases/latest/download/copy-data.py /irisdev/app/copy-data.py
+
+
 
 RUN --mount=type=bind,source=/,target=/builder/root,from=builder \
     cp -f /builder/root/usr/irissys/iris.cpf /usr/irissys/iris.cpf && \
