@@ -8,7 +8,7 @@ ARG IMAGE=intersystemsdc/irishealth-community:preview
 #ARG IMAGE=intersystemsdc/iris-community:2020.1.0.215.0-zpm
 #ARG IMAGE=intersystemsdc/iris-community:2020.2.0.196.0-zpm
 #ARG IMAGE=intersystemsdc/iris-community
-FROM $IMAGE as builder
+FROM $IMAGE AS builder
 
 USER root
 
@@ -70,7 +70,7 @@ CMD [ "-l", "/usr/irissys/mgr/messages.log" ]
 
 
 
-FROM $IMAGE as final
+FROM $IMAGE AS final
 
 ADD --chown=${ISC_PACKAGE_MGRUSER}:${ISC_PACKAGE_IRISGROUP} https://github.com/grongierisc/iris-docker-multi-stage-script/releases/latest/download/copy-data.py /irisdev/app/copy-data.py
 

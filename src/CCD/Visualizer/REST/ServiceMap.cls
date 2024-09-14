@@ -26,7 +26,7 @@ XData UrlMap [ XMLNamespace = "http://www.intersystems.com/urlmap" ]
 ClassMethod GetXPathValue() As %Status
 {
 	Set tSC = $$$OK
-	Try {
+	
 		
 		If (%request.ContentType '= "multipart/form-data") {	
 			//If $$$TESTMODE W "Request header type not supported, change to 'multipart/form-data'"
@@ -93,12 +93,14 @@ ClassMethod GetXPathValue() As %Status
 			//$$$ThrowOnError(tResponse.XMLExportToStream(.tStream))
 		} 
 		Else {
-			do ..GetLocationValue(tFileStream,tXPath, .tValue)
+			do ..GetLocationValuesMultiple(tFileStream,tXPath, .tValue)
 
+			//format results into JSON
+			do ..FormatResultsToJSON(tValue, .tJsonString)
 			Set %response.ContentType="application/json"
 			Set tStream=##class(%Stream.GlobalCharacter).%New()	
-			
-			do tStream.Write(tValue)
+
+			do tStream.Write(tJsonString)
 			//Do he evaluation
 		}
 		Do tStream.OutputToDevice()
@@ -107,17 +109,7 @@ ClassMethod GetXPathValue() As %Status
 		//if $ISOBJECT(tFileStream) {		
 		//	Do tFileStream.Clear(1)
 		//}
-	} 
-	Catch Ex {
-		Set tSC = Ex.AsStatus()
-		set ^zException = Ex.Data
-		//If $$$TESTMODE zw tSC
-		Set %response.Status = ..#HTTP500INTERNALSERVERERROR
-		Set tSC = $$$OK
-		if $ISOBJECT(tFileStream) {
-			d tFileStream.%Delete() 
-		}
-	}
+	
 	Quit tSC
 }
 
@@ -344,5 +336,31 @@ ClassMethod GetLocationValuesMultiple(pStream As %Stream.Object, pLocation As %S
     // Rewind the stream
     Do pStream.Rewind()
 }
+ClassMethod FormatResultsToJSON(pResults As %ListOfDataTypes, Output pJsonString As %String)
+{
 
+
+    // Create a dynamic object for JSON
+    set jsonObject = ##class(%DynamicObject).%New()
+
+    // Create a dynamic array to store formatted results
+    set jsonArray = ##class(%DynamicArray).%New()
+
+    // Loop through the list and format each item into JSON
+    for i=1:1:pResults.Count() {
+        set value = pResults.GetAt(i).Value
+
+        // Create a temporary object to hold the value pair
+        set tempObj = ##class(%DynamicObject).%New()
+        set tempObj.value = value
+
+        // Add the object to the array
+        do jsonArray.%Push(tempObj)
+    }
+
+    // Convert the array to JSON string
+	set pJsonString = jsonArray.%ToJSON()
+  
+
+}
 }
