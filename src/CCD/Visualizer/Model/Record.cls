@@ -21,7 +21,7 @@ Property Response As %String(MAXLEN = 1024);
 /// This property is populated along with Error
 /// HL7 Content
 /// CCD XML Content
-Property CCDContentXML As %String(MAXLEN = 500);
+Property CCDContentXML As %Stream.Object;
 
 Property SDAContentXML As %Stream.Object;
 

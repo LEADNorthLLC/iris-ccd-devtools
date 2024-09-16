@@ -5,7 +5,7 @@ Class CCD.Visualizer.REST.ServiceMap Extends CCD.Visualizer.REST.Service.Base
 /** Change Log
 2024-01-20 - Chi Nguyen-Rettig: initial
 **/
-/// Require Cross-origin resource sharing handling.
+/// Enable Cross-origin resource sharing handling.
 Parameter HandleCorsRequest = 1;
 
 /// Use Session for REST Services
@@ -26,7 +26,7 @@ XData UrlMap [ XMLNamespace = "http://www.intersystems.com/urlmap" ]
 ClassMethod GetXPathValue() As %Status
 {
 	Set tSC = $$$OK
-	Try {
+	
 		
 		If (%request.ContentType '= "multipart/form-data") {	
 			//If $$$TESTMODE W "Request header type not supported, change to 'multipart/form-data'"
@@ -93,12 +93,14 @@ ClassMethod GetXPathValue() As %Status
 			//$$$ThrowOnError(tResponse.XMLExportToStream(.tStream))
 		} 
 		Else {
-			do ..GetLocationValue(tFileStream,tXPath, .tValue)
+			do ..GetLocationValuesMultiple(tFileStream,tXPath, .tValue)
 
+			//format results into JSON
+			do ..FormatResultsToJSON(tValue, .tJsonString)
 			Set %response.ContentType="application/json"
 			Set tStream=##class(%Stream.GlobalCharacter).%New()	
-			
-			do tStream.Write(tValue)
+
+			do tStream.Write(tJsonString)
 			//Do he evaluation
 		}
 		Do tStream.OutputToDevice()
@@ -107,17 +109,7 @@ ClassMethod GetXPathValue() As %Status
 		//if $ISOBJECT(tFileStream) {		
 		//	Do tFileStream.Clear(1)
 		//}
-	} 
-	Catch Ex {
-		Set tSC = Ex.AsStatus()
-		set ^zException = Ex.Data
-		//If $$$TESTMODE zw tSC
-		Set %response.Status = ..#HTTP500INTERNALSERVERERROR
-		Set tSC = $$$OK
-		if $ISOBJECT(tFileStream) {
-			d tFileStream.%Delete() 
-		}
-	}
+	
 	Quit tSC
 }
 
@@ -221,6 +213,78 @@ ClassMethod TransformCCD() As %Status
 		set ^zJStatus=tSC
 		
 	}
+	Quit tSC
+}
+
+/// API takes an input XSL template and XML input document. Transforms the document using the XSL template 
+/// and returns the result. The XSL template is combined with the identity template in order to show the 
+/// results of adding the XSL template and keeping everything else the same
+ClassMethod TestXSL() As %Status
+{
+	Set tSC = $$$OK
+	
+	If (%request.ContentType '= "multipart/form-data") {	
+		//If $$$TESTMODE W "Request header type not supported, change to 'multipart/form-data'"
+		Set %response.Status = ..#HTTP406NOTACCEPTABLE
+		QUIT
+	}
+		
+	// The Data should contain 2 parts, the first is JSON metadata, the second is the file data.	
+	#dim tFileStream As HS.SDA3.QuickStream
+	if ($D(%request.Data)) 
+	{
+		Set name=""
+		set name = %request.Next(name)
+			
+		if (name = "") $$$ThrowStatus($$$ERROR($$$GeneralError,"Unable to identify Data Sections."))
+			
+		#; Pull XSL Template from first part of API call
+		Set tXSLStream = %request.Get(name)
+			
+		#; Pull XML source from second part of API call
+		Set name = %request.Next(name) 
+		if (name = "") $$$ThrowStatus($$$ERROR($$$GeneralError,"Unable to identify Data Sections."))
+		Set tSourceDataStream = %request.Get(name)
+			
+		if ('$ISOBJECT(tSourceDataStream))
+		{
+			set tFileStream = ##class(HS.SDA3.QuickStream).%New()
+			$$$ThrowOnError(tFileStream.Write(tSourceDataStream))
+			do tFileStream.Rewind()
+		}
+		else
+		{
+			set tFileStream = ##class(HS.SDA3.QuickStream).%New()
+			do tFileStream.CopyFrom(tSourceDataStream)
+			do tFileStream.Rewind()
+		}
+	}
+	else
+	{
+		If $$$TESTMODE W "Request header type not supported, change to 'multipart/form-data'"
+		Set %response.Status = ..#HTTP406NOTACCEPTABLE
+		QUIT
+	}
+
+	#; Setup up template in a stylesheet
+	Set tStyleSheet = ##class(CCD.Visualizer.REST.Transform).AddTemplate(tXSLStream)
+		
+	#; Load the XSL template into a compiled StyleSheet
+	Set tStatus = ##class(%XML.XSLT.CompiledStyleSheet).CreateFromStream(tStyleSheet, .tCompiledStyleSheet)
+	$$$ThrowOnError(tStatus)
+	Set tStatus = ##class(%XML.XSLT.Transformer).TransformStreamWithCompiledXSL(tSourceDataStream, tCompiledStyleSheet, .tOutputStream,, .tParams, ##class(HS.Util.XSLTHelper).%New())
+	$$$ThrowOnError(tStatus)
+
+	Set tResponse = ##class(CCD.Visualizer.Model.Record).%New()
+	set tResponse.CCDContentXML = tOutputStream
+
+	#;Write response
+	Set %response.Status = ..#HTTP200STATUSOK
+	Set %response.ContentType="application/xml"
+	$$$ThrowOnError(tResponse.XMLExportToStream(.tStream))
+
+	Do tStream.OutputToDevice()
+
 	Quit tSC
 }
 
@@ -348,5 +412,31 @@ ClassMethod GetLocationValuesMultiple(pStream As %Stream.Object, pLocation As %S
     // Rewind the stream
     Do pStream.Rewind()
 }
+ClassMethod FormatResultsToJSON(pResults As %ListOfDataTypes, Output pJsonString As %String)
+{
 
+
+    // Create a dynamic object for JSON
+    set jsonObject = ##class(%DynamicObject).%New()
+
+    // Create a dynamic array to store formatted results
+    set jsonArray = ##class(%DynamicArray).%New()
+
+    // Loop through the list and format each item into JSON
+    for i=1:1:pResults.Count() {
+        set value = pResults.GetAt(i).Value
+
+        // Create a temporary object to hold the value pair
+        set tempObj = ##class(%DynamicObject).%New()
+        set tempObj.value = value
+
+        // Add the object to the array
+        do jsonArray.%Push(tempObj)
+    }
+
+    // Convert the array to JSON string
+	set pJsonString = jsonArray.%ToJSON()
+  
+
+}
 }

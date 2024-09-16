@@ -6,7 +6,7 @@ XData setup
 <Manifest>
   <Default Name="SourceDir" Value="#{$system.Process.CurrentDirectory()}src"/>
 
-  <Namespace Name="IRISAPP" Code="IRISAPP" Data="IRISAPP" Create="yes" Ensemble="no">
+  <Namespace Name="IRISAPP" Code="IRISAPP" Data="IRISAPP" Create="yes" Ensemble="1">
 
     <Configuration>
       <Database Name="IRISAPP" Dir="/opt/irisapp/data" Create="yes"/>
