@@ -10,6 +10,7 @@ zn "%SYS"
 do ##class(SYS.Container).QuiesceForBundling()
 Do ##class(Security.Users).UnExpireUserPasswords("*")
 s props("Database")="HSLIB",sc=##Class(Config.MapPackages).Create("%ALL","HS",.props)
+do ##class(%EnsembleMgr).EnableNamespace("IRISAPP")
 halt
 EOF
 

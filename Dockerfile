@@ -1,4 +1,4 @@
-ARG IMAGE=intersystemsdc/irishealth-community:preview
+ARG IMAGE=intersystemsdc/irishealth-community
 #ARG IMAGE=intersystems/iris:2019.1.0S.111.0
 #ARG IMAGE=store/intersystems/irishealth:2019.3.0.308.0-community
 #ARG IMAGE=store/intersystems/iris-community:2019.3.0.309.0
@@ -61,7 +61,7 @@ RUN \
   #zn "IRISAPP" \
   #zpm "install swagger-ui" \
   #zpm "install webterminal"
-
+  
 
 
   # bringing the standard shell back
