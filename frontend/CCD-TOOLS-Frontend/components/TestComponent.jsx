@@ -58,8 +58,8 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
   return (
     <div className='comp m-5'>
         <div className='m-5 '>
-            <div className='m-5 comp-input flex justify-between bg-slate-300 rounded-md'>
-                <h2 className='subTitle'>{labels.inputLabelOne}</h2>
+            <div className='m-5 comp-input flex justify-between bg-slate-300 rounded-md border-2 border-slate-500 shadow-sm'>
+                <h2 className='subTitle labelOne'>{labels.inputLabelOne}</h2>
                 {
                     largeInput ? (
                         <textarea rows={3} className='w-full h-full' value={inputOne} onChange={(e) => setInputOne(e.target.value)} />
@@ -78,7 +78,7 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
                 }
             </div>
 
-            <div className='m-5 flex flex-col justify-center w-64 h-4/6 bg-slate-300 comp-area rounded-md'>
+            <div className='m-5 flex flex-col justify-center w-64 h-4/6 bg-slate-300 comp-area rounded-md border-2 border-slate-500 shadow-sm'>
                 <div className='flex justify-around mb-4'>
                     <h2 className='big-col subTitle'>{labels.inputLabelTwo}</h2>
                     <div className='w-1/12'></div>
@@ -101,9 +101,9 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
                             }
                         </div>
                     </div>
-                    <div className='col relative  h-full flex justify-center'>
+                    <div className='col relative  h-full flex justify-center w-10'>
                         <div className='absolute top-3 btn h-full'>
-                            <button onClick={() => postReqest()} className='bg-slate-200 h-8 w-20 z-50'>Transform</button>
+                            <button onClick={() => postReqest()} className='bg-slate-200 h-8 w-20 z-50 transformBtn'>Transform</button>
                         </div>
                     </div>
                     <div className='big-col relative  h-full'>

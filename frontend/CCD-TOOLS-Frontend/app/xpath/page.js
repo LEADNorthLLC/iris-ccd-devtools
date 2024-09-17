@@ -5,7 +5,7 @@ import { xpathLabels } from '@/constants/labels'
 
 const XPath = () => {
   return (
-    <div className='m-5 bg-slate-400 rounded-md'>
+    <div className='m-5 customGrey rounded-md border-2 border-slate-500 shadow-sm'>
       <h1 className='m-4 title'>
       {xpathLabels.pageTitle}
       </h1>
