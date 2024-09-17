@@ -8,7 +8,7 @@ export default function Home() {
   return (
     <div className="w-full home m-5 bg-slate-300 rounded-md border-2 border-slate-400 shadow-sm">
       <h1 className='m-6 p-6 title'>
-        Select an App to Begin
+        Home
       </h1>
         <div class="flex justify-center items-start w-full h-full">
         {

@@ -88,3 +88,7 @@ button:hover {
 button:active {
     background-color: rgb(171, 192, 219);
 }
+
+.customFont {
+    font-size: 1.4rem;
+}

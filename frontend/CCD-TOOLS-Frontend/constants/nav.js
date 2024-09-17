@@ -9,7 +9,8 @@ export const links = [
     },
     {
         to: '/transform',
-        display: 'CCDA to SDA Transorms'
+        display: 'CCDA to SDA Transorms',
+        desc: 'Some description or other'
     },
     {
         to: '/xsl',

@@ -9,7 +9,7 @@ import './index.css'
 
 const ex = "<note><to>Tove</to><from>Jani</from><heading>Reminder</heading><body>Don't forget me this weekend!</body></note>"
 
-const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://localhost:3000/" }) => {
+const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://localhost:3000/", type }) => {
     const [inputOne, setInputOne] = useState('')
     const [texAreaOne, setTexAreaOne] = useState('')
     const [texAreaTwo, setTexAreaTwo] = useState('')
@@ -18,26 +18,69 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
     const inputRef = useRef(null);
 
     const postReqest = async () => {
-
-        const axiosInstance = axios.create({
-            'Access-Control-Allow-Origin': '*',
-            baseURL: baseUrl,
-            timeout: 1000,
-          });
+        const myHeaders = new Headers();
+        myHeaders.append("Content-Type", "multipart/form-data");
+        myHeaders.append("Authorization", "Basic X3N5c3RlbTpTWVM=");
+        myHeaders.append("Cookie", "CSPSESSIONID-SP-62773-UP-csp-visualizer-service-=003000010000AafU38vb8LR0lx8vqTAgRttsgaGtcGlDgxj9W_; CSPWSERVERID=hzYBi3LG");
         
-        let data1 = {
-          "TransformName": inputOne
-        }
-        let data2 = texAreaOne
-      
-        let response = await axiosInstance.post(url, {
-          'CONTENT1': data1,
-          'CONTENT2': data2
-        })
-      
-        console.log(response)
-        setTexAreaTwo(response)
+        const formdata = new FormData();
+
+        let data = inputOne
+
+        if (labels.pageTitle === "CCDA to SDA Transforms Tester") {
+            data = {"TransformName": "/hl7:ClinicalDocument/hl7:recordTarget/hl7:patientRole/hl7:id[1]/@root"}
+        } else if (labels.pageTitle === "XPath Evaluator") {
+            data = {"XPathForEval": "/hl7:ClinicalDocument/hl7:recordTarget/hl7:patientRole/hl7:id[1]/@root"}
+        } 
+        // else if (labels.pageTitle === "XSL Tempate Tester") {}
+        
+        formdata.append("CONTENT1", data);
+        formdata.append("CONTENT2", texAreaOne)
+        
+        const requestOptions = {
+          method: "POST",
+          headers: myHeaders,
+          body: formdata,
+          redirect: "follow"
+        };
+        
+        fetch(baseUrl + url, requestOptions)
+          .then((response) => response.text())
+          .then((result) => {
+            setTexAreaTwo(result)
+          })
+        //   .catch((error) => console.error(error));
+
+        // setTexAreaTwo(texAreaOne)
+
     }
+    // const postReqest = async () => {
+
+    //     const axiosInstance = axios.create({
+    //         'Access-Control-Allow-Origin': '*',
+    //         baseURL: baseUrl,
+    //         timeout: 1000,
+    //       });
+        
+    //     let data1 = {
+    //       "TransformName": inputOne
+    //     }
+    //     let data2 = texAreaOne
+
+    //     const bodyFormData = new FormData();
+      
+    //     let response = await axiosInstance.post(url, {
+    //       'CONTENT1': data1,
+    //       'CONTENT2': data2
+    //     }, {
+    //         headers: {
+    //           'Content-Type': 'multipart/form-data'
+    //         }
+    //       }
+    //     )
+    //     console.log(response)
+    //     setTexAreaTwo(response)
+    // }
 
     const fileUploadAction = () => {
         inputRef.current.click()
@@ -62,7 +105,10 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
                 <h2 className='subTitle labelOne'>{labels.inputLabelOne}</h2>
                 {
                     largeInput ? (
-                        <textarea rows={3} className='w-full h-full' value={inputOne} onChange={(e) => setInputOne(e.target.value)} />
+                        <>
+                        <textarea rows={5} className='w-full h-full' defaultValue={inputOne} onChange={(e) => setInputOne(e.target.value)} />
+                        <p>Add drop down here</p>
+                        </>
                     ) : (
                         <>
                             <input className='w-4/5 h-8' type="text" name="option" list="options" onChange={(e) => setInputOne(e.target.value)} />
@@ -97,13 +143,13 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
                                 viewer ? 
                                 <XMLViewer collapsible xml={texAreaOne} /> 
                                     :
-                                <textarea rows={15} className='w-full h-full p-2' value={texAreaOne} onChange={(e) => setTexAreaOne(e.target.value)} />
+                                <textarea rows={15} className='w-full h-full p-2' defaultValue={texAreaOne} onChange={(e) => setTexAreaOne(e.target.value)} />
                             }
                         </div>
                     </div>
                     <div className='col relative  h-full flex justify-center w-10'>
                         <div className='absolute top-3 btn h-full'>
-                            <button onClick={() => postReqest()} className='bg-slate-200 h-8 w-20 z-50 transformBtn'>Transform</button>
+                            <button onClick={() => postReqest()} className='bg-slate-200 h-8 w-20 z-50 transformBtn'>Submit</button>
                         </div>
                     </div>
                     <div className='big-col relative  h-full'>
@@ -115,7 +161,7 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
                             viewerTwo ? 
                             <XMLViewer collapsible xml={texAreaTwo} /> 
                                 :
-                            <textarea contentEditable={false} className='w-full h-full p-2' value={texAreaTwo}  />
+                            <textarea contentEditable={false} className='w-full h-full p-2' defaultValue={texAreaTwo}  />
                         }
                     </div>    
                 </div>
