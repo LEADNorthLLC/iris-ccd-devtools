@@ -144,7 +144,6 @@ ClassMethod TransformCCD() As %Status
 			Set stream = %request.Get(name)
 
 			set ^zStream = stream
-			set ^zStreamContent = stream.Read()
 			
 			Set tRequest = ##class(CCD.Visualizer.Model.Record).%New()
     		$$$THROWONERROR(tSC,tRequest.%JSONImport(stream))
