@@ -12,3 +12,10 @@ services:
       - 63773
     volumes:
       - ./:/irisdev/app
+  react:
+    build:
+      context: ./frontend/CCD-TOOLS-Frontend
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+        - 4000:3000

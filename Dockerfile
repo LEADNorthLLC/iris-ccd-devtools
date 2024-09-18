@@ -54,7 +54,7 @@ RUN \
   set webProperties("DispatchClass") = "" \
   set webProperties("NameSpace") = "IRISAPP" \
   set webProperties("Enabled") = 1 \
-  set webProperties("AutheEnabled") = 32 \
+  set webProperties("AutheEnabled") = 6 \
   set sc = ##class(Security.Applications).Create(webName, .webProperties) \
   write sc \
   write "Web application "_webName_" has been created!" 

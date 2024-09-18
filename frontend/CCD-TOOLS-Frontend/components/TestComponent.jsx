@@ -38,14 +38,16 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
         if (labels.pageTitle === "CCDA to SDA Transforms Tester") {
             data = `{"TransformName": "${inputOne}"}`
         } else if (labels.pageTitle === "XPath Evaluator") {
-            data = `{"XPathForEval": "${inputOne}}"`
-            console.log(data)
+            data = `{"XPathForEval": "${inputOne}"}`
         } 
         // else if (labels.pageTitle === "XSL Tempate Tester") {}
         
         formdata.append("CONTENT1", data);
         formdata.append("CONTENT2", texAreaOne)
         
+        console.log("CONTENT1", data) 
+        console.log("CONTENT2", texAreaOne) 
+
         const requestOptions = {
           method: "POST",
           headers: myHeaders,

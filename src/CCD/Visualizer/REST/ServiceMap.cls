@@ -120,8 +120,10 @@ ClassMethod TransformCCD() As %Status
 	Do %response.SetHeader("Access-Control-Allow-Origin","*")
 
 	
+	set ^zMessage1 = "in"
 	try {
 		If (%request.ContentType '= "multipart/form-data") {	
+			set ^zMessage2 = "Not multipart"
 			//If $$$TESTMODE W "Request header type not supported, change to 'multipart/form-data'"
 			Set %response.Status = ..#HTTP406NOTACCEPTABLE
 			QUIT
@@ -129,15 +131,24 @@ ClassMethod TransformCCD() As %Status
 		
 		// The Data should contain 2 parts, the first is JSON metadata, the second is the file data.
 		// If we have MIME Data, then this is coming from Ensemble.  If we have Data then it is coming over from Angular / JQuery.
+		Set name=""
+		set name = %request.Next(name)
+		set ^zName = name
+		set ^zContent = %request.Content
+
 		
 		#dim tFileStream As HS.SDA3.QuickStream
 		if ($D(%request.Data)) 
 		{
+			set ^zMessage = "test message"
 			Set name=""
 			set name = %request.Next(name)
 			
 			if (name = "") $$$ThrowStatus($$$ERROR($$$GeneralError,"Unable to identify Data Sections."))
 			Set stream = %request.Get(name)
+
+			set ^zStream = stream
+			set ^zStreamContent = stream.Read()
 			
 			Set tRequest = ##class(CCD.Visualizer.Model.Record).%New()
     		$$$THROWONERROR(tSC,tRequest.%JSONImport(stream))
