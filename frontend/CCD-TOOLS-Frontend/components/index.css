@@ -12,7 +12,7 @@ textarea, input {
 
 .comp {
     width: 80vw;
-    height: 90vw;
+    height: fit-content;
     /* background-color: brown; */
 }
 
@@ -38,15 +38,21 @@ textarea, input {
 }
 
 .col {
-    width: 8.8%;
+    width: 12%;
 }
 
 .big-col {
     width: 45%;
 }
 
-.xml {
+.xml1 {
     height: 40vh;
+    /* overflow-y: scroll; */
+}
+
+.xml2 {
+    height: 40vh;
+    overflow-y: scroll;
 }
 
 .title {
@@ -70,7 +76,7 @@ textarea, input {
 }
 
 .transformBtn {
-    width: 8rem;
+    width: 6rem;
 }
 
 button {

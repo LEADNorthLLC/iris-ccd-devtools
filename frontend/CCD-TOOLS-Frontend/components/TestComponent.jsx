@@ -5,6 +5,8 @@ import axios from "axios";
 import { useState, useRef } from "react";
 import { saveAs } from 'file-saver';
 import XMLViewer from 'react-xml-viewer'
+import Dropdown from 'react-bootstrap/Dropdown';
+import DropdownButton from 'react-bootstrap/DropdownButton';
 import './index.css'
 
 const ex = "<note><to>Tove</to><from>Jani</from><heading>Reminder</heading><body>Don't forget me this weekend!</body></note>"
@@ -18,6 +20,12 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
     const inputRef = useRef(null);
 
     const postReqest = async () => {
+
+        if (inputOne === '' || texAreaOne === '') {
+            setTexAreaTwo("Please make sure both inputs are filled before clicking submit")
+            return
+        }
+        
         const myHeaders = new Headers();
         myHeaders.append("Content-Type", "multipart/form-data");
         myHeaders.append("Authorization", "Basic X3N5c3RlbTpTWVM=");
@@ -28,9 +36,10 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
         let data = inputOne
 
         if (labels.pageTitle === "CCDA to SDA Transforms Tester") {
-            data = {"TransformName": "/hl7:ClinicalDocument/hl7:recordTarget/hl7:patientRole/hl7:id[1]/@root"}
+            data = `{"TransformName": "${inputOne}"}`
         } else if (labels.pageTitle === "XPath Evaluator") {
-            data = {"XPathForEval": "/hl7:ClinicalDocument/hl7:recordTarget/hl7:patientRole/hl7:id[1]/@root"}
+            data = `{"XPathForEval": "${inputOne}}"`
+            console.log(data)
         } 
         // else if (labels.pageTitle === "XSL Tempate Tester") {}
         
@@ -49,38 +58,8 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
           .then((result) => {
             setTexAreaTwo(result)
           })
-        //   .catch((error) => console.error(error));
-
-        // setTexAreaTwo(texAreaOne)
-
+          .catch((error) => console.error(error));
     }
-    // const postReqest = async () => {
-
-    //     const axiosInstance = axios.create({
-    //         'Access-Control-Allow-Origin': '*',
-    //         baseURL: baseUrl,
-    //         timeout: 1000,
-    //       });
-        
-    //     let data1 = {
-    //       "TransformName": inputOne
-    //     }
-    //     let data2 = texAreaOne
-
-    //     const bodyFormData = new FormData();
-      
-    //     let response = await axiosInstance.post(url, {
-    //       'CONTENT1': data1,
-    //       'CONTENT2': data2
-    //     }, {
-    //         headers: {
-    //           'Content-Type': 'multipart/form-data'
-    //         }
-    //       }
-    //     )
-    //     console.log(response)
-    //     setTexAreaTwo(response)
-    // }
 
     const fileUploadAction = () => {
         inputRef.current.click()
@@ -106,12 +85,16 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
                 {
                     largeInput ? (
                         <>
-                        <textarea rows={5} className='w-full h-full' defaultValue={inputOne} onChange={(e) => setInputOne(e.target.value)} />
-                        <p>Add drop down here</p>
+                        <textarea rows={5} className='w-full h-full' placeholder={labels.exInputLabelOne} defaultValue={inputOne} onChange={(e) => setInputOne(e.target.value)} />
+                        {/* <DropdownButton id="dropdown-basic-button" title="Dropdown button">
+                            <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
+                            <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
+                            <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
+                        </DropdownButton> */}
                         </>
                     ) : (
                         <>
-                            <input className='w-4/5 h-8' type="text" name="option" list="options" onChange={(e) => setInputOne(e.target.value)} />
+                            <input className='w-4/5 h-8' type="text" name="option" list="options" placeholder={labels.exInputLabelOne} onChange={(e) => setInputOne(e.target.value)} />
                             <datalist id="options">
                                 {
                                     options && options.map((item) => (
@@ -124,44 +107,53 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
                 }
             </div>
 
-            <div className='m-5 flex flex-col justify-center w-64 h-4/6 bg-slate-300 comp-area rounded-md border-2 border-slate-500 shadow-sm'>
+            <div className='m-5 flex flex-col justify-center w-64  bg-slate-300 comp-area rounded-md border-2 border-slate-500 shadow-sm'>
                 <div className='flex justify-around mb-4'>
-                    <h2 className='big-col subTitle'>{labels.inputLabelTwo}</h2>
-                    <div className='w-1/12'></div>
-                    <h2 className='big-col subTitle'>{labels.outputLabel}</h2>
-                </div>
-
-                <div className='flex'>
-                    <div className='big-col relative h-full'>
-                        <div className='absolute right-3 top-3  h-full'>
+                    <div className='flex justify-between w-full'>
+                        <h2 className='big-col subTitle'>{labels.inputLabelTwo}</h2>
+                        <div className='flex'>
                             <input type='file' hidden ref={inputRef} onChange={(e) => handleFile(e.target.files[0])} className='bg-slate-600 z-40' />
                             <button onClick={() => fileUploadAction()} className='bg-slate-200 z-40'>Upload</button>
                             <button onClick={() => setViewer(!viewer)} className='bg-slate-200 z-40'>Viewer</button>
                         </div>
-                        <div className='w-full xml'>
-                            {
-                                viewer ? 
-                                <XMLViewer collapsible xml={texAreaOne} /> 
-                                    :
-                                <textarea rows={15} className='w-full h-full p-2' defaultValue={texAreaOne} onChange={(e) => setTexAreaOne(e.target.value)} />
-                            }
-                        </div>
                     </div>
-                    <div className='col relative  h-full flex justify-center w-10'>
-                        <div className='absolute top-3 btn h-full'>
-                            <button onClick={() => postReqest()} className='bg-slate-200 h-8 w-20 z-50 transformBtn'>Submit</button>
-                        </div>
-                    </div>
-                    <div className='big-col relative  h-full'>
-                        <div className='absolute right-3 top-3  h-full'>
+                    <div className='w-3/12'></div>
+                    <div className='flex justify-between w-full'>
+                        <h2 className='big-col subTitle'>{labels.outputLabel}</h2>
+                        <div className='flex'>
                             <button onClick={() => download()} className='bg-slate-200 z-40'>Download</button>
                             <button onClick={() => setViewerTwo(!viewerTwo)} className='bg-slate-200 z-40'>Viewer</button>
                         </div>
+                    </div>
+                </div>
+
+                <div className='flex'>
+                    <div className='big-col relative h-full'>
+                        <div className='w-full xml1'>
+                            {
+                                viewer ? 
+                                <div className='w-full xml2'>   
+                                    <XMLViewer collapsible xml={texAreaOne} /> 
+                                </div>
+                                    :
+                                <textarea rows={15} className='w-full h-full p-2' placeholder={labels.exInputLabelTwo} defaultValue={texAreaOne} onChange={(e) => setTexAreaOne(e.target.value)} />
+                            }
+                        </div>
+                    </div>
+                    <div className='col relative h-full flex justify-start '>
+                        <div className='btn h-full'>
+                            <button onClick={() => postReqest()} className='bg-slate-200 h-8 z-50 transformBtn'>Submit</button>
+                        </div>
+                    </div>
+                    <div className='big-col relative xml1 h-full'>
+
                         {
                             viewerTwo ? 
-                            <XMLViewer collapsible xml={texAreaTwo} /> 
+                            <div className='w-full xml2'>
+                                <XMLViewer collapsible xml={texAreaTwo} /> 
+                            </div>
                                 :
-                            <textarea contentEditable={false} className='w-full h-full p-2' defaultValue={texAreaTwo}  />
+                            <textarea contentEditable={false} className='w-full h-full p-2' placeholder={labels.exOutputLabel} defaultValue={texAreaTwo}  />
                         }
                     </div>    
                 </div>
