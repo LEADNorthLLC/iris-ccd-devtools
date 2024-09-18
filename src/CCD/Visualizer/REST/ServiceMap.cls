@@ -131,11 +131,7 @@ ClassMethod TransformCCD() As %Status
 		
 		// The Data should contain 2 parts, the first is JSON metadata, the second is the file data.
 		// If we have MIME Data, then this is coming from Ensemble.  If we have Data then it is coming over from Angular / JQuery.
-		Set name=""
-		set name = %request.Next(name)
-		set ^zName = name
-		set ^zContent = %request.Content
-
+		
 		
 		#dim tFileStream As HS.SDA3.QuickStream
 		if ($D(%request.Data)) 

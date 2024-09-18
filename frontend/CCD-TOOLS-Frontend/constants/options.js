@@ -2,147 +2,27 @@ const transforms = [
     {
     "ID": 10116,
     "DocumentType": "CCDA2",
-    desc: "Sending Facility",
-    value: "/ClinicalDocument/informant/assignedEntity/representedOrganization"
+    desc: "CCDA to SDA",
+    value: "SDA/CCDA-to-SDA.xsl"
     },
     {
     "ID": 10117,
     "DocumentType": "CCDA2",
-    desc: "Sending Facility",
-    value: "/ClinicalDocument/author/assignedEntity/representedOrganization"
+    desc: "CCDAv21 to SDA",
+    value: "SDA/CCDAv21-to-SDA.xsl"
     },
     {
     "ID": 10118,
     "DocumentType": "CCDA2",
-    desc: "Patient Addresses",
-    value: "/ClinicalDocument/recordTarget/patientRole/addr/streetAddressLine"
+    desc: "CCDA to SDA",
+    value: "SDA/CDA-toSDA.xsl"
     },
     {
     "ID": 10119,
     "DocumentType": "CCDA2",
-    desc: "Patient Addresses",
-    value: "/ClinicalDocument/recordTarget/patientRole/addr/city"
+    desc: "CCDA to SDA",
+    value: "SDA/AU-CDA-to-SDA.xsl"
     },
-    {
-    "ID": 10120,
-    "DocumentType": "CCDA2",
-    desc: "Patient Addresses",
-    value: "/ClinicalDocument/recordTarget/patientRole/addr/state"
-    },
-    {
-    "ID": 10121,
-    "DocumentType": "CCDA2",
-    desc: "Patient Addresses",
-    value: "/ClinicalDocument/recordTarget/patientRole/addr/postalCode"
-    },
-    {
-    "ID": 10122,
-    "DocumentType": "CCDA2",
-    desc: "Patient Addresses",
-    value: "/ClinicalDocument/recordTarget/patientRole/addr/country"
-    },
-    {
-    "ID": 10123,
-    "DocumentType": "CCDA2",
-    desc: "Patient Addresses",
-    value: "/ClinicalDocument/recordTarget/patientRole/addr/county"
-    },
-    {
-    "ID": 10124,
-    "DocumentType": "CCDA2",
-    desc: "Advance Directive Author",
-    value: "/ClinicalDocument/component/structuredBody/component/section[templateId/@root='2.16.840.1.113883.10.20.22.2.21.1']/entry/observation/author/assignedAuthor/code/@displayName"
-    },
-    {
-    "ID": 10125,
-    "DocumentType": "CCDA2",
-    desc: "Advance Directive Information Source",
-    value: "/ClinicalDocument/component/structuredBody/component/section[templateId/@root='2.16.840.1.113883.10.20.22.2.21.1']/entry/observation/informant/representedOrganization/id/@extension"
-    },
-    {
-    "ID": 10126,
-    "DocumentType": "CCDA2",
-    desc: "Advance Directive Information Source",
-    value: "/ClinicalDocument/component/structuredBody/component/section[templateId/@root='2.16.840.1.113883.10.20.22.2.21.1']/entry/observation/informant/representedOrganization/name"
-    },
-    {
-    "ID": 10127,
-    "DocumentType": "CCDA2",
-    desc: "Advance Directive Information Source",
-    value: "/ClinicalDocument/component/structuredBody/component/section[templateId/@root='2.16.840.1.113883.10.20.22.2.21.1']/entry/observation/informant/representedOrganization/addr/streetAddressLine"
-    },
-    {
-    "ID": 10128,
-    "DocumentType": "CCDA2",
-    desc: "Advance Directive Information Source",
-    value: "/ClinicalDocument/component/structuredBody/component/section[templateId/@root='2.16.840.1.113883.10.20.22.2.21.1']/entry/observation/informant/representedOrganization/addr/city"
-    },
-    {
-    "ID": 10129,
-    "DocumentType": "CCDA2",
-    desc: "Advance Directive Information Source",
-    value: "/ClinicalDocument/component/structuredBody/component/section[templateId/@root='2.16.840.1.113883.10.20.22.2.21.1']/entry/observation/informant/representedOrganization/addr/state"
-    },
-    {
-    "ID": 10130,
-    "DocumentType": "CCDA2",
-    desc: "Advance Directive Information Source",
-    value: "/ClinicalDocument/component/structuredBody/component/section[templateId/@root='2.16.840.1.113883.10.20.22.2.21.1']/entry/observation/informant/representedOrganization/addr/postalCode"
-    },
-    {
-    "ID": 10131,
-    "DocumentType": "CCDA2",
-    desc: "Advance Directive Information Source",
-    value: "/ClinicalDocument/component/structuredBody/component/section[templateId/@root='2.16.840.1.113883.10.20.22.2.21.1']/entry/observation/informant/representedOrganization/addr/country"
-    },
-    {
-    "ID": 10132,
-    "DocumentType": "CCDA2",
-    desc: "Advance Directive Information Source",
-    value: "/ClinicalDocument/component/structuredBody/component/section[templateId/@root='2.16.840.1.113883.10.20.22.2.21.1']/entry/observation/informant/representedOrganization/addr/county"
-    },
-    {
-    "ID": 10133,
-    "DocumentType": "CCDA2",
-    desc: "Advance Directive Information Source",
-    value: "/ClinicalDocument/component/structuredBody/component/section[templateId/@root='2.16.840.1.113883.10.20.22.2.21.1']/entry/observation/informant/representedOrganization/telecom[@use='HP' or @use='HV' or not(@use)]"
-    },
-    {
-    "ID": 10134,
-    "DocumentType": "CCDA2",
-    desc: "Advance Directive Information Source",
-    value: "/ClinicalDocument/component/structuredBody/component/section[templateId/@root='2.16.840.1.113883.10.20.22.2.21.1']/entry/observation/informant/representedOrganization/telecom[@use='WP']"
-    },
-    {
-    "ID": 10135,
-    "DocumentType": "CCDA2",
-    desc: "Advance Directive Information Source",
-    value: "/ClinicalDocument/component/structuredBody/component/section[templateId/@root='2.16.840.1.113883.10.20.22.2.21.1']/entry/observation/informant/representedOrganization/telecom[@use='MC']"
-    },
-    {
-    "ID": 10136,
-    "DocumentType": "CCDA2",
-    desc: "Advance Directive Information Source",
-    value: "/ClinicalDocument/component/structuredBody/component/section[templateId/@root='2.16.840.1.113883.10.20.22.2.21.1']/entry/observation/informant/representedOrganization/telecom[contains(@value,'mailto:')]"
-    },
-    {
-    "ID": 10137,
-    "DocumentType": "CCDA2",
-    desc: "Advance Directive Author Time",
-    value: "/ClinicalDocument/component/structuredBody/component/section[templateId/@root='2.16.840.1.113883.10.20.22.2.21.1']/entry/observation/author/time/@value"
-    },
-    {
-    "ID": 10138,
-    "DocumentType": "CCDA2",
-    desc: "Advance Directive Id",
-    value: "/ClinicalDocument/component/structuredBody/component/section[templateId/@root='2.16.840.1.113883.10.20.22.2.21.1']/entry/observation/id"
-    },
-    {
-    "ID": 10141,
-    "DocumentType": "CCDA2",
-    desc: "Advance Directive Effective Date - Start",
-    value: "/ClinicalDocument/component/structuredBody/component/section[templateId/@root='2.16.840.1.113883.10.20.22.2.21.1']/entry/observation/effectiveTime/low/@value"
-    }
     ]
 
 const xpaths = [
