@@ -22,7 +22,7 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
 
     const postmanRequest = () => {
         const myHeaders = new Headers();
-        myHeaders.append("Content-Type", "multipart/form-data");
+        //myHeaders.append("Content-Type", "multipart/form-data");
         myHeaders.append("Authorization", "Basic X3N5c3RlbTpTWVM=");
         myHeaders.append("Cookie", "CSPSESSIONID-SP-62773-UP-csp-visualizer-service-=000000010000AafU38vb8LTDG3cw5$w$vXTqW3Kx57F$ca17Ys; CSPWSERVERID=hzYnqEFD");
 
@@ -51,7 +51,7 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
         }
         
         const myHeaders = new Headers();
-        myHeaders.append("Content-Type", "multipart/form-data");
+        //myHeaders.append("Content-Type", "multipart/form-data");
         myHeaders.append("Authorization", "Basic X3N5c3RlbTpTWVM=");
         myHeaders.append("Cookie", "CSPSESSIONID-SP-62773-UP-csp-visualizer-service-=003000010000AafU38vb8LR0lx8vqTAgRttsgaGtcGlDgxj9W_; CSPWSERVERID=hzYBi3LG");
         
