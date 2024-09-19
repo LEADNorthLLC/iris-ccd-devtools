@@ -44,10 +44,6 @@
       CookiePath="/csp/visualizer/service"
     />
 
-    <Invoke Class="Ens.Director" Method="SetAutoStart">
-         <Arg>VISUALIZERPKG.FoundationProduction</Arg>
-    </Invoke>
-
     </Module>
     
   </Document>

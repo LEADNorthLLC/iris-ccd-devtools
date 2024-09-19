@@ -29,7 +29,7 @@ ClassMethod GetXPathValue() As %Status
 	
 		
 		If (%request.ContentType '= "multipart/form-data") {	
-			//If $$$TESTMODE W "Request header type not supported, change to 'multipart/form-data'"
+			
 			Set %response.Status = ..#HTTP406NOTACCEPTABLE
 			QUIT
 		}
@@ -72,12 +72,10 @@ ClassMethod GetXPathValue() As %Status
 		}
 		else
 		{
-			If $$$TESTMODE W "Request header type not supported, change to 'multipart/form-data'"
+			
 			Set %response.Status = ..#HTTP406NOTACCEPTABLE
 			QUIT
 		}
-		
-	
 		
 		Set %response.Status = ..#HTTP200STATUSOK
 		
@@ -117,14 +115,10 @@ ClassMethod TransformCCD() As %Status
 {
 	Set tSC = $$$OK
 
-	Do %response.SetHeader("Access-Control-Allow-Origin","*")
+	#; Do %response.SetHeader("Access-Control-Allow-Origin","*")
 
-	
-	set ^zMessage1 = "in"
 	try {
 		If (%request.ContentType '= "multipart/form-data") {	
-			set ^zMessage2 = "Not multipart"
-			//If $$$TESTMODE W "Request header type not supported, change to 'multipart/form-data'"
 			Set %response.Status = ..#HTTP406NOTACCEPTABLE
 			QUIT
 		}
@@ -171,7 +165,7 @@ ClassMethod TransformCCD() As %Status
 		}
 		else
 		{
-			If $$$TESTMODE W "Request header type not supported, change to 'multipart/form-data'"
+	
 			Set %response.Status = ..#HTTP406NOTACCEPTABLE
 			QUIT
 		}
@@ -230,7 +224,7 @@ ClassMethod TestXSL() As %Status
 	Set tSC = $$$OK
 	
 	If (%request.ContentType '= "multipart/form-data") {	
-		//If $$$TESTMODE W "Request header type not supported, change to 'multipart/form-data'"
+		
 		Set %response.Status = ..#HTTP406NOTACCEPTABLE
 		QUIT
 	}
@@ -267,7 +261,7 @@ ClassMethod TestXSL() As %Status
 	}
 	else
 	{
-		If $$$TESTMODE W "Request header type not supported, change to 'multipart/form-data'"
+		
 		Set %response.Status = ..#HTTP406NOTACCEPTABLE
 		QUIT
 	}

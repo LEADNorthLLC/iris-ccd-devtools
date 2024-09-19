@@ -44,20 +44,21 @@ RUN \
   set webProperties("DispatchClass") = "CCD.Visualizer.REST.ServiceMap" \
   set webProperties("NameSpace") = "IRISAPP" \
   set webProperties("Enabled") = 1 \
-  set webProperties("AutheEnabled") = 32 \
-  set sc = ##class(Security.Applications).Create(webName, .webProperties) \
-  write sc \
-  write "Web application "_webName_" has been created!" \
-  write "Create web application ..." \
-  set webName = "/csp/ccdtools" \
-  set webProperties("Path") = "/usr/irissys/csp/out"\
-  set webProperties("DispatchClass") = "" \
-  set webProperties("NameSpace") = "IRISAPP" \
-  set webProperties("Enabled") = 1 \
-  set webProperties("AutheEnabled") = 6 \
+  set webProperties("MatchRoles") = ":%All" \
+  set webProperties("AutheEnabled") = 64 \
   set sc = ##class(Security.Applications).Create(webName, .webProperties) \
   write sc \
   write "Web application "_webName_" has been created!" 
+  #write "Create web application ..." \
+  #set webName = "/csp/ccdtools" \
+  #set webProperties("Path") = "/usr/irissys/csp/out"\
+  #set webProperties("DispatchClass") = "" \
+  #set webProperties("NameSpace") = "IRISAPP" \
+  #set webProperties("Enabled") = 1 \
+  #set webProperties("AutheEnabled") = 64 \
+  #set sc = ##class(Security.Applications).Create(webName, .webProperties) \
+  #write sc \
+  #write "Web application "_webName_" has been created!" 
   #zn "IRISAPP" \
   #zpm "install swagger-ui" \
   #zpm "install webterminal"
