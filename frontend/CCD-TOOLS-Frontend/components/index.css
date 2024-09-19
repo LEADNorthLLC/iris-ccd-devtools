@@ -13,12 +13,10 @@ textarea, input {
 .comp {
     width: 80vw;
     height: fit-content;
-    /* background-color: brown; */
 }
 
 .comp-input {
     width: 70vw;
-    /* height: 4rem; */
     padding: 2rem;
 }
 
@@ -34,7 +32,6 @@ textarea, input {
     width: 6rem;
     height: 3rem;
     margin: 0 auto;
-    /* left: 40%; */
 }
 
 .col {
@@ -47,7 +44,6 @@ textarea, input {
 
 .xml1 {
     height: 40vh;
-    /* overflow-y: scroll; */
 }
 
 .xml2 {

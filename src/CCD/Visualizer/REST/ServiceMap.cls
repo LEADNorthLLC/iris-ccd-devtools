@@ -130,22 +130,21 @@ ClassMethod TransformCCD() As %Status
 		#dim tFileStream As HS.SDA3.QuickStream
 		if ($D(%request.Data)) 
 		{
-			set ^zMessage = "test message"
+			
 			Set name=""
 			set name = %request.Next(name)
 			
 			if (name = "") $$$ThrowStatus($$$ERROR($$$GeneralError,"Unable to identify Data Sections."))
 			Set stream = %request.Get(name)
 
-			set ^zStream = stream
+			
 			
 			Set tRequest = ##class(CCD.Visualizer.Model.Record).%New()
     		$$$THROWONERROR(tSC,tRequest.%JSONImport(stream))
 
 			#; Pull elements from API call
 			set tTransformName = tRequest.TransformName
-			set ^zTransformName = tTransformName
-			Set name = %request.Next(name) 
+ 			Set name = %request.Next(name) 
 
 			if (name = "") $$$ThrowStatus($$$ERROR($$$GeneralError,"Unable to identify Data Sections."))
 			Set stream = %request.Get(name)
@@ -268,7 +267,9 @@ ClassMethod TestXSL() As %Status
 
 	#; Setup up template in a stylesheet
 	Set tStyleSheet = ##class(CCD.Visualizer.REST.Transform).AddTemplate(tXSLStream)
-		
+	
+	set ^zXSL = tXSLStream.Read()
+	
 	#; Load the XSL template into a compiled StyleSheet
 	Set tStatus = ##class(%XML.XSLT.CompiledStyleSheet).CreateFromStream(tStyleSheet, .tCompiledStyleSheet)
 	$$$ThrowOnError(tStatus)

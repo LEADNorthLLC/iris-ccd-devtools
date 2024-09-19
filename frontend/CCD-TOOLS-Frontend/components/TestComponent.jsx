@@ -20,29 +20,6 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
     const inputRef = useRef(null);
 
 
-    const postmanRequest = () => {
-        const myHeaders = new Headers();
-        //myHeaders.append("Content-Type", "multipart/form-data");
-        myHeaders.append("Authorization", "Basic X3N5c3RlbTpTWVM=");
-        myHeaders.append("Cookie", "CSPSESSIONID-SP-62773-UP-csp-visualizer-service-=000000010000AafU38vb8LTDG3cw5$w$vXTqW3Kx57F$ca17Ys; CSPWSERVERID=hzYnqEFD");
-
-        const formdata = new FormData();
-        formdata.append("CONTENT1", "{\"TransformName\": \"SDA3/CCDAv21-to-SDA.xsl\"\n}");
-        formdata.append("CONTENT2", "<ClinicalDocument xsi:schemaLocation=\"urn:hl7-org:v3 http://xreg2.nist.gov:8080/")
-
-        const requestOptions = {
-        method: "POST",
-        headers: myHeaders,
-        body: formdata,
-        redirect: "follow"
-        };
-
-        fetch("http://localhost:62773/csp/visualizer/service/transform/", requestOptions)
-        .then((response) => response.text())
-        .then((result) => console.log(result))
-        .catch((error) => console.error(error));
-    }
-
     const postReqest = async () => {
 
         if (inputOne === '' || texAreaOne === '') {
@@ -51,7 +28,6 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
         }
         
         const myHeaders = new Headers();
-        //myHeaders.append("Content-Type", "multipart/form-data");
         myHeaders.append("Authorization", "Basic X3N5c3RlbTpTWVM=");
         myHeaders.append("Cookie", "CSPSESSIONID-SP-62773-UP-csp-visualizer-service-=003000010000AafU38vb8LR0lx8vqTAgRttsgaGtcGlDgxj9W_; CSPWSERVERID=hzYBi3LG");
         
@@ -64,16 +40,12 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
         } else if (labels.pageTitle === "XPath Evaluator") {
             data = `{"XPathForEval": "${inputOne}"}`
         } 
-        // else if (labels.pageTitle === "XSL Tempate Tester") {}
+        else if (labels.pageTitle === "XSL Tempate Tester") {
+            data = `${inputOne}`
+        }
         
-        data = '{"TransformName": "Hello"}'
         formdata.append("CONTENT1", data);
-        formdata.append("CONTENT2", data)
-        // formdata.append("CONTENT1", data);
-        // formdata.append("CONTENT2", texAreaOne)
-        
-        console.log("CONTENT1", data) 
-        console.log("CONTENT2", texAreaOne) 
+        formdata.append("CONTENT2", texAreaOne)
 
         const requestOptions = {
           method: "POST",
@@ -85,7 +57,11 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
         fetch(baseUrl + url, requestOptions)
           .then((response) => response.text())
           .then((result) => {
-            setTexAreaTwo(result)
+            if (result === '[]') {
+                setTexAreaTwo('No result found')
+            } else {
+                setTexAreaTwo(result)
+            }
           })
           .catch((error) => console.error(error));
     }
