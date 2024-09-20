@@ -37,7 +37,7 @@ $ git clone git@github.com:LEADNorthLLC/iris-ccd-devtools.git/
 Open the terminal in this directory and run:
 
 ```
-$ docker-compose up -d --build
+$ docker-compose up -d --build  
 ```
 
 ## Management portal: 
