@@ -75,11 +75,13 @@ Data set up in the Postman import is also from Synthea.
 When evaluating CCDs and building transforms, developers need to test an XPATH to see if it's pointing to the expected location. This XPath evaluation uses the same mechanism as the utilities and transformations within IRIS to locate the XPath so a developer can test that the syntax of the XPath is correct. 
 
 [URL](http://localhost:62773/csp/visualizer/service/xpath/) 
+
+```bash
 Request-type: POST
 Content-type: multipart-form
 CONTENT1: {"XPathForEval": "/hl7:ClinicalDocument/hl7:recordTarget/hl7:patientRole/hl7:id[1]/@root"}
 CONTENT2: <ClinicalDocument xsi:schemaLocat ..... />
-
+```
 
 Notes: Quoted values in the XPath must use single quotes in order to not mess with JSON parsing
 CONTENT2 should contain the entire XML document, no escaping required. 
@@ -87,30 +89,27 @@ CONTENT2 should contain the entire XML document, no escaping required.
 # CCD to SDA Transform #
 A CCD can be passed to a standard CCDA to SDA transform to see the results from the IRIS transformation. 
 
+```bash
 [URL](http://localhost:62773/csp/visualizer/service/transform/) 
 Request-type: POST
 Content-type: multipart-form
 CONTENT1: {"TransformName": "SDA3/CCDAv21-to-SDA.xsl"}
 CONTENT2: <ClinicalDocument xsi:schemaLocat ..... />
+```
 
 Notes: CONTENT2 should contain the entire CCD document, no escaping required. 
 Possible values for TransformName: 
+```bash
 SDA3/CCDA-to-SDA.xsl
 SDA3/CCDAv21-to-SDA.xsl
 SDA3/CDA-toSDA.xsl
 SDA3/AU-CDA-to-SDA.xsl
-
+```
 
 ## Challenges we ran into
 The DevTools UI is developed using React. We initially tried to serve the DevTools UI through a web application in IRIS, but it appeared incompatible with Next.js.
 
 While testing, we had to deal with CORS issues due to the cross-origin request. In order to get through the pre-flight request, we have the web application set to Unauthenticated and added %ALL to the Role. 
-
-## Accomplishments that we are proud of
-tbd
-
-## What I learned
-tbd
 
 ## Built with
 Using VSCode and ObjectScript plugin, IRIS Community Edition in Docker, ZPM, IRIS openapi API
