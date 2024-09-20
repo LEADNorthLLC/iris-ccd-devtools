@@ -1,33 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-  <Document name="contest-rest-template.ZPM">
+  <Document name="iris-ccd-devtools.ZPM">
     <Module>
-      <Name>contest-rest-template</Name>
-      <Version>1.0.5</Version>
-      <Description>Template repository for InterSystems IIRS REST API Programming Contest</Description>
-      <Packaging>module</Packaging>
-      <SourcesRoot>src</SourcesRoot>
-      
-      <Resource Name="Sample.PKG"/>
-     
-       <CSPApplication 
-        Url="/crud"
-        Recurse="1"
-        MatchRoles=":{$dbrole}"
-        PasswordAuthEnabled="0"
-        UnauthenticatedEnabled="1"
-        DispatchClass="Sample.PersonREST"
-        ServeFiles="1"
-        CookiePath="/crud"
-        UseCookies="2"
-       />
-    </Module>
-    
-  </Document>
-  <Document name="ccd-visualizer.ZPM">
-    <Module>
-      <Name>ccd-visualizer</Name>
-      <Version>1.0.3</Version>
+      <Name>iris-ccd-devtools</Name>
+      <Version>1.0.0</Version>
+      <Description>Repository for CCD DevTools UI and API - InterSystems Dev Tools Programming Contest</Description>
       <Packaging>module</Packaging>
       <SourcesRoot>src</SourcesRoot>
       <Resource Name="CCD.PKG"/>
@@ -43,7 +20,6 @@
       UseCookies="2"
       CookiePath="/csp/visualizer/service"
     />
-
     </Module>
     
   </Document>
