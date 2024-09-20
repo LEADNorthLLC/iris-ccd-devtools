@@ -3,7 +3,7 @@ const transformLabels = {
     inputLabelOne: "CCDA to SDA Transform",
     inputLabelTwo: "Input Document",
     outputLabel: "Output",
-    exInputLabelOne: "EX: /ClinicalDocument/informant/assignedEntity/representedOrganization",
+    exInputLabelOne: "EX: SDA3/CCDAv21-to-SDA.xsl",
     exInputLabelTwo: "EX: <ClinicalDocument xsi:schemaLocation='urn:hl7-org:v3 http://xreg2.nist.gov:8080/hitspValidation/schema/cdar2c32/infrastructure/cda/C32_CDA.xsd' xmlns='urn:hl7-org:v3' xmlns:voc='urn:hl7-org:v3/voc' xmlns:sdtc='urn:hl7-org:sdtc' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'....",
     exOutputLabel: "Your output will appear here after clicking submit",
 }
