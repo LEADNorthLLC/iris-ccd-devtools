@@ -58,8 +58,18 @@ The UI is served from a second container and is available after docker startup a
 [CD DevTools UI](http://localhost:4000)
 
 ## REST APIs - TESTING
+
+# Testing #
+
+**Sample Data**
+Sample C-CDAs from the [SyntheaMass](https://synthea.mitre.org/downloads) open-source data set have been included in the `testing/sample data` folder for unit testing. 
+
+**Postman export*
 An export for a Postman Collection to test the available APIs is located in the **testing** folder of this project. 
 Import `Visualizer.postman_collection.json` in Postman to run tests. 
+
+Data set up in the Postman import is also from Synthea. 
+
 
 # XPath Evaluation Test #
 When evaluating CCDs and building transforms, developers need to test an XPATH to see if it's pointing to the expected location. This XPath evaluation uses the same mechanism as the utilities and transformations within IRIS to locate the XPath so a developer can test that the syntax of the XPath is correct. 
@@ -104,20 +114,6 @@ tbd
 
 ## Built with
 Using VSCode and ObjectScript plugin, IRIS Community Edition in Docker, ZPM, IRIS openapi API
-
-# Sample Testing #
-This template creates /csp/visualizer/service REST web-application on IRIS which implements 3 CCD evaluation APIS:
-
-
-The API is available on localhost:62773/csp/visualizer/service
-
-This REST API goes with  OpenAPI (swagger) documentation. you can check it localhost:62773/crud/_spec
-THis spec can be examined with different tools, such as [SwaggerUI](https://swagger.io/tools/swagger-ui/), [Postman](postman.com), etc.
-Or you can install [swagger-ui](https://openexchange.intersystems.com/package/iris-web-swagger-ui) with:
-```
-zpm:IRISAPP>install swagger-ui
-``` 
-And check the documentation on localhost:62773/swagger-ui/index.html
 
 ## Collaboration 
 Any collaboration is very welcome! Fork and send Pull requests!
