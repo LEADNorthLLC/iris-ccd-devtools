@@ -1,27 +1,27 @@
 const transforms = [
     {
     "ID": 10116,
-    "DocumentType": "CCDA2",
+    "DocumentType": "CCDA1",
     desc: "CCDA to SDA",
-    value: "SDA/CCDA-to-SDA.xsl"
+    value: "SDA3/CCDA-to-SDA.xsl"
     },
     {
     "ID": 10117,
     "DocumentType": "CCDA2",
     desc: "CCDAv21 to SDA",
-    value: "SDA/CCDAv21-to-SDA.xsl"
+    value: "SDA3/CCDAv21-to-SDA.xsl"
     },
     {
     "ID": 10118,
-    "DocumentType": "CCDA2",
-    desc: "CCDA to SDA",
-    value: "SDA/CDA-toSDA.xsl"
+    "DocumentType": "CCD",
+    desc: "CCD to SDA",
+    value: "SDA3/CDA-to-SDA.xsl"
     },
     {
     "ID": 10119,
-    "DocumentType": "CCDA2",
+    "DocumentType": "AU",
     desc: "CCDA to SDA",
-    value: "SDA/AU-CDA-to-SDA.xsl"
+    value: "SDA3/AU-CDA-to-SDA.xsl"
     },
     ]
 

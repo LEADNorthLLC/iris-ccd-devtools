@@ -1,11 +1,11 @@
 ## iris-ccd-devtools
 
-This is a project based off of the IRIS REST API Contest template.
-
-The REST API with CRUD actions for a Sample Person peristent class has been kept in the project temporarily for reference.
+A UI and API for testing CCDA documents against the IRIS XPath Utilities and C-CDA to SDA XSLT code base. 
 
 ## Contributors
+
 Chi Nguyen-Rettig (LEAD North)
+
 Nathan Holt (LEAD North)
 
 ## Inspiration
@@ -95,10 +95,10 @@ CONTENT2: <ClinicalDocument xsi:schemaLocat ..... />
 
 Notes: CONTENT2 should contain the entire CCD document, no escaping required. 
 Possible values for TransformName: 
-SDA/CCDA-to-SDA.xsl
-SDA/CCDAv21-to-SDA.xsl
-SDA/CDA-toSDA.xsl
-SDA/AU-CDA-to-SDA.xsl
+SDA3/CCDA-to-SDA.xsl
+SDA3/CCDAv21-to-SDA.xsl
+SDA3/CDA-toSDA.xsl
+SDA3/AU-CDA-to-SDA.xsl
 
 
 ## Challenges we ran into
