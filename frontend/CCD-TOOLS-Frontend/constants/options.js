@@ -52,7 +52,7 @@ const xpaths = [
     },
     {
         desc: "Facility OID4", 
-        value: "/hl7:ClinicalDocument/hl7:recordTarget/hl7:patientRole/hl7:patient/id/@root"
+        value: "/hl7:ClinicalDocument/hl7:recordTarget/hl7:patientRole/hl7:id/@root"
     },
     {
         desc: "Encompassing Encounter Number1", 

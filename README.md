@@ -14,7 +14,9 @@ To create a user-friendly front-end to organize several testing utilities and me
 ## What it does
 Creates /csp/visualizer/service web app in IRIS with endpoints for XPath testing, XSLT testing, and CCD to SDA transform testing. 
 
+<!--
 It uses [swagger-ui](https://openexchange.intersystems.com/package/iris-web-swagger-ui) module to provide documentation and test environment for API.
+-->
 
 # Getting Started
 
@@ -30,13 +32,13 @@ Make sure you have [git](https://git-scm.com/book/en/v2/Getting-Started-Installi
 
 Clone/git pull the repo into any local directory e.g. like it is shown below:
 
-```
+```bash
 $ git clone git@github.com:LEADNorthLLC/iris-ccd-devtools.git/
 ```
 
 Open the terminal in this directory and run:
 
-```
+```bash
 $ docker-compose up -d --build
 ```
 
@@ -45,11 +47,11 @@ $ docker-compose up -d --build
 The management portal is available at: 
 [Management portal](http://localhost:62773/csp/sys/UtilHome.csp)
 
+```bash
 Login: _system/SYS
-
+```
 The API is available on localhost:62773/csp/visusalier/service
 
-API documentation <TBD>
 
 ## CCD DevTools UI:
 
@@ -97,7 +99,7 @@ CONTENT1: {"TransformName": "SDA3/CCDAv21-to-SDA.xsl"}
 CONTENT2: <ClinicalDocument xsi:schemaLocat ..... />
 ```
 
-Notes: CONTENT2 should contain the entire CCD document, no escaping required. 
+Note: CONTENT2 should contain the entire CCD document, no escaping required. 
 Possible values for TransformName: 
 ```bash
 SDA3/CCDA-to-SDA.xsl
