@@ -19,7 +19,7 @@ const xpathLabels = {
 }
 
 const xslLabels = {
-    pageTitle: "XSL Tempate Tester",
+    pageTitle: "XSL Template Tester",
     inputLabelOne: "XSL Template to Test",
     inputLabelTwo: "Input Document",
     outputLabel: "Output",
