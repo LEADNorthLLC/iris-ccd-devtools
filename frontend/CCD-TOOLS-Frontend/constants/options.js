@@ -80,11 +80,11 @@ const xpaths = [
     },
     {
         desc: "Person ID", 
-        value: "/hl7:ClinicalDocument/hl7:recordTarget/hl7:patientRole/hl7:patient/hl7:id/@extension"
+        value: "/hl7:ClinicalDocument/hl7:recordTarget/hl7:patientRole/hl7:id/@extension"
     },
     {
         desc: "Person ID Assigning Authority Code", 
-        value: "/hl7:ClinicalDocument/hl7:recordTarget/hl7:patientRole/hl7:patient/hl7:id/@root"
+        value: "/hl7:ClinicalDocument/hl7:recordTarget/hl7:patientRole/hl7:id/@root"
     },
 ]
 

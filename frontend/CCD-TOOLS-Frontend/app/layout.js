@@ -14,8 +14,8 @@ const geistMono = localFont({
 });
 
 export const metadata = {
-  title: "CCD Tools",
-  description: "A tool created by LEAD North LLC",
+  title: "CCD DevTools",
+  description: "A CCD evaluation and testing tool created by LEAD North LLC",
 };
 
 export default function RootLayout({ children }) {

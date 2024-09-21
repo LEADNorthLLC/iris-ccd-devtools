@@ -9,7 +9,7 @@ const XSL = () => {
       <h1 className='m-4 title'>
         {xslLabels.pageTitle}
       </h1>
-      <TestComponent options={xsl} labels={xslLabels}  largeInput={true} baseUrl='http://localhost:62773' url='/csp/visualizer/service/xpath/'/>
+      <TestComponent options={xsl} labels={xslLabels}  largeInput={true} baseUrl='http://localhost:62773' url='/csp/visualizer/service/xslt/'/>
     </div>
   )
 }

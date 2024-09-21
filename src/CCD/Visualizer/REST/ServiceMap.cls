@@ -236,10 +236,10 @@ ClassMethod TestXSL() As %Status
 		set name = %request.Next(name)
 			
 		if (name = "") $$$ThrowStatus($$$ERROR($$$GeneralError,"Unable to identify Data Sections."))
-			
+
 		#; Pull XSL Template from first part of API call
 		Set tXSLStream = %request.Get(name)
-			
+	
 		#; Pull XML source from second part of API call
 		Set name = %request.Next(name) 
 		if (name = "") $$$ThrowStatus($$$ERROR($$$GeneralError,"Unable to identify Data Sections."))
@@ -260,15 +260,12 @@ ClassMethod TestXSL() As %Status
 	}
 	else
 	{
-		
 		Set %response.Status = ..#HTTP406NOTACCEPTABLE
 		QUIT
 	}
 
 	#; Setup up template in a stylesheet
 	Set tStyleSheet = ##class(CCD.Visualizer.REST.Transform).AddTemplate(tXSLStream)
-	
-	set ^zXSL = tXSLStream.Read()
 	
 	#; Load the XSL template into a compiled StyleSheet
 	Set tStatus = ##class(%XML.XSLT.CompiledStyleSheet).CreateFromStream(tStyleSheet, .tCompiledStyleSheet)
