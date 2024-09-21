@@ -57,7 +57,9 @@ The API is available on localhost:62773/csp/visusalier/service
 
 The UI is served from a second container and is available after docker startup at: 
 
-[CD DevTools UI](http://localhost:4000)
+[CCD DevTools URL](http://localhost:4000)
+
+![CCD DevTools UI](misc/images/CCD_devtools_TransformTester.png)
 
 ## REST APIs - TESTING
 

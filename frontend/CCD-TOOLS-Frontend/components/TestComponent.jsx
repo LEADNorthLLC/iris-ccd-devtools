@@ -40,7 +40,7 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
         } else if (labels.pageTitle === "XPath Evaluator") {
             data = `{"XPathForEval": "${inputOne}"}`
         } 
-        else if (labels.pageTitle === "XSL Tempate Tester") {
+        else if (labels.pageTitle === "XSL Template Tester") {
             data = `${inputOne}`
         }
         
