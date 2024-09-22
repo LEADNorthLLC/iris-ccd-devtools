@@ -12,10 +12,9 @@ USER irisowner
 COPY Installer.cls .
 
 COPY src src
-COPY misc/csp /usr/irissys/csp
+# COPY misc/csp /usr/irissys/csp
 COPY irissession.sh /
 SHELL ["/irissession.sh"] 
-
 
 RUN \
   do $SYSTEM.OBJ.Load("Installer.cls", "ck") \
@@ -36,19 +35,14 @@ RUN \
   #zpm "install swagger-ui" \
   #zpm "install webterminal"
   
-
-
   # bringing the standard shell back
 SHELL ["/bin/bash", "-c"]
 CMD [ "-l", "/usr/irissys/mgr/messages.log" ]
 
 
-
 FROM $IMAGE AS final
 
 ADD --chown=${ISC_PACKAGE_MGRUSER}:${ISC_PACKAGE_IRISGROUP} https://github.com/grongierisc/iris-docker-multi-stage-script/releases/latest/download/copy-data.py /irisdev/app/copy-data.py
-
-
 
 RUN --mount=type=bind,source=/,target=/builder/root,from=builder \
     cp -f /builder/root/usr/irissys/iris.cpf /usr/irissys/iris.cpf && \

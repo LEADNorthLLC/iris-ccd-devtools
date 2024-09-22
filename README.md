@@ -20,11 +20,7 @@ It uses [swagger-ui](https://openexchange.intersystems.com/package/iris-web-swag
 
 # Getting Started
 
-## Installation with ZPM - Option
-
-zpm:USER>install iris-ccd-devtools
-
-## Installation with Docker - Option
+## Installation with Docker 
 
 ## Prerequisites
 Make sure you have [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) and [Docker desktop](https://www.docker.com/products/docker-desktop) installed.
@@ -62,8 +58,6 @@ The UI is served from a second container and is available after docker startup a
 ![CCD DevTools UI](misc/images/CCD_devtools_TransformTester.png)
 
 ## REST APIs - TESTING
-
-# Testing #
 
 **Sample Data**
 Sample C-CDAs from the [SyntheaMass](https://synthea.mitre.org/downloads) open-source data set have been included in the `testing/sample data` folder for unit testing. 
@@ -109,15 +103,30 @@ SDA3/CCDAv21-to-SDA.xsl
 SDA3/CDA-toSDA.xsl
 SDA3/AU-CDA-to-SDA.xsl
 ```
+# XSL Template Test
+Test an isolated XSL template. The contents of the XSL template window will be inserted into an XSL stylesheet that contains the identity template.
+
+```bash
+[URL](http://localhost:62773/csp/visualizer/service/xslt/) 
+Request-type: POST
+Content-type: multipart-form
+CONTENT1: <xsl:template match="/hl7:ClinicalDocument/hl7:component/hl7:structuredBody/hl7:component/hl7:section[hl7:templateId/@root='2.16.840.1.113883.10.20.22.2.38']"/>
+CONTENT2: <ClinicalDocument xsi:schemaLocat ..... />
+```
+Note: CONTENT1 contains the entire XSL template, no escaping or single quotes required. CONTENT2 should contain the entire CCD document, no escaping required. 
 
 ## Challenges we ran into
 The DevTools UI is developed using React. We initially tried to serve the DevTools UI through a web application in IRIS, but it appeared incompatible with Next.js.
 
 While testing, we had to deal with CORS issues due to the cross-origin request. In order to get through the pre-flight request, we have the web application set to Unauthenticated and added %ALL to the Role. 
 
+Due to the use of two docker containers, we were unable to package the solution with ZPM. 
+
 ## Built with
-Using VSCode and ObjectScript plugin, IRIS Community Edition in Docker, ZPM, IRIS openapi API
+Using VSCode and ObjectScript plugin, IRIS for Health Community Edition in Docker, IRIS openapi API, NextJs and React.
 
 ## Collaboration 
 Any collaboration is very welcome! Fork and send Pull requests!
+
+## 
 
