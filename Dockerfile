@@ -1,5 +1,6 @@
 ARG IMAGE=intersystemsdc/irishealth-community
-
+# ARG IMAGE=intersystemsdc/irishealth-community:2024.2-zpm
+# docker pull intersystems/iris-community:2024.1
 FROM $IMAGE AS builder
 
 USER root
