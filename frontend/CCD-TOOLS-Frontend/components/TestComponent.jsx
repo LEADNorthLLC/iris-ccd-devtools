@@ -17,6 +17,8 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
     const [texAreaTwo, setTexAreaTwo] = useState('')
     const [viewer, setViewer] = useState(false)
     const [viewerTwo, setViewerTwo] = useState(false)
+    const [loaderOne, setLoaderOne] = useState(false)
+    const [loaderTwo, setLoaderTwo] = useState(false)
     const inputRef = useRef(null);
 
 
@@ -81,6 +83,29 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
         saveAs(blob, 'LEAD.txt')
     }
 
+    const load = (opt) => {
+
+        if ((texAreaOne === '' && opt === 1) || (texAreaTwo === '' && opt === 2)) {
+            return
+        }
+
+        if (opt === 1) {
+            setLoaderOne(true)
+        } else if (opt === 2) {
+            setLoaderTwo(true)
+        }
+        
+        setTimeout(() => {
+            if (opt === 1) {
+                setLoaderOne(false)
+                setViewer(!viewer)
+            } else if (opt === 2) {
+                setLoaderTwo(false)
+                setViewerTwo(!viewerTwo)
+            }
+        }, 2000);
+    }
+
     
   return (
     <div className='comp m-5'>
@@ -119,7 +144,7 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
                         <div className='flex'>
                             <input type='file' hidden ref={inputRef} onChange={(e) => handleFile(e.target.files[0])} className='bg-slate-600 z-40' />
                             <button onClick={() => fileUploadAction()} className='bg-slate-200 z-40'>Upload</button>
-                            <button onClick={() => setViewer(!viewer)} className='bg-slate-200 z-40'>Viewer</button>
+                            <button onClick={() => load(1)} className='bg-slate-200 z-40'>Viewer</button>
                         </div>
                     </div>
                     <div className='w-3/12'></div>
@@ -127,7 +152,7 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
                         <h2 className='big-col subTitle'>{labels.outputLabel}</h2>
                         <div className='flex'>
                             <button onClick={() => download()} className='bg-slate-200 z-40'>Download</button>
-                            <button onClick={() => setViewerTwo(!viewerTwo)} className='bg-slate-200 z-40'>Viewer</button>
+                            <button onClick={() => load(2)} className='bg-slate-200 z-40'>Viewer</button>
                         </div>
                     </div>
                 </div>
@@ -136,12 +161,19 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
                     <div className='big-col relative h-full'>
                         <div className='w-full xml1'>
                             {
-                                viewer ? 
-                                <div className='w-full xml2'>   
-                                    <XMLViewer collapsible xml={texAreaOne} /> 
-                                </div>
+                                loaderOne ?
+                                    <div className='flex justify-center content-center align-middle h-64'>
+                                        <div className='loader'></div>
+                                    </div>
                                     :
-                                <textarea rows={15} className='w-full h-full p-2' placeholder={labels.exInputLabelTwo} defaultValue={texAreaOne} onChange={(e) => setTexAreaOne(e.target.value)} />
+                                    (
+                                        viewer ? 
+                                            <div className='w-full xml2'>   
+                                                <XMLViewer collapsible xml={texAreaOne} /> 
+                                            </div>
+                                                :
+                                            <textarea rows={15} className='w-full h-full p-2' placeholder={labels.exInputLabelTwo} defaultValue={texAreaOne} onChange={(e) => setTexAreaOne(e.target.value)} />
+                                    )
                             }
                         </div>
                     </div>
@@ -152,14 +184,22 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
                     </div>
                     <div className='big-col relative xml1 h-full'>
 
-                        {
-                            viewerTwo ? 
-                            <div className='w-full xml2'>
-                                <XMLViewer collapsible xml={texAreaTwo} /> 
-                            </div>
-                                :
-                            <textarea contentEditable={false} className='w-full h-full p-2' placeholder={labels.exOutputLabel} defaultValue={texAreaTwo}  />
-                        }
+                    {
+                                loaderTwo ?
+                                    <div className='flex justify-center content-center align-middle h-64'>
+                                        <div className='loader'></div>
+                                    </div>
+                                    :
+                                    (
+                                        viewerTwo ? 
+                                            <div className='w-full xml2'>   
+                                                <XMLViewer collapsible xml={texAreaTwo} />  
+                                            </div>
+                                                :
+                                            <textarea contentEditable={false} className='w-full h-full p-2' placeholder={labels.exOutputLabel} defaultValue={texAreaTwo}  />
+                                    )
+                            }
+
                     </div>    
                 </div>
             </div>

@@ -16,7 +16,7 @@ ClassMethod OnPreDispatch(pUrl As %String, pMethod As %String, ByRef pContinue A
     
     // Set the return type according to the Accept type in the request. Default is application/json.
     IF ('..AcceptsContentType(..#CONTENTTYPEJSON)) {
-      SET tSC = ..ReportHttpStatusCode(..#HTTP406NOTACCEPTABLE), pContinue=0
+      SET tSC = ..ReportHttpStatusCode(406), pContinue=0
       QUIT 
         } ELSE {   
       // This always returns json
