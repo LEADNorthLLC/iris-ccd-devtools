@@ -1,6 +1,6 @@
 {
     "files.associations": {
-    
+
         "Dockerfile*": "dockerfile",
       },
     "objectscript.conn" :{
@@ -9,10 +9,15 @@
       "docker-compose": {
         "service": "iris",
         "internalPort": 52773
+      },
+      "links": {
+        "CCD DevTools URL": "http://localhost:4000"
       }
     },
+
+
     "objectscript.conn.active": true,
-    
-  
+
+
 
 }
