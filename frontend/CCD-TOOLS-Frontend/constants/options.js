@@ -28,14 +28,26 @@ const transforms = [
 const xpaths = [
     {
         desc: "Sending Facility1", 
-        value: "/hl7:ClinicalDocument/hl7:informant/hl7:assignedEntity/hl7:representedOrganization/hl7:name"
+        value: "/hl7:ClinicalDocument/hl7:informant/hl7:assignedEntity/hl7:representedOrganization/hl7:id/@extension"
     },
     {
         desc: "Sending Facility2", 
-        value: "/hl7:ClinicalDocument/hl7:author/hl7:assignedAuthor/hl7:representedOrganization/hl7:name"
+        value: "/hl7:ClinicalDocument/hl7:informant/hl7:assignedEntity/hl7:representedOrganization/hl7:name"
     },
     {
         desc: "Sending Facility3", 
+        value: "/hl7:ClinicalDocument/hl7:author/hl7:assignedAuthor/hl7:representedOrganization/hl7:id/@extension"
+    },
+    {
+        desc: "Sending Facility4", 
+        value: "/hl7:ClinicalDocument/hl7:author/hl7:assignedAuthor/hl7:representedOrganization/hl7:name"
+    },
+    {
+        desc: "Sending Facility5", 
+        value: "/hl7:ClinicalDocument/hl7:author/hl7:assignedEntity/hl7:representedOrganization/hl7:id/@external"
+    },
+    {
+        desc: "Sending Facility6", 
         value: "/hl7:ClinicalDocument/hl7:author/hl7:assignedEntity/hl7:representedOrganization/hl7:name"
     },
     {
@@ -52,7 +64,7 @@ const xpaths = [
     },
     {
         desc: "Facility OID4", 
-        value: "/hl7:ClinicalDocument/hl7:recordTarget/hl7:patientRole/hl7:id/@root"
+        value: "/hl7:ClinicalDocument/hl7:recordTarget/hl7:patientRole/hl7:id[1]/@root"
     },
     {
         desc: "Encompassing Encounter Number1", 
