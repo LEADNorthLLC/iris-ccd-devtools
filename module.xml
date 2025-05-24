@@ -2,9 +2,9 @@
 <Export generator="Cache" version="25">
   <Document name="iris-ccd-devtools.ZPM">
     <Module>
-      <Name>iris-ccd-devtools</Name>
+      <Name>iris-interop-devtools</Name>
       <Version>1.0.0</Version>
-      <Description>Repository for CCD DevTools UI and API - InterSystems Dev Tools Programming Contest</Description>
+      <Description>Repository for Iris Interoperability DevTools UI and API - InterSystems Dev Tools Programming Contest</Description>
       <Packaging>module</Packaging>
       <SourcesRoot>src</SourcesRoot>
       <Resource Name="CCD.PKG"/>
