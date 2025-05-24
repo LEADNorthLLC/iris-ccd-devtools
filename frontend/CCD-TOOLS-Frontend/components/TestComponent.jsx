@@ -45,6 +45,12 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
         else if (labels.pageTitle === "XSL Template Tester") {
             data = `${inputOne}`
         }
+        else if (labels.pageTitle === "FHIR to SDA Transforms Tester") {
+            data = `{"TransformName": "${inputOne}"}`
+        }
+        else if (labels.pageTitle === "SDA to FHIR Transforms Tester") {
+            data = `{"TransformName": "${inputOne}"}`
+        }
         
         formdata.append("CONTENT1", data);
         formdata.append("CONTENT2", texAreaOne)

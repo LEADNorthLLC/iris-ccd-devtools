@@ -3,7 +3,7 @@
 import { Sidebar, TopBar } from "@/components";
 import Image from "next/image";
 import Link from 'next/link';
-import { Menu, X, Sun, Moon, LayoutDashboard, FileCheck, ChevronRight, User, LogOut, BookCheck, FileStack, Settings } from 'lucide-react';
+import { Menu, X, Sun, Moon, LayoutDashboard, FileCheck, ChevronRight, User, LogOut, FileCode, FileSearch, FileCode2 } from 'lucide-react';
 import { useRouter, usePathname } from 'next/navigation'
 import React, { useState, useEffect } from 'react'
 import { links } from '@/constants/nav'
@@ -36,18 +36,29 @@ export default function ClientLayout({ children }) {
   }, []); // Empty dependency array
 
   const menuItems = [
-    { path: '/', icon: <FileCheck className="w-5 h-5" />, label: 'Dashboard' },
-    { path: '/xpath', icon: <BookCheck className="w-5 h-5" />, label: 'XPath Evaluator' },
+    { path: '/', icon: <LayoutDashboard className="w-5 h-5" />, label: 'Dashboard' },
+    { path: '/xpath', icon: <FileSearch className="w-5 h-5" />, label: 'XPath Evaluator' },
     {
       path: '/transform',
-      icon: <LayoutDashboard className="w-5 h-5" />,
+      icon: <FileCode className="w-5 h-5" />,
       label: 'CCDA to SDA Transforms',
     },
     {
-        path: '/xsl',
-        icon: <LayoutDashboard className="w-5 h-5" />,
-        label: 'XSL Template Tester',
-      },
+      path: '/xsl',
+      icon: <FileCode2 className="w-5 h-5" />,
+      label: 'XSL Template Tester',
+    },
+    { type: 'separator' },
+    {
+      path: '/fhirsdatransform',
+      icon: <FileCode className="w-5 h-5" />,
+      label: 'FHIR to SDA Transforms',
+    },
+    {
+      path: '/sdafhirtransform',
+      icon: <FileCode className="w-5 h-5" />,
+      label: 'SDA to FHIR Transforms',
+    },
   ];
 
   const closeSidebarIfMobile = () => {
@@ -94,36 +105,39 @@ export default function ClientLayout({ children }) {
         </div>
 
         <nav className="mt-4">
-          
-          {menuItems.map((item) => (
-            <div key={item.path}>
-              <Link
-                href={item.path}
-                onClick={closeSidebarIfMobile}
-                className={`flex items-center px-4 py-3 ${
-                  pathname === item.path
-                    ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400'
-                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
-                }`}
-              >
-                {item.icon}
-                {sidebarOpen && <span className="ml-3">{item.label}</span>}
-              </Link>
-              {sidebarOpen && item.subItems && (
-                <div className="ml-11 mt-1 space-y-1">
-                  {item.subItems.map((subItem) => (
-                    <Link
-                      key={subItem.path}
-                      href={subItem.path}
-                      onClick={closeSidebarIfMobile}
-                      className="block py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400"
-                    >
-                      {subItem.label}
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
+          {menuItems.map((item, index) => (
+            item.type === 'separator' ? (
+              <div key={`separator-${index}`} className="my-4 border-t border-gray-200 dark:border-gray-700" />
+            ) : (
+              <div key={item.path}>
+                <Link
+                  href={item.path}
+                  onClick={closeSidebarIfMobile}
+                  className={`flex items-center px-4 py-3 ${
+                    pathname === item.path
+                      ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400'
+                      : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                  }`}
+                >
+                  {item.icon}
+                  {sidebarOpen && <span className="ml-3">{item.label}</span>}
+                </Link>
+                {sidebarOpen && item.subItems && (
+                  <div className="ml-11 mt-1 space-y-1">
+                    {item.subItems.map((subItem) => (
+                      <Link
+                        key={subItem.path}
+                        href={subItem.path}
+                        onClick={closeSidebarIfMobile}
+                        className="block py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400"
+                      >
+                        {subItem.label}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )
           ))}
         </nav>
       </div>
@@ -170,33 +184,6 @@ export default function ClientLayout({ children }) {
               {children}
             </div>
           </div>
-
-          {/* Dashboard Widgets */}
-          {pathname === '/' && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 border-t-4 border-emerald-500">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Participant Onboarding Introduction</h3>
-                <p className="text-gray-600 dark:text-gray-400 mb-4">Learn how to use the Participant Onboarding to validate your healthcare data efficiently.</p>
-                <button className="text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 font-medium">
-                  Read More →
-                </button>
-              </div>
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 border-t-4 border-emerald-500">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Interpreting Your Report Card</h3>
-                <p className="text-gray-600 dark:text-gray-400 mb-4">Understanding validation results and addressing common data quality issues.</p>
-                <button className="text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 font-medium">
-                  Learn More →
-                </button>
-              </div>
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 border-t-4 border-emerald-500">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Data Standards Guide</h3>
-                <p className="text-gray-600 dark:text-gray-400 mb-4">Comprehensive overview of FHIR, C-CDA, and HL7 data standards.</p>
-                <button className="text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 font-medium">
-                  View Guide →
-                </button>
-              </div>
-            </div>
-          )}
         </main>
 
         {/* Footer */}

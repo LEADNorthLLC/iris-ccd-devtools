@@ -1,6 +1,6 @@
 ## iris-interop-tools
 
-A UI and API for testing CCDA documents against the IRIS XPath Utilities and C-CDA to SDA XSLT code base. 
+A UI and API for testing FHIR and CCDA documents against the IRIS XPath Utilities and C-CDA to SDA XSLT code base. 
 
 ## Contributors
 
@@ -8,8 +8,10 @@ Chi Nguyen-Rettig (LEAD North)
 
 Nathan Holt (LEAD North)
 
+Shawntelle Madison-Coker (Lead North)
+
 ## Inspiration
-To create a user-friendly front-end to organize several testing utilities and methods used to facility CCD transform development
+To create a user-friendly front-end to organize several testing utilities and methods used to facility FHIR and CCD transform development
 
 ## What it does
 Creates /csp/visualizer/service web app in IRIS with endpoints for XPath testing, XSLT testing, and CCD to SDA transform testing. 
@@ -29,7 +31,7 @@ Make sure you have [git](https://git-scm.com/book/en/v2/Getting-Started-Installi
 Clone/git pull the repo into any local directory e.g. like it is shown below:
 
 ```bash
-$ git clone git@github.com:LEADNorthLLC/iris-ccd-devtools.git/
+$ git clone git@github.com:LEADNorthLLC/iris-interop-tools.git/
 ```
 
 Open the terminal in this directory and run:
