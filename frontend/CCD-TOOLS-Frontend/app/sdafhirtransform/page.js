@@ -3,7 +3,7 @@ import { TestComponent } from '@/components'
 import { transforms } from '@/constants/options'
 import { transformLabels } from '@/constants/labels'
 
-const Transform = () => {
+const SDAFHIRTransform = () => {
   return (
     <div>
       {/* <h1 className='m-4 title'>
@@ -14,4 +14,4 @@ const Transform = () => {
   )
 }
 
-export default Transform
+export default SDAFHIRTransform

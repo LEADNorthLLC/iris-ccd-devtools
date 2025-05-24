@@ -25,7 +25,7 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
     const postReqest = async () => {
 
         if (inputOne === '' || texAreaOne === '') {
-            setTexAreaTwo("Please make sure both inputs are filled before clicking submit")
+            setTexAreaTwo("Please make sure both inputs are filled before clicking submit.")
             return
         }
         
@@ -109,22 +109,17 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
     
   return (
     <div className='comp m-5'>
-        <div className='m-5 '>
-            <div className='m-5 comp-input flex justify-between bg-slate-300 rounded-md border-2 border-slate-500 shadow-sm'>
-                <h2 className='subTitle labelOne'>{labels.inputLabelOne}</h2>
+        <div className='m-5'>
+            <div className='m-5 comp-input flex justify-between bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-lg'>
+                <h2 className='subTitle labelOne text-gray-900 dark:text-white'>{labels.inputLabelOne}</h2>
                 {
                     largeInput ? (
                         <>
-                        <textarea rows={5} className='w-full h-full' placeholder={labels.exInputLabelOne} defaultValue={inputOne} onChange={(e) => setInputOne(e.target.value)} />
-                        {/* <DropdownButton id="dropdown-basic-button" title="Dropdown button">
-                            <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-                            <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
-                            <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
-                        </DropdownButton> */}
+                        <textarea rows={5} className='w-full h-full bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg p-2' placeholder={labels.exInputLabelOne} defaultValue={inputOne} onChange={(e) => setInputOne(e.target.value)} />
                         </>
                     ) : (
                         <>
-                            <input className='w-4/5 h-8' type="text" name="option" list="options" placeholder={labels.exInputLabelOne} onChange={(e) => setInputOne(e.target.value)} />
+                            <input className='w-4/5 h-8 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg p-2' type="text" name="option" list="options" placeholder={labels.exInputLabelOne} onChange={(e) => setInputOne(e.target.value)} />
                             <datalist id="options">
                                 {
                                     options && options.map((item) => (
@@ -137,22 +132,22 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
                 }
             </div>
 
-            <div className='m-5 flex flex-col justify-center w-64  bg-slate-300 comp-area rounded-md border-2 border-slate-500 shadow-sm'>
+            <div className='m-5 flex flex-col justify-center w-64 bg-white dark:bg-gray-800 comp-area rounded-lg border border-gray-200 dark:border-gray-700 shadow-lg'>
                 <div className='flex justify-around mb-4'>
                     <div className='flex justify-between w-full'>
-                        <h2 className='big-col subTitle'>{labels.inputLabelTwo}</h2>
+                        <h2 className='big-col subTitle text-gray-900 dark:text-white'>{labels.inputLabelTwo}</h2>
                         <div className='flex'>
-                            <input type='file' hidden ref={inputRef} onChange={(e) => handleFile(e.target.files[0])} className='bg-slate-600 z-40' />
-                            <button onClick={() => fileUploadAction()} className='bg-slate-200 z-40'>Upload</button>
-                            <button onClick={() => load(1)} className='bg-slate-200 z-40'>Viewer</button>
+                            <input type='file' hidden ref={inputRef} onChange={(e) => handleFile(e.target.files[0])} className='border bg-slate-600 z-40' />
+                            <button onClick={() => fileUploadAction()} className='bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg transition-colors duration-200'>Upload</button>
+                            <button onClick={() => load(1)} className='bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg transition-colors duration-200 ml-2'>Viewer</button>
                         </div>
                     </div>
                     <div className='w-3/12'></div>
                     <div className='flex justify-between w-full'>
-                        <h2 className='big-col subTitle'>{labels.outputLabel}</h2>
+                        <h2 className='big-col subTitle text-gray-900 dark:text-white'>{labels.outputLabel}</h2>
                         <div className='flex'>
-                            <button onClick={() => download()} className='bg-slate-200 z-40'>Download</button>
-                            <button onClick={() => load(2)} className='bg-slate-200 z-40'>Viewer</button>
+                            <button onClick={() => download()} className='bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg transition-colors duration-200'>Download</button>
+                            <button onClick={() => load(2)} className='bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg transition-colors duration-200 ml-2'>Viewer</button>
                         </div>
                     </div>
                 </div>
@@ -168,22 +163,21 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
                                     :
                                     (
                                         viewer ? 
-                                            <div className='w-full xml2'>   
+                                            <div className='w-full xml2 bg-white dark:bg-gray-700 rounded-lg p-4'>   
                                                 <XMLViewer collapsible xml={texAreaOne} /> 
                                             </div>
                                                 :
-                                            <textarea rows={15} className='w-full h-full p-2' placeholder={labels.exInputLabelTwo} defaultValue={texAreaOne} onChange={(e) => setTexAreaOne(e.target.value)} />
+                                            <textarea rows={15} className='border w-full h-full p-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg' placeholder={labels.exInputLabelTwo} defaultValue={texAreaOne} onChange={(e) => setTexAreaOne(e.target.value)} />
                                     )
                             }
                         </div>
                     </div>
-                    <div className='col relative h-full flex justify-start '>
+                    <div className='col relative h-full flex justify-start'>
                         <div className='btn h-full'>
-                            <button onClick={() => postReqest()} className='bg-slate-200 h-8 z-50 transformBtn'>Submit</button>
+                            <button onClick={() => postReqest()} className='bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg transition-colors duration-200 h-8 z-50 transformBtn'>Submit</button>
                         </div>
                     </div>
                     <div className='big-col relative xml1 h-full'>
-
                     {
                                 loaderTwo ?
                                     <div className='flex justify-center content-center align-middle h-64'>
@@ -192,14 +186,13 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
                                     :
                                     (
                                         viewerTwo ? 
-                                            <div className='w-full xml2'>   
+                                            <div className='w-full xml2 bg-white dark:bg-gray-700 rounded-lg p-4'>   
                                                 <XMLViewer collapsible xml={texAreaTwo} />  
                                             </div>
                                                 :
-                                            <textarea contentEditable={false} className='w-full h-full p-2' placeholder={labels.exOutputLabel} defaultValue={texAreaTwo}  />
+                                            <textarea contentEditable={false} className='border w-full h-full p-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg' placeholder={labels.exOutputLabel} defaultValue={texAreaTwo} />
                                     )
                             }
-
                     </div>    
                 </div>
             </div>

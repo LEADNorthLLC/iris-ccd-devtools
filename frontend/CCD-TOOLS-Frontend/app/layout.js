@@ -1,6 +1,6 @@
 import localFont from "next/font/local";
 import "./globals.css";
-import { Sidebar, TopBar } from "@/components";
+import ClientLayout from "./ClientLayout";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -14,21 +14,15 @@ const geistMono = localFont({
 });
 
 export const metadata = {
-  title: "CCD DevTools",
-  description: "A CCD evaluation and testing tool created by LEAD North LLC",
+  title: "Iris Interoperability DevTools",
+  description: "An evaluation and testing tool created by LEAD North LLC",
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-x-hidden`}
-      >
-        <TopBar />
-        <div className="flex overflow-hidden">
-          <Sidebar />
-          {children}
-        </div>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-x-hidden`}>
+        <ClientLayout>{children}</ClientLayout>
       </body>
     </html>
   );

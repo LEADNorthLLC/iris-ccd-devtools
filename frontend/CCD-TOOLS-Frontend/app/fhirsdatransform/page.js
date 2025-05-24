@@ -3,9 +3,9 @@ import { TestComponent } from '@/components'
 import { transforms } from '@/constants/options'
 import { transformLabels } from '@/constants/labels'
 
-const Transform = () => {
+const FHIRSDATransform = () => {
   return (
-    <div>
+    <div >
       {/* <h1 className='m-4 title'>
       {transformLabels.pageTitle}
         </h1> */}
@@ -14,4 +14,4 @@ const Transform = () => {
   )
 }
 
-export default Transform
+export default FHIRSDATransform
