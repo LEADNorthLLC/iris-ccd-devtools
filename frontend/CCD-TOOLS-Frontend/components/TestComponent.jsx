@@ -115,11 +115,11 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
                 {
                     largeInput ? (
                         <>
-                        <textarea rows={5} className='w-full h-full bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg p-2' placeholder={labels.exInputLabelOne} defaultValue={inputOne} onChange={(e) => setInputOne(e.target.value)} />
+                        <textarea rows={5} className='border w-full h-full bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg p-2' placeholder={labels.exInputLabelOne} defaultValue={inputOne} onChange={(e) => setInputOne(e.target.value)} />
                         </>
                     ) : (
                         <>
-                            <input className='w-4/5 h-8 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg p-2' type="text" name="option" list="options" placeholder={labels.exInputLabelOne} onChange={(e) => setInputOne(e.target.value)} />
+                            <input className='border w-4/5 h-8 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg p-2' type="text" name="option" list="options" placeholder={labels.exInputLabelOne} onChange={(e) => setInputOne(e.target.value)} />
                             <datalist id="options">
                                 {
                                     options && options.map((item) => (
@@ -132,7 +132,7 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
                 }
             </div>
 
-            <div className='m-5 flex flex-col justify-center w-64 bg-white dark:bg-gray-800 comp-area rounded-lg border border-gray-200 dark:border-gray-700 shadow-lg'>
+            <div className='m-5 flex flex-col justify-center bg-white dark:bg-gray-800 comp-area rounded-lg border border-gray-200 dark:border-gray-700 shadow-lg'>
                 <div className='flex justify-around mb-4'>
                     <div className='flex justify-between w-full'>
                         <h2 className='big-col subTitle text-gray-900 dark:text-white'>{labels.inputLabelTwo}</h2>
