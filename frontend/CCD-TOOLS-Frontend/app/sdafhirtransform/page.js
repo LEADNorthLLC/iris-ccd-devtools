@@ -4,8 +4,6 @@ import TestComponent from '@/components/TestComponent'
 
 const sdafhirtransforms = [
   { value: 'SDAtoFHIR', desc: 'SDA to FHIR Transform' },
-  { value: 'SDAtoFHIR_2_0', desc: 'SDA to FHIR 2.0 Transform' },
-  { value: 'SDAtoFHIR_2_1', desc: 'SDA to FHIR 2.1 Transform' }
 ]
 
 const sdafhirtransformLabels = {
@@ -26,7 +24,7 @@ export default function SDAFHIRTransform() {
         options={sdafhirtransforms} 
         labels={sdafhirtransformLabels} 
         baseUrl='http://localhost:62773' 
-        url='/csp/visualizer/service/sdafhirtransform/' 
+        url='/csp/visualizer/service/sdafhirtransform/'
       />
     </div>
   )
