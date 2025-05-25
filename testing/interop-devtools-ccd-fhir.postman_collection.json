@@ -252,68 +252,6 @@
 			"response": []
 		},
 		{
-			"name": "FHIR Transform FHIR to SDA Test - Multipart",
-			"request": {
-				"auth": {
-					"type": "basic",
-					"basic": [
-						{
-							"key": "password",
-							"value": "SYS",
-							"type": "string"
-						},
-						{
-							"key": "username",
-							"value": "_system",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "multipart/form-data",
-						"type": "text",
-						"disabled": true
-					}
-				],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "CONTENT1",
-							"value": "{\"TransformName\": \"SDA3/CCDAv21-to-SDA.xsl\"\n}",
-							"description": "XPathValue",
-							"type": "text"
-						},
-						{
-							"key": "CONTENT2",
-							"value": "{\n  \"resourceType\" : \"Patient\",\n  \"id\" : \"example\",\n  \"identifier\" : [{\n    \"use\" : \"usual\",\n    \"type\" : {\n      \"coding\" : [{\n        \"system\" : \"http://terminology.hl7.org/CodeSystem/v2-0203\",\n        \"code\" : \"MR\"\n      }]\n    },\n    \"system\" : \"urn:oid:1.2.36.146.595.217.0.1\",\n    \"value\" : \"12345\",\n    \"period\" : {\n      \"start\" : \"2001-05-06\"\n    },\n    \"assigner\" : {\n      \"display\" : \"Acme Healthcare\"\n    }\n  }],\n  \"active\" : true,\n  \"name\" : [{\n    \"use\" : \"official\",\n    \"family\" : \"Chalmers\",\n    \"given\" : [\"Peter\",\n    \"James\"]\n  },\n  {\n    \"use\" : \"usual\",\n    \"given\" : [\"Jim\"]\n  },\n  {\n    \"use\" : \"maiden\",\n    \"family\" : \"Windsor\",\n    \"given\" : [\"Peter\",\n    \"James\"]\n  }],\n  \"telecom\" : [{\n    \"use\" : \"home\"\n  },\n  {\n    \"system\" : \"phone\",\n    \"value\" : \"(03) 5555 6473\",\n    \"use\" : \"work\",\n    \"rank\" : 1\n  },\n  {\n    \"system\" : \"phone\",\n    \"value\" : \"(03) 3410 5613\",\n    \"use\" : \"mobile\",\n    \"rank\" : 2\n  },\n  {\n    \"system\" : \"phone\",\n    \"value\" : \"(03) 5555 8834\",\n    \"use\" : \"old\",\n    \"period\" : {\n      \"end\" : \"2014\"\n    }\n  }],\n  \"gender\" : \"male\",\n  \"birthDate\" : \"1974-12-25\",\n  \"_birthDate\" : {\n    \"extension\" : [{\n      \"url\" : \"http://hl7.org/fhir/StructureDefinition/patient-birthTime\",\n      \"valueDateTime\" : \"1974-12-25T14:35:45-05:00\"\n    }]\n  },\n  \"deceasedBoolean\" : false,\n  \"address\" : [{\n    \"use\" : \"home\",\n    \"type\" : \"both\",\n    \"text\" : \"534 Erewhon St PeasantVille, Rainbow, Vic  3999\",\n    \"line\" : [\"534 Erewhon St\"],\n    \"city\" : \"PleasantVille\",\n    \"district\" : \"Rainbow\",\n    \"state\" : \"Vic\",\n    \"postalCode\" : \"3999\",\n    \"period\" : {\n      \"start\" : \"1974-12-25\"\n    }\n  }],\n  \"contact\" : [{\n    \"relationship\" : [{\n      \"coding\" : [{\n        \"system\" : \"http://terminology.hl7.org/CodeSystem/v2-0131\",\n        \"code\" : \"N\"\n      }]\n    }],\n    \"name\" : {\n      \"family\" : \"du Marché\",\n      \"_family\" : {\n        \"extension\" : [{\n          \"url\" : \"http://hl7.org/fhir/StructureDefinition/humanname-own-prefix\",\n          \"valueString\" : \"VV\"\n        }]\n      },\n      \"given\" : [\"Bénédicte\"]\n    },\n    \"telecom\" : [{\n      \"system\" : \"phone\",\n      \"value\" : \"+33 (237) 998327\"\n    }],\n    \"address\" : {\n      \"use\" : \"home\",\n      \"type\" : \"both\",\n      \"line\" : [\"534 Erewhon St\"],\n      \"city\" : \"PleasantVille\",\n      \"district\" : \"Rainbow\",\n      \"state\" : \"Vic\",\n      \"postalCode\" : \"3999\",\n      \"period\" : {\n        \"start\" : \"1974-12-25\"\n      }\n    },\n    \"gender\" : \"female\"\n  }]\n}",
-							"description": "Document content",
-							"type": "text"
-						}
-					]
-				},
-				"url": {
-					"raw": "http://localhost:62773/csp/visualizer/service/fhirtransform/",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "62773",
-					"path": [
-						"csp",
-						"visualizer",
-						"service",
-						"fhirtransform",
-						""
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "FHIR Transform FHIR to SDA Test - Patient Bundle",
 			"request": {
 				"auth": {
@@ -345,7 +283,7 @@
 					"formdata": [
 						{
 							"key": "CONTENT1",
-							"value": "{\"TransformName\": \"SDA3/CCDAv21-to-SDA.xsl\"\n}",
+							"value": "{\"TransformName\": \"FHIRToSDA\"\n}",
 							"description": "XPathValue",
 							"type": "text"
 						},
@@ -376,7 +314,7 @@
 			"response": []
 		},
 		{
-			"name": "FHIR Transform FHIR to SDA Test - Allergy",
+			"name": "FHIR Transform FHIR to SDA Test - Patient Bundle ERROR",
 			"request": {
 				"auth": {
 					"type": "basic",
@@ -407,75 +345,75 @@
 					"formdata": [
 						{
 							"key": "CONTENT1",
-							"value": "{\"TransformName\": \"SDA3/CCDAv21-to-SDA.xsl\"\n}",
+							"value": "{\"TransformName\": \"FHIRToSDA\"\n}",
+							"description": "XPathValue",
+							"type": "text"
+						},
+						{
+							"key": "CONTENT2",
+							"value": "{\n  \"resourceType\" : \"Patient\",\n  \"id\" : \"example\",\n  \"identifier\" : [{\n    \"use\" : \"usual\",\n    \"type\" : {\n      \"coding\" : [{\n        \"system\" : \"http://terminology.hl7.org/CodeSystem/v2-0203\",\n        \"code\" : \"MR\"\n      }]\n    },\n    \"system\" : \"urn:oid:1.2.36.146.595.217.0.1\",\n    \"value\" : \"12345\",\n    \"period\" : {\n      \"start\" : \"2001-05-06\"\n    },\n    \"assigner\" : {\n      \"display\" : \"Acme Healthcare\"\n    }\n  }],\n  \"active\" : true,\n  \"name\" : [{\n    \"use\" : \"official\",\n    \"family\" : \"Chalmers\",\n    \"given\" : [\"Peter\",\n    \"James\"]\n  },\n  {\n    \"use\" : \"usual\",\n    \"given\" : [\"Jim\"]\n  },\n  {\n    \"use\" : \"maiden\",\n    \"family\" : \"Windsor\",\n    \"given\" : [\"Peter\",\n    \"James\"],\n    \"period\" : {\n      \"end\" : \"2002\"\n    }\n  }],\n  \"telecom\" : [{\n    \"use\" : \"home\"\n  },\n  {\n    \"system\" : \"phone\",\n    \"value\" : \"(03) 5555 6473\",\n    \"use\" : \"work\",\n    \"rank\" : 1\n  },\n  {\n    \"system\" : \"phone\",\n    \"value\" : \"(03) 3410 5613\",\n    \"use\" : \"mobile\",\n    \"rank\" : 2\n  },\n  {\n    \"system\" : \"phone\",\n    \"value\" : \"(03) 5555 8834\",\n    \"use\" : \"old\",\n    \"period\" : {\n      \"end\" : \"2014\"\n    }\n  }],\n  \"gender\" : \"male\",\n  \"birthDate\" : \"1974-12-25\",\n  \"_birthDate\" : {\n    \"extension\" : [{\n      \"url\" : \"http://hl7.org/fhir/StructureDefinition/patient-birthTime\",\n      \"valueDateTime\" : \"1974-12-25T14:35:45-05:00\"\n    }]\n  },\n  \"deceasedBoolean\" : false,\n  \"address\" : [{\n    \"use\" : \"home\",\n    \"type\" : \"both\",\n    \"text\" : \"534 Erewhon St PeasantVille, Rainbow, Vic  3999\",\n    \"line\" : [\"534 Erewhon St\"],\n    \"city\" : \"PleasantVille\",\n    \"district\" : \"Rainbow\",\n    \"state\" : \"Vic\",\n    \"postalCode\" : \"3999\",\n    \"period\" : {\n      \"start\" : \"1974-12-25\"\n    }\n  }],\n  \"contact\" : [{\n    \"relationship\" : [{\n      \"coding\" : [{\n        \"system\" : \"http://terminology.hl7.org/CodeSystem/v2-0131\",\n        \"code\" : \"N\"\n      }]\n    }],\n    \"name\" : {\n      \"family\" : \"du Marché\",\n      \"_family\" : {\n        \"extension\" : [{\n          \"url\" : \"http://hl7.org/fhir/StructureDefinition/humanname-own-prefix\",\n          \"valueString\" : \"VV\"\n        }]\n      },\n      \"given\" : [\"Bénédicte\"]\n    },\n    \"additionalName\" : [{\n      \"use\" : \"nickname\",\n      \"given\" : [\"Béné\"]\n    }],\n    \"telecom\" : [{\n      \"system\" : \"phone\",\n      \"value\" : \"+33 (237) 998327\"\n    }],\n    \"address\" : {\n      \"use\" : \"home\",\n      \"type\" : \"both\",\n      \"line\" : [\"534 Erewhon St\"],\n      \"city\" : \"PleasantVille\",\n      \"district\" : \"Rainbow\",\n      \"state\" : \"Vic\",\n      \"postalCode\" : \"3999\",\n      \"period\" : {\n        \"start\" : \"1974-12-25\"\n      }\n    },\n    \"additionalAddress\" : [{\n      \"use\" : \"work\",\n      \"line\" : [\"123 Smart St\"],\n      \"city\" : \"PleasantVille\",\n      \"state\" : \"Vic\",\n      \"postalCode\" : \"3999\"\n    }],\n    \"gender\" : \"female\",\n    \"period\" : {\n      \"start\" : \"2012\"\n    }\n  }],\n  \"managingOrganization\" : {\n    \"reference\" : \"Organization/1\"\n  }\n}",
+							"description": "Document content",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:62773/csp/visualizer/service/fhirtransform/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "62773",
+					"path": [
+						"csp",
+						"visualizer",
+						"service",
+						"fhirtransform",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "FHIR Transform FHIR to SDA Test - Allergy ERROR",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "SYS",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "_system",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "multipart/form-data",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "CONTENT1",
+							"value": "{\"TransformName\": \"FHIRToSDA\"\n}",
 							"description": "XPathValue",
 							"type": "text"
 						},
 						{
 							"key": "CONTENT2",
 							"value": "{\n  \"resourceType\" : \"AllergyIntolerance\",\n  \"id\" : \"medication\",\n  \"clinicalStatus\" : {\n    \"coding\" : [{\n      \"system\" : \"http://terminology.hl7.org/CodeSystem/allergyintolerance-clinical\",\n      \"code\" : \"active\",\n      \"display\" : \"Active\"\n    }]\n  },\n  \"verificationStatus\" : {\n    \"coding\" : [{\n      \"system\" : \"http://terminology.hl7.org/CodeSystem/allergyintolerance-verification\",\n      \"code\" : \"unconfirmed\",\n      \"display\" : \"Unconfirmed\"\n    }]\n  },\n  \"category\" : [\"medication\"],\n  \"criticality\" : \"high\",\n  \"code\" : {\n    \"coding\" : [{\n      \"system\" : \"http://www.nlm.nih.gov/research/umls/rxnorm\",\n      \"code\" : \"7980\",\n      \"display\" : \"Penicillin G\"\n    }]\n  },\n  \"patient\" : {\n    \"reference\" : \"Patient/example\"\n  },\n  \"recordedDate\" : \"2010-03-01\",\n  \"recorder\" : {\n    \"reference\" : \"Practitioner/example\"\n  },\n  \"reaction\" : [{\n    \"manifestation\" : [{\n      \"concept\" : {\n        \"coding\" : [{\n          \"system\" : \"http://snomed.info/sct\",\n          \"code\" : \"247472004\",\n          \"display\" : \"Hives\"\n        }]\n      }\n    }]\n  }]\n}",
-							"description": "Document content",
-							"type": "text"
-						}
-					]
-				},
-				"url": {
-					"raw": "http://localhost:62773/csp/visualizer/service/fhirtransform/",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "62773",
-					"path": [
-						"csp",
-						"visualizer",
-						"service",
-						"fhirtransform",
-						""
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "FHIR Transform FHIR to SDA Test - Patient Bundle",
-			"request": {
-				"auth": {
-					"type": "basic",
-					"basic": [
-						{
-							"key": "password",
-							"value": "SYS",
-							"type": "string"
-						},
-						{
-							"key": "username",
-							"value": "_system",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "multipart/form-data",
-						"type": "text",
-						"disabled": true
-					}
-				],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "CONTENT1",
-							"value": "{\"TransformName\": \"SDA3/CCDAv21-to-SDA.xsl\"\n}",
-							"description": "XPathValue",
-							"type": "text"
-						},
-						{
-							"key": "CONTENT2",
-							"value": "{\n  \"resourceType\" : \"Bundle\",\n  \"id\" : \"bundle-response-simplesummary\",\n  \"type\" : \"batch-response\",\n  \"entry\" : [{\n    \"fullUrl\" : \"http://example.org/fhir/Patient/example\",\n    \"resource\" : {\n      \"resourceType\" : \"Patient\",\n      \"id\" : \"example\",\n      \"meta\" : {\n        \"versionId\" : \"1\",\n        \"lastUpdated\" : \"2018-11-12T03:35:20.715Z\"\n      },\n      \"text\" : {\n        \"status\" : \"generated\",\n        \"div\" : \"<div xmlns=\\\"http://www.w3.org/1999/xhtml\\\">\\n                        <table>\\n                            <tbody>\\n                                <tr>\\n                                    <td>Name</td>\\n                                    <td>Peter James \\n                                        <b>Chalmers</b> (&quot;Jim&quot;)\\n                                    </td>\\n                                </tr>\\n                                <tr>\\n                                    <td>Address</td>\\n                                    <td>534 Erewhon, Pleasantville, Vic, 3999</td>\\n                                </tr>\\n                                <tr>\\n                                    <td>Contacts</td>\\n                                    <td>Home: unknown. Work: (03) 5555 6473</td>\\n                                </tr>\\n                                <tr>\\n                                    <td>Id</td>\\n                                    <td>MRN: 12345 (Acme Healthcare)</td>\\n                                </tr>\\n                            </tbody>\\n                        </table>\\n                    </div>\"\n      },\n      \"identifier\" : [{\n        \"use\" : \"usual\",\n        \"type\" : {\n          \"coding\" : [{\n            \"system\" : \"http://terminology.hl7.org/CodeSystem/v2-0203\",\n            \"code\" : \"MR\"\n          }]\n        },\n        \"system\" : \"urn:oid:1.2.36.146.595.217.0.1\",\n        \"value\" : \"12345\",\n        \"period\" : {\n          \"start\" : \"2001-05-06\"\n        },\n        \"assigner\" : {\n          \"display\" : \"Acme Healthcare\"\n        }\n      }],\n      \"active\" : true,\n      \"name\" : [{\n        \"use\" : \"official\",\n        \"family\" : \"Chalmers\",\n        \"given\" : [\"Peter\",\n        \"James\"]\n      },\n      {\n        \"use\" : \"usual\",\n        \"given\" : [\"Jim\"]\n      },\n      {\n        \"use\" : \"maiden\",\n        \"family\" : \"Windsor\",\n        \"given\" : [\"Peter\",\n        \"James\"]\n      }],\n      \"telecom\" : [{\n        \"use\" : \"home\"\n      },\n      {\n        \"system\" : \"phone\",\n        \"value\" : \"(03) 5555 6473\",\n        \"use\" : \"work\",\n        \"rank\" : 1\n      },\n      {\n        \"system\" : \"phone\",\n        \"value\" : \"(03) 3410 5613\",\n        \"use\" : \"mobile\",\n        \"rank\" : 2\n      },\n      {\n        \"system\" : \"phone\",\n        \"value\" : \"(03) 5555 8834\",\n        \"use\" : \"old\",\n        \"period\" : {\n          \"end\" : \"2014\"\n        }\n      }],\n      \"gender\" : \"male\",\n      \"birthDate\" : \"1974-12-25\",\n      \"_birthDate\" : {\n        \"extension\" : [{\n          \"url\" : \"http://hl7.org/fhir/StructureDefinition/patient-birthTime\",\n          \"valueDateTime\" : \"1974-12-25T14:35:45-05:00\"\n        }]\n      },\n      \"deceasedBoolean\" : false,\n      \"address\" : [{\n        \"use\" : \"home\",\n        \"type\" : \"both\",\n        \"text\" : \"534 Erewhon St PeasantVille, Rainbow, Vic  3999\",\n        \"line\" : [\"534 Erewhon St\"],\n        \"city\" : \"PleasantVille\",\n        \"district\" : \"Rainbow\",\n        \"state\" : \"Vic\",\n        \"postalCode\" : \"3999\",\n        \"period\" : {\n          \"start\" : \"1974-12-25\"\n        }\n      }],\n      \"contact\" : [{\n        \"relationship\" : [{\n          \"coding\" : [{\n            \"system\" : \"http://terminology.hl7.org/CodeSystem/v2-0131\",\n            \"code\" : \"N\"\n          }]\n        }],\n        \"name\" : {\n          \"family\" : \"du Marché\",\n          \"_family\" : {\n            \"extension\" : [{\n              \"url\" : \"http://hl7.org/fhir/StructureDefinition/humanname-own-prefix\",\n              \"valueString\" : \"VV\"\n            }]\n          },\n          \"given\" : [\"Bénédicte\"]\n        },\n        \"telecom\" : [{\n          \"system\" : \"phone\",\n          \"value\" : \"+33 (237) 998327\"\n        }],\n        \"address\" : {\n          \"use\" : \"home\",\n          \"type\" : \"both\",\n          \"line\" : [\"534 Erewhon St\"],\n          \"city\" : \"PleasantVille\",\n          \"district\" : \"Rainbow\",\n          \"state\" : \"Vic\",\n          \"postalCode\" : \"3999\",\n          \"period\" : {\n            \"start\" : \"1974-12-25\"\n          }\n        }\n      }],\n      \"managingOrganization\" : {\n        \"reference\" : \"Organization/1\"\n      }\n    },\n    \"response\" : {\n      \"status\" : \"200\",\n      \"etag\" : \"W/1\",\n      \"lastModified\" : \"2018-11-12T03:35:20.717Z\"\n    }\n  },\n  {\n    \"resource\" : {\n      \"resourceType\" : \"Bundle\",\n      \"id\" : \"2c2fb771-6c4b-4df8-89b2-47a1178e7c\",\n      \"meta\" : {\n        \"lastUpdated\" : \"2018-11-12T05:42:49.445Z\"\n      },\n      \"type\" : \"searchset\",\n      \"total\" : 4,\n      \"link\" : [{\n        \"relation\" : \"self\",\n        \"url\" : \"http://test.fhir.org/r5/Condition?_format=application/fhir+xml&search-id=36aac5c3-a9f6-4c3a-bf94-24d32ed604&&patient=example&_sort=_id\"\n      }],\n      \"entry\" : [{\n        \"fullUrl\" : \"http://test.fhir.org/r5/Condition/example\",\n        \"resource\" : {\n          \"resourceType\" : \"Condition\",\n          \"id\" : \"example\",\n          \"meta\" : {\n            \"versionId\" : \"1\",\n            \"lastUpdated\" : \"2018-11-12T03:34:46.552Z\"\n          },\n          \"text\" : {\n            \"status\" : \"generated\",\n            \"div\" : \"<div xmlns=\\\"http://www.w3.org/1999/xhtml\\\">Severe burn of left ear (Date: 24-May 2012)</div>\"\n          },\n          \"clinicalStatus\" : {\n            \"coding\" : [{\n              \"system\" : \"http://terminology.hl7.org/CodeSystem/condition-clinical\",\n              \"code\" : \"active\"\n            }]\n          },\n          \"verificationStatus\" : {\n            \"coding\" : [{\n              \"system\" : \"http://terminology.hl7.org/CodeSystem/condition-ver-status\",\n              \"code\" : \"confirmed\"\n            }]\n          },\n          \"category\" : [{\n            \"coding\" : [{\n              \"system\" : \"http://terminology.hl7.org/CodeSystem/condition-category\",\n              \"code\" : \"encounter-diagnosis\",\n              \"display\" : \"Encounter Diagnosis\"\n            },\n            {\n              \"system\" : \"http://snomed.info/sct\",\n              \"code\" : \"439401001\",\n              \"display\" : \"Diagnosis\"\n            }]\n          }],\n          \"severity\" : {\n            \"coding\" : [{\n              \"system\" : \"http://snomed.info/sct\",\n              \"code\" : \"24484000\",\n              \"display\" : \"Severe\"\n            }]\n          },\n          \"code\" : {\n            \"coding\" : [{\n              \"system\" : \"http://snomed.info/sct\",\n              \"code\" : \"39065001\",\n              \"display\" : \"Burn of ear\"\n            }],\n            \"text\" : \"Burnt Ear\"\n          },\n          \"bodySite\" : [{\n            \"coding\" : [{\n              \"system\" : \"http://snomed.info/sct\",\n              \"code\" : \"49521004\",\n              \"display\" : \"Left external ear structure\"\n            }],\n            \"text\" : \"Left Ear\"\n          }],\n          \"subject\" : {\n            \"reference\" : \"Patient/example\"\n          },\n          \"onsetDateTime\" : \"2012-05-24\"\n        },\n        \"search\" : {\n          \"mode\" : \"match\"\n        }\n      },\n      {\n        \"fullUrl\" : \"http://test.fhir.org/r5/Condition/example2\",\n        \"resource\" : {\n          \"resourceType\" : \"Condition\",\n          \"id\" : \"example2\",\n          \"meta\" : {\n            \"versionId\" : \"1\",\n            \"lastUpdated\" : \"2018-11-12T03:34:46.626Z\"\n          },\n          \"text\" : {\n            \"status\" : \"generated\",\n            \"div\" : \"<div xmlns=\\\"http://www.w3.org/1999/xhtml\\\">Mild Asthma (Date: 12-Nov 2012)</div>\"\n          },\n          \"clinicalStatus\" : {\n            \"coding\" : [{\n              \"system\" : \"http://terminology.hl7.org/CodeSystem/condition-clinical\",\n              \"code\" : \"active\"\n            }]\n          },\n          \"verificationStatus\" : {\n            \"coding\" : [{\n              \"system\" : \"http://terminology.hl7.org/CodeSystem/condition-ver-status\",\n              \"code\" : \"confirmed\"\n            }]\n          },\n          \"category\" : [{\n            \"coding\" : [{\n              \"system\" : \"http://terminology.hl7.org/CodeSystem/condition-category\",\n              \"code\" : \"problem-list-item\",\n              \"display\" : \"Problem List Item\"\n            }]\n          }],\n          \"severity\" : {\n            \"coding\" : [{\n              \"system\" : \"http://snomed.info/sct\",\n              \"code\" : \"255604002\",\n              \"display\" : \"Mild\"\n            }]\n          },\n          \"code\" : {\n            \"text\" : \"Asthma\"\n          },\n          \"subject\" : {\n            \"reference\" : \"Patient/example\"\n          },\n          \"onsetString\" : \"approximately November 2012\"\n        },\n        \"search\" : {\n          \"mode\" : \"match\"\n        }\n      },\n      {\n        \"fullUrl\" : \"http://test.fhir.org/r5/Condition/family-history\",\n        \"resource\" : {\n          \"resourceType\" : \"Condition\",\n          \"id\" : \"family-history\",\n          \"meta\" : {\n            \"versionId\" : \"1\",\n            \"lastUpdated\" : \"2018-11-12T03:34:47.274Z\"\n          },\n          \"text\" : {\n            \"status\" : \"generated\",\n            \"div\" : \"<div xmlns=\\\"http://www.w3.org/1999/xhtml\\\">Family history of cancer of colon</div>\"\n          },\n          \"clinicalStatus\" : {\n            \"coding\" : [{\n              \"system\" : \"http://terminology.hl7.org/CodeSystem/condition-clinical\",\n              \"code\" : \"active\"\n            }]\n          },\n          \"category\" : [{\n            \"coding\" : [{\n              \"system\" : \"http://terminology.hl7.org/CodeSystem/condition-category\",\n              \"code\" : \"problem-list-item\",\n              \"display\" : \"Problem List Item\"\n            }]\n          }],\n          \"code\" : {\n            \"coding\" : [{\n              \"system\" : \"http://snomed.info/sct\",\n              \"code\" : \"312824007\",\n              \"display\" : \"Family history of cancer of colon\"\n            }]\n          },\n          \"subject\" : {\n            \"reference\" : \"Patient/example\"\n          }\n        },\n        \"search\" : {\n          \"mode\" : \"match\"\n        }\n      },\n      {\n        \"fullUrl\" : \"http://test.fhir.org/r5/Condition/stroke\",\n        \"resource\" : {\n          \"resourceType\" : \"Condition\",\n          \"id\" : \"stroke\",\n          \"meta\" : {\n            \"versionId\" : \"1\",\n            \"lastUpdated\" : \"2018-11-12T03:34:47.337Z\"\n          },\n          \"text\" : {\n            \"status\" : \"generated\",\n            \"div\" : \"<div xmlns=\\\"http://www.w3.org/1999/xhtml\\\">Ischemic stroke, July 18, 2010</div>\"\n          },\n          \"clinicalStatus\" : {\n            \"coding\" : [{\n              \"system\" : \"http://terminology.hl7.org/CodeSystem/condition-clinical\",\n              \"code\" : \"active\"\n            }]\n          },\n          \"verificationStatus\" : {\n            \"coding\" : [{\n              \"system\" : \"http://terminology.hl7.org/CodeSystem/condition-ver-status\",\n              \"code\" : \"confirmed\"\n            }]\n          },\n          \"category\" : [{\n            \"coding\" : [{\n              \"system\" : \"http://terminology.hl7.org/CodeSystem/condition-category\",\n              \"code\" : \"encounter-diagnosis\",\n              \"display\" : \"Encounter Diagnosis\"\n            }]\n          }],\n          \"code\" : {\n            \"coding\" : [{\n              \"system\" : \"http://snomed.info/sct\",\n              \"code\" : \"422504002\",\n              \"display\" : \"Ischemic stroke (disorder)\"\n            }],\n            \"text\" : \"Stroke\"\n          },\n          \"subject\" : {\n            \"reference\" : \"Patient/example\"\n          },\n          \"onsetDateTime\" : \"2010-07-18\"\n        },\n        \"search\" : {\n          \"mode\" : \"match\"\n        }\n      }]\n    },\n    \"response\" : {\n      \"status\" : \"200\",\n      \"etag\" : \"W/1\",\n      \"lastModified\" : \"2018-11-12T03:35:20.717Z\"\n    }\n  },\n  {\n    \"resource\" : {\n      \"resourceType\" : \"Bundle\",\n      \"id\" : \"86846953-60dd-47ba-b37a-7e7d7e3312\",\n      \"meta\" : {\n        \"lastUpdated\" : \"2018-11-12T05:42:49.476Z\"\n      },\n      \"type\" : \"searchset\",\n      \"total\" : 0,\n      \"link\" : [{\n        \"relation\" : \"self\",\n        \"url\" : \"http://test.fhir.org/r5/MedicationStatement?_format=application/fhir+xml&search-id=0f08b401-5120-4444-9a83-3fd21d33df&&patient=example&_sort=_id\"\n      }]\n    },\n    \"response\" : {\n      \"status\" : \"200\",\n      \"etag\" : \"W/1\",\n      \"lastModified\" : \"2018-11-12T03:35:20.717Z\"\n    }\n  },\n  {\n    \"resource\" : {\n      \"resourceType\" : \"Bundle\",\n      \"id\" : \"4bafe9c4-ba53-4d7b-89d0-d92ee0859a\",\n      \"meta\" : {\n        \"lastUpdated\" : \"2018-11-12T05:42:49.498Z\"\n      },\n      \"type\" : \"searchset\",\n      \"total\" : 0,\n      \"link\" : [{\n        \"relation\" : \"self\",\n        \"url\" : \"http://test.fhir.org/r5/Observation?_format=application/fhir+xml&search-id=50df0414-1375-48a4-ba1e-66f580360a&&patient=example&code=http%3A//loinc.org%7C55284%2D4&date=ge2015%2D01%2D01&_sort=_id\"\n      }]\n    },\n    \"response\" : {\n      \"status\" : \"200\",\n      \"etag\" : \"W/1\",\n      \"lastModified\" : \"2018-11-12T03:35:20.717Z\"\n    }\n  }]\n}",
 							"description": "Document content",
 							"type": "text"
 						}
@@ -537,7 +475,7 @@
 						},
 						{
 							"key": "CONTENT2",
-							"value": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Container><Patient><Name><FamilyName>Chalmers</FamilyName><GivenName>Peter; James</GivenName><Type>Legal</Type></Name><Aliases><Name><GivenName>Jim</GivenName><Type>Display</Type></Name><Name><FamilyName>Windsor</FamilyName><GivenName>Peter; James</GivenName><Type>Maiden</Type></Name></Aliases><Gender><Code>M</Code></Gender><SupportContacts><SupportContact><Name><FamilyName>du Marché</FamilyName><GivenName>Bénédicte</GivenName></Name><Gender><Code>F</Code></Gender><Address><FromTime>1974-12-25T00:00:00</FromTime><Street>534 Erewhon St</Street><City><Code>PleasantVille</Code><Description>PleasantVille</Description></City><State><Code>Vic</Code><Description>Vic</Description></State><Zip><Code>3999</Code><Description>3999</Description></Zip><County><Code>Rainbow</Code><Description>Rainbow</Description></County></Address><ContactInfo><HomePhoneNumber>+33 (237) 998327</HomePhoneNumber></ContactInfo><ContactType><Code>N</Code></ContactType></SupportContact></SupportContacts><BirthTime>1974-12-25T00:00:00</BirthTime><IsDead>false</IsDead><PatientNumbers><PatientNumber><FromTime>2001-05-06T00:00:00</FromTime><Number>12345</Number><NumberType>MRN</NumberType><ISOAssigningAuthority>urn:oid:1.2.36.146.595.217.0.1</ISOAssigningAuthority></PatientNumber></PatientNumbers><Addresses><Address><FromTime>1974-12-25T00:00:00</FromTime><Street>534 Erewhon St</Street><City><Code>PleasantVille</Code><Description>PleasantVille</Description></City><State><Code>Vic</Code><Description>Vic</Description></State><Zip><Code>3999</Code><Description>3999</Description></Zip><County><Code>Rainbow</Code><Description>Rainbow</Description></County></Address></Addresses><ContactInfo><WorkPhoneNumber>(03) 5555 6473</WorkPhoneNumber><MobilePhoneNumber>(03) 3410 5613</MobilePhoneNumber></ContactInfo></Patient><UpdateECRDemographics>true</UpdateECRDemographics><SendingFacility>FHIR</SendingFacility></Container>\n",
+							"value": "<Container><Patient><Name><FamilyName>Chalmers</FamilyName><GivenName>Peter; James</GivenName><Type>Legal</Type></Name><Aliases><Name><GivenName>Jim</GivenName><Type>Display</Type></Name><Name><FamilyName>Windsor</FamilyName><GivenName>Peter; James</GivenName><Type>Maiden</Type></Name></Aliases><Gender><Code>M</Code></Gender><SupportContacts><SupportContact><Name><FamilyName>du Marché</FamilyName><GivenName>Bénédicte</GivenName></Name><Gender><Code>F</Code></Gender><Address><FromTime>1974-12-25T00:00:00</FromTime><Street>534 Erewhon St</Street><City><Code>PleasantVille</Code><Description>PleasantVille</Description></City><State><Code>Vic</Code><Description>Vic</Description></State><Zip><Code>3999</Code><Description>3999</Description></Zip><County><Code>Rainbow</Code><Description>Rainbow</Description></County></Address><ContactInfo><HomePhoneNumber>+33 (237) 998327</HomePhoneNumber></ContactInfo><ContactType><Code>N</Code></ContactType></SupportContact></SupportContacts><BirthTime>1974-12-25T00:00:00</BirthTime><IsDead>false</IsDead><PatientNumbers><PatientNumber><FromTime>2001-05-06T00:00:00</FromTime><Number>12345</Number><NumberType>MRN</NumberType><ISOAssigningAuthority>urn:oid:1.2.36.146.595.217.0.1</ISOAssigningAuthority></PatientNumber></PatientNumbers><Addresses><Address><FromTime>1974-12-25T00:00:00</FromTime><Street>534 Erewhon St</Street><City><Code>PleasantVille</Code><Description>PleasantVille</Description></City><State><Code>Vic</Code><Description>Vic</Description></State><Zip><Code>3999</Code><Description>3999</Description></Zip><County><Code>Rainbow</Code><Description>Rainbow</Description></County></Address></Addresses><ContactInfo><WorkPhoneNumber>(03) 5555 6473</WorkPhoneNumber><MobilePhoneNumber>(03) 3410 5613</MobilePhoneNumber></ContactInfo></Patient><UpdateECRDemographics>true</UpdateECRDemographics><SendingFacility>FHIR</SendingFacility></Container>\n",
 							"description": "SDA content",
 							"type": "text"
 						}
