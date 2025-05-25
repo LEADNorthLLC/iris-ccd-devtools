@@ -36,27 +36,27 @@ export default function ClientLayout({ children }) {
   }, []); // Empty dependency array
 
   const menuItems = [
-    { path: '/', icon: <LayoutDashboard className="w-5 h-5" />, label: 'Dashboard' },
-    { path: '/xpath', icon: <FileSearch className="w-5 h-5" />, label: 'XPath Evaluator' },
+    { path: '/', icon: <LayoutDashboard className="w-5 h-5 dark:stroke-gray-300" />, label: 'Dashboard' },
+    { path: '/xpath', icon: <FileSearch className="w-5 h-5 dark:stroke-gray-300" />, label: 'XPath Evaluator' },
     {
       path: '/transform',
-      icon: <FileCode className="w-5 h-5" />,
+      icon: <FileCode className="w-5 h-5 dark:stroke-gray-300" />,
       label: 'CCDA to SDA Transforms',
     },
     {
       path: '/xsl',
-      icon: <FileCode2 className="w-5 h-5" />,
+      icon: <FileCode2 className="w-5 h-5 dark:stroke-gray-300" />,
       label: 'XSL Template Tester',
     },
     { type: 'separator' },
     {
       path: '/fhirsdatransform',
-      icon: <FileCode className="w-5 h-5" />,
+      icon: <FileCode className="w-5 h-5 dark:stroke-gray-300" />,
       label: 'FHIR to SDA Transforms',
     },
     {
       path: '/sdafhirtransform',
-      icon: <FileCode className="w-5 h-5" />,
+      icon: <FileCode className="w-5 h-5 dark:stroke-gray-300" />,
       label: 'SDA to FHIR Transforms',
     },
   ];
@@ -97,9 +97,9 @@ export default function ClientLayout({ children }) {
             aria-label={sidebarOpen ? "Close sidebar" : "Open sidebar"}
           >
             {sidebarOpen ? (
-              <ChevronRight className="w-5 h-5 dark:text-white" />
+              <ChevronRight className="w-5 h-5 dark:text-white dark:stroke-gray-300 dark:fill-gray-300" />
             ) : (
-              <Menu className="w-5 h-5 dark:text-white" />
+              <Menu className="w-5 h-5 dark:text-white dark:stroke-gray-300 dark:fill-gray-300" />
             )}
           </button>
         </div>
@@ -120,7 +120,7 @@ export default function ClientLayout({ children }) {
                   }`}
                 >
                   {item.icon}
-                  {sidebarOpen && <span className="ml-3">{item.label}</span>}
+                  {sidebarOpen && <span className="ml-3 dark:text-gray-300">{item.label}</span>}
                 </Link>
                 {sidebarOpen && item.subItems && (
                   <div className="ml-11 mt-1 space-y-1">

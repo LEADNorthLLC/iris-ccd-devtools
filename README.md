@@ -57,12 +57,12 @@ The UI is served from a second container and is available after docker startup a
 
 [CCD DevTools URL](http://localhost:4000)
 
-![CCD DevTools UI](misc/images/CCD_devtools_TransformTester.png)
+![CCD DevTools UI](misc/images/interop_devtools_Transform_Tester.png)
 
 ## REST APIs - TESTING
 
 **Sample Data**
-Sample C-CDAs from the [SyntheaMass](https://synthea.mitre.org/downloads) open-source data set have been included in the `testing/sample data` folder for unit testing. 
+Sample C-CDAs from the [SyntheaMass](https://synthea.mitre.org/downloads) open-source data set have been included in the `testing/sample data/CCDA` folder for unit testing. Also sample FHIR data from SyntheaMass has been included in the `testing/sample data/FHIR` folder for unit testing. 
 
 **Postman export*
 An export for a Postman Collection to test the available APIs is located in the **testing** folder of this project. 
