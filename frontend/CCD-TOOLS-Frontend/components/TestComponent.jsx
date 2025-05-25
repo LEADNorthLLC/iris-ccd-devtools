@@ -112,8 +112,11 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
     }
 
     const download = () => {
+        const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+        const pageTitle = labels.pageTitle.replace(/\s+/g, '_');
+        const filename = `${pageTitle}_${timestamp}.txt`;
         const blob = new Blob([texAreaTwo], { type : 'plain/text' });
-        saveAs(blob, 'LEAD.txt')
+        saveAs(blob, filename);
     }
 
     const load = (opt) => {
