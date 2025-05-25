@@ -143,6 +143,7 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
   return (
     <div className='comp m-5'>
         <div className='m-5 '>
+
             <div className='m-5 comp-input flex justify-between bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-lg'>
                 <h2 className='subTitle labelOne text-gray-900 dark:text-white'>{labels.inputLabelOne}</h2>
                 {
@@ -177,15 +178,20 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
                         <div className='flex'>
                             <input type='file' hidden ref={inputRef} onChange={(e) => handleFile(e.target.files[0])} className='border bg-slate-600 z-40' />
                             <button onClick={() => fileUploadAction()} className='bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg transition-colors duration-200'>Upload</button>
+                            {!(labels.pageTitle === "FHIR to SDA Transforms Tester" || labels.pageTitle === "SDA to FHIR Transforms Tester") && (
                             <button onClick={() => load(1)} className='bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg transition-colors duration-200 ml-2'>Viewer</button>
+                            )}
                         </div>
                     </div>
                     <div className='w-3/12'></div>
                     <div className='flex justify-between w-full'>
                         <h2 className='big-col subTitle text-gray-900 dark:text-white'>{labels.outputLabel}</h2>
                         <div className='flex'>
+                           
                             <button onClick={() => download()} className='bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg transition-colors duration-200'>Download</button>
+                            {!(labels.pageTitle === "FHIR to SDA Transforms Tester" || labels.pageTitle === "SDA to FHIR Transforms Tester") && (
                             <button onClick={() => load(2)} className='bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg transition-colors duration-200 ml-2'>Viewer</button>
+                            )}
                         </div>
                     </div>
                 </div>
