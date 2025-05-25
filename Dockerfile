@@ -5,34 +5,43 @@ FROM $IMAGE AS builder
 
 USER root
 
-WORKDIR /opt/irisapp
-RUN chown ${ISC_PACKAGE_MGRUSER}:${ISC_PACKAGE_IRISGROUP} /opt/irisapp
+WORKDIR /irisdev/app/dev
+
+RUN chown ${ISC_PACKAGE_MGRUSER}:${ISC_PACKAGE_IRISGROUP} /irisdev/app/dev
 
 USER irisowner
 
-COPY Installer.cls .
+COPY App.Installer.cls .
 
 COPY src src
-# COPY misc/csp /usr/irissys/csp
-COPY irissession.sh /
-SHELL ["/irissession.sh"] 
 
-RUN \
-  do $SYSTEM.OBJ.Load("Installer.cls", "ck") \
-  set sc = ##class(App.Installer).setup() \
-  zn "%SYS" \
-  write "Create web application ..." \
-  set webName = "/csp/visualizer/service" \
-  set webProperties("DispatchClass") = "CCD.Visualizer.REST.ServiceMap" \
-  set webProperties("NameSpace") = "IRISAPP" \
-  set webProperties("Enabled") = 1 \
-  set webProperties("MatchRoles") = ":%All" \
-  set webProperties("AutheEnabled") = 64 \
-  set sc = ##class(Security.Applications).Create(webName, .webProperties) \
-  write sc \
-  write "Web application "_webName_" has been created!" 
+COPY .iris_init /irisdev/app/.iris_init
 
-  #zn "IRISAPP" \
+#; COPY irissession.sh /
+#; SHELL ["/irissession.sh"] 
+
+
+RUN --mount=type=bind,src=.,dst=. \
+    pip3 install -r requirements.txt && \
+    iris start IRIS && \
+	iris session IRIS < iris.script && \
+    iris stop IRIS quietly
+
+#RUN \
+#  zn "%SYS" \
+#  write "Create web application ..." \
+#  set webName = "/csp/visualizer/service" \
+#  set webProperties("DispatchClass") = "CCD.Visualizer.REST.ServiceMap" \
+#  set webProperties("NameSpace") = "IRISAPP" \
+#  set webProperties("Enabled") = 1 \
+#  set webProperties("MatchRoles") = ":%All" \
+#  set webProperties("AutheEnabled") = 64 \
+#  set sc = ##class(Security.Applications).Create(webName, .webProperties) \
+#  write sc \
+#  write "Web application "_webName_" has been created!" \ 
+
+#  zn "IRISAPP" \
+
   #zpm "install swagger-ui" \
   #zpm "install webterminal"
   

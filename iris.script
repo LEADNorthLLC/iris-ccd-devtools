@@ -1,0 +1,36 @@
+zn "%SYS"
+
+// Unexpire passwords and set up passwordless mode to simplify dev use.
+// ** Comment out these two line for Production use **
+do ##class(Security.Users).UnExpireUserPasswords("*")
+zpm "install passwordless"
+
+// Enable callin for Embedded Python
+do ##class(Security.Services).Get("%Service_CallIn",.prop)
+set prop("Enabled")=1
+set prop("AutheEnabled")=48
+do ##class(Security.Services).Modify("%Service_CallIn",.prop)
+
+// create IRISAPP namespace
+//do $SYSTEM.OBJ.Load("/irisdev/app/dev/App.Installer.cls", "cbuk")
+//set sc = ##class(App.Installer).setup()
+zn "HSLIB"
+
+// Install a Foundation namespace and change to it
+Do ##class(HS.Util.Installer.Foundation).Install("IRISAPP")
+
+// do ##class(%SYSTEM.Process).CurrentDirectory("$PWD")
+// $@
+// if '\$Get(sc) do ##class(%SYSTEM.Process).Terminate(, 1)
+//zn "%SYS"
+//do ##class(SYS.Container).QuiesceForBundling()
+// Do ##class(Security.Users).UnExpireUserPasswords("*")
+//s props("Database")="HSLIB",sc=##Class(Config.MapPackages).Create("%ALL","HS",.props)
+// do ##class(%EnsembleMgr).EnableNamespace("IRISAPP")
+
+
+zn "IRISAPP"
+set ^UnitTest("TestDirectory")="/opt/irisapp"    
+zpm "load /irisdev/app/dev/ -v":1:1
+
+halt

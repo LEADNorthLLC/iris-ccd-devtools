@@ -1,4 +1,4 @@
-Class CCD.Visualizer.REST.Service.Base Extends %CSP.REST 
+Class CCD.Visualizer.REST.Service.Base Extends %CSP.REST
 {
 
 Parameter CHARSET = "utf-8";
@@ -25,17 +25,20 @@ ClassMethod OnPreDispatch(pUrl As %String, pMethod As %String, ByRef pContinue A
         
         
         // read request object into %DynamicObject format
-    IF ((pMethod'="POST") && (pMethod'="PUT")) || (%request.Content="") {
-      SET %request.Content = {}
+    IF ((pMethod'="POST") && (pMethod'="PUT")) || (%request.Content="") 
+    {
+        SET %request.Content = {}
     } ELSE {
       IF '$isobject(%request.Content) {
         SET tContent = %request.Content
       } ELSE {
         SET tContent = ""
         WHILE '%request.Content.AtEnd {
-          SET tContent = tContent_%request.Content.Read()
+          //SET tContent = tContent_%request.Content.Read()
+          SET tContent = tContent_%request.Content
         }
       }
+      
       IF (tContent="") {
         SET %request.Content = {}
       } ELSE {
@@ -47,7 +50,7 @@ ClassMethod OnPreDispatch(pUrl As %String, pMethod As %String, ByRef pContinue A
   } CATCH ex {
     SET tSC = ex.AsStatus()
   }
-  QUIT ##class(%iKnow.REST.Base).%ErrorHandler(tSC, .pContinue)
+  QUIT tSC
 }
 
 ClassMethod %ProcessResult(pStatus As %Status = {$$$OK}, pResult As %DynamicObject = "") As %Status [ Internal ]
@@ -86,7 +89,10 @@ ClassMethod %ProcessResult(pStatus As %Status = {$$$OK}, pResult As %DynamicObje
   ELSEIF pResult.%Extends("%Stream.Object") {
     DO pResult.OutputToDevice()
   }
-  
+  ELSE {
+    DO pResult.OutputToDevice()
+  }
+    
   QUIT tSC
 }
 
