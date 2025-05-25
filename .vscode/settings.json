@@ -2,6 +2,6 @@
     "objectscript.conn": {
         "server": "iris-interop-tools",
         "ns": "IRISAPP",
-        "active": true
+        "active": false
     }
 }
