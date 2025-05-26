@@ -11,7 +11,7 @@ const sdafhirtransformLabels = {
   inputLabelOne: 'SDA to FHIR Transform',
   inputLabelTwo: 'Input SDA',
   outputLabel: 'Output',
-  exInputLabelOne: 'EX. TODO....',
+  exInputLabelOne: 'EX. SDAtoFHIR',
   exInputLabelTwo: 'Enter SDA XML',
   exOutputLabel: 'FHIR output will appear here'
 }
