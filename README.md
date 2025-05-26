@@ -8,13 +8,20 @@ The IRIS Interoperability DevTools (formerly *IRIS CCD DevTools*) allows develop
 
 > **Platform: This application is installed IRIS for Health, but the dashboard is compatible with IRIS for Health or HealthShare/UCR. The front-end is built on NextJS. The build instantiates both IRIS for Health Community and a React environment running on Node 18-alpine to run the UI** 
 
+## Version 2.0 Updates
+This current version has these additional features: 
+- Improved Dashboard with additional user instruction
+- Additional **FHIR to SDA** and **SDA to FHIR** testing tools on dashboard
+- Two additional endpoints and APIs on the service to support FHIR testing
+- Added "SDA to CCDA" testing API on service
+ 
 ## Contributors
 
 [Chi Nguyen-Rettig (LEAD North)](https://community.intersystems.com/user/chi-nguyen-rettig)
 
-[Nathan Holt (LEAD North)] (https://community.intersystems.com/user/nathan-holt)
+[Nathan Holt (LEAD North)](https://community.intersystems.com/user/nathan-holt)
 
-[Shawntelle Madison-Coker (LEAD North)] (https://community.intersystems.com/user/shawntelle-madison-coker)
+[Shawntelle Madison-Coker (LEAD North)](https://community.intersystems.com/user/shawntelle-madison-coker)
 
 ## Inspiration
 To create a user-friendly front-end to organize several testing utilities and methods used to accelerate FHIR and CCD analysis transformation development.

@@ -17,24 +17,6 @@ RUN --mount=type=bind,src=.,dst=. \
 	iris session IRIS < iris.script && \
     iris stop IRIS quietly
 
-RUN \
-  do $SYSTEM.OBJ.Load("App.Installer.cls", "ck") \
-  set sc = ##class(App.Installer).setup() \
-  zn "%SYS" \
-  write "Create web application ..." \
-  set webName = "/csp/visualizer/service" \
-  set webProperties("DispatchClass") = "CCD.Visualizer.REST.ServiceMap" \
-  set webProperties("NameSpace") = "IRISAPP" \
-  set webProperties("Enabled") = 1 \
-  set webProperties("MatchRoles") = ":%All" \
-  set webProperties("AutheEnabled") = 64 \
-  set sc = ##class(Security.Applications).Create(webName, .webProperties) \
-  write sc \
-  write "Web application "_webName_" has been created!"
-
-  #zn "IRISAPP" \
-  #zpm "install swagger-ui" \
-  #zpm "install webterminal"
 
   # bringing the standard shell back
 SHELL ["/bin/bash", "-c"]

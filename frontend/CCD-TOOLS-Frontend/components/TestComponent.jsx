@@ -7,11 +7,11 @@ import { saveAs } from 'file-saver';
 import XMLViewer from 'react-xml-viewer'
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
-import './index.css'
+import './index.css';
 
 const ex = "<note><to>Tove</to><from>Jani</from><heading>Reminder</heading><body>Don't forget me this weekend!</body></note>"
 
-const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://localhost:3000/", type }) => {
+const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://localhost:3000", type }) => {
     const [inputOne, setInputOne] = useState('')
     const [texAreaOne, setTexAreaOne] = useState('')
     const [texAreaTwo, setTexAreaTwo] = useState('')
@@ -23,18 +23,15 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
 
 
     const postReqest = async () => {
-
         if (inputOne === '' || texAreaOne === '') {
-            setTexAreaTwo("Please make sure both inputs are filled before clicking submit")
+            setTexAreaTwo("Please make sure both inputs are filled before clicking submit.")
             return
         }
-        
-        const myHeaders = new Headers();
-        myHeaders.append("Authorization", "Basic X3N5c3RlbTpTWVM=");
-        myHeaders.append("Cookie", "CSPSESSIONID-SP-62773-UP-csp-visualizer-service-=003000010000AafU38vb8LR0lx8vqTAgRttsgaGtcGlDgxj9W_; CSPWSERVERID=hzYBi3LG");
+
+        //console.log("Starting post request v5:03pm");
         
         const formdata = new FormData();
-
+        
         let data = inputOne
 
         if (labels.pageTitle === "CCDA to SDA Transforms Tester") {
@@ -45,27 +42,63 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
         else if (labels.pageTitle === "XSL Template Tester") {
             data = `${inputOne}`
         }
+        else if (labels.pageTitle === "FHIR to SDA Transforms Tester") {
+            data = `{"TransformName": "${inputOne}"}`
+        }
+        else if (labels.pageTitle === "SDA to FHIR Transforms Tester") {
+            data = `{"TransformName": "${inputOne}"}`
+        }
         
         formdata.append("CONTENT1", data);
         formdata.append("CONTENT2", texAreaOne)
 
         const requestOptions = {
           method: "POST",
-          headers: myHeaders,
           body: formdata,
-          redirect: "follow"
+          redirect: "follow",
+          headers: {
+            'x-debug': 'true'
+          }
         };
+
+        // Remove any duplicate path segments and ensure trailing slash
+        const cleanUrl = url.replace(/^\/csp\/visualizer\/service\//, '').replace(/\/$/, '');
+        const fullUrl = `/csp/visualizer/service/${cleanUrl}/`;
         
-        fetch(baseUrl + url, requestOptions)
-          .then((response) => response.text())
-          .then((result) => {
+        // console.log("Request Details:");
+        // console.log("Original URL:", url);
+        // console.log("Clean URL:", cleanUrl);
+        // console.log("Full URL:", fullUrl);
+        // console.log("Request Options:", {
+        //     method: requestOptions.method,
+        //     headers: requestOptions.headers,
+        //     body: formdata
+        // });
+
+        try {
+            const response = await fetch(fullUrl, requestOptions);
+            // console.log('Response Details:');
+            // console.log('Status:', response.status);
+            // console.log('Status Text:', response.statusText);
+            // console.log('Headers:', Object.fromEntries(response.headers.entries()));
+            
+            const result = await response.text();
+            // console.log('Response Body:', result);
+            
             if (result === '[]') {
                 setTexAreaTwo('No result found')
             } else {
                 setTexAreaTwo(result)
             }
-          })
-          .catch((error) => console.error(error));
+        } catch (error) {
+            console.error('Fetch error:', error);
+            console.error('Error details:', {
+                name: error.name,
+                message: error.message,
+                stack: error.stack
+            });
+            setTexAreaTwo('Error occurred while processing request. Check console for details.');
+        }
     }
 
     const fileUploadAction = () => {
@@ -79,8 +112,11 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
     }
 
     const download = () => {
+        const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+        const pageTitle = labels.pageTitle.replace(/\s+/g, '_');
+        const filename = `${pageTitle}_${timestamp}.txt`;
         const blob = new Blob([texAreaTwo], { type : 'plain/text' });
-        saveAs(blob, 'LEAD.txt')
+        saveAs(blob, filename);
     }
 
     const load = (opt) => {
@@ -110,12 +146,13 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
   return (
     <div className='comp m-5'>
         <div className='m-5 '>
-            <div className='m-5 comp-input flex justify-between bg-slate-300 rounded-md border-2 border-slate-500 shadow-sm'>
-                <h2 className='subTitle labelOne'>{labels.inputLabelOne}</h2>
+
+            <div className='m-5 comp-input flex justify-between bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-lg'>
+                <h2 className='subTitle labelOne text-gray-900 dark:text-white'>{labels.inputLabelOne}</h2>
                 {
                     largeInput ? (
                         <>
-                        <textarea rows={5} className='w-full h-full' placeholder={labels.exInputLabelOne} defaultValue={inputOne} onChange={(e) => setInputOne(e.target.value)} />
+                        <textarea rows={5} className='border w-full h-full dark:bg-gray-700 text-gray-900 dark:text-white' placeholder={labels.exInputLabelOne} defaultValue={inputOne} onChange={(e) => setInputOne(e.target.value)} />
                         {/* <DropdownButton id="dropdown-basic-button" title="Dropdown button">
                             <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
                             <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
@@ -124,7 +161,7 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
                         </>
                     ) : (
                         <>
-                            <input className='w-4/5 h-8' type="text" name="option" list="options" placeholder={labels.exInputLabelOne} onChange={(e) => setInputOne(e.target.value)} />
+                            <input className='border w-4/5 h-8 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg p-2' type="text" name="option" list="options" placeholder={labels.exInputLabelOne} onChange={(e) => setInputOne(e.target.value)} />
                             <datalist id="options">
                                 {
                                     options && options.map((item) => (
@@ -137,22 +174,27 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
                 }
             </div>
 
-            <div className='m-5 flex flex-col justify-center w-64  bg-slate-300 comp-area rounded-md border-2 border-slate-500 shadow-sm'>
+            <div className='m-5 flex flex-col justify-center bg-white dark:bg-gray-800 comp-area rounded-lg border border-gray-200 dark:border-gray-700 shadow-lg'>
                 <div className='flex justify-around mb-4'>
                     <div className='flex justify-between w-full'>
-                        <h2 className='big-col subTitle'>{labels.inputLabelTwo}</h2>
+                        <h2 className='big-col subTitle text-gray-900 dark:text-white'>{labels.inputLabelTwo}</h2>
                         <div className='flex'>
-                            <input type='file' hidden ref={inputRef} onChange={(e) => handleFile(e.target.files[0])} className='bg-slate-600 z-40' />
-                            <button onClick={() => fileUploadAction()} className='bg-slate-200 z-40'>Upload</button>
-                            <button onClick={() => load(1)} className='bg-slate-200 z-40'>Viewer</button>
+                            <input type='file' hidden ref={inputRef} onChange={(e) => handleFile(e.target.files[0])} className='border bg-slate-600 z-40' />
+                            <button onClick={() => fileUploadAction()} className='bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg transition-colors duration-200'>Upload</button>
+                            {!(labels.pageTitle === "FHIR to SDA Transforms Tester" || labels.pageTitle === "SDA to FHIR Transforms Tester") && (
+                            <button onClick={() => load(1)} className='bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg transition-colors duration-200 ml-2'>Viewer</button>
+                            )}
                         </div>
                     </div>
                     <div className='w-3/12'></div>
                     <div className='flex justify-between w-full'>
-                        <h2 className='big-col subTitle'>{labels.outputLabel}</h2>
+                        <h2 className='big-col subTitle text-gray-900 dark:text-white'>{labels.outputLabel}</h2>
                         <div className='flex'>
-                            <button onClick={() => download()} className='bg-slate-200 z-40'>Download</button>
-                            <button onClick={() => load(2)} className='bg-slate-200 z-40'>Viewer</button>
+                           
+                            <button onClick={() => download()} className='bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg transition-colors duration-200'>Download</button>
+                            {!(labels.pageTitle === "FHIR to SDA Transforms Tester" || labels.pageTitle === "SDA to FHIR Transforms Tester") && (
+                            <button onClick={() => load(2)} className='bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg transition-colors duration-200 ml-2'>Viewer</button>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -168,22 +210,21 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
                                     :
                                     (
                                         viewer ? 
-                                            <div className='w-full xml2'>   
+                                            <div className='w-full xml2 bg-white dark:bg-gray-700 rounded-lg p-4'>   
                                                 <XMLViewer collapsible xml={texAreaOne} /> 
                                             </div>
                                                 :
-                                            <textarea rows={15} className='w-full h-full p-2' placeholder={labels.exInputLabelTwo} defaultValue={texAreaOne} onChange={(e) => setTexAreaOne(e.target.value)} />
+                                            <textarea rows={15} className='border w-full h-full p-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg' placeholder={labels.exInputLabelTwo} defaultValue={texAreaOne} onChange={(e) => setTexAreaOne(e.target.value)} />
                                     )
                             }
                         </div>
                     </div>
-                    <div className='col relative h-full flex justify-start '>
+                    <div className='col relative h-full flex justify-start'>
                         <div className='btn h-full'>
-                            <button onClick={() => postReqest()} className='bg-slate-200 h-8 z-50 transformBtn'>Submit</button>
+                            <button onClick={() => postReqest()} className='bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg transition-colors duration-200 h-8 z-50 transformBtn'>Submit</button>
                         </div>
                     </div>
                     <div className='big-col relative xml1 h-full'>
-
                     {
                                 loaderTwo ?
                                     <div className='flex justify-center content-center align-middle h-64'>
@@ -192,19 +233,19 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
                                     :
                                     (
                                         viewerTwo ? 
-                                            <div className='w-full xml2'>   
+                                            <div className='w-full xml2 bg-white dark:bg-gray-700 rounded-lg p-4'>   
                                                 <XMLViewer collapsible xml={texAreaTwo} />  
                                             </div>
                                                 :
-                                            <textarea contentEditable={false} className='w-full h-full p-2' placeholder={labels.exOutputLabel} defaultValue={texAreaTwo}  />
+                                            <textarea contentEditable={false} className='border w-full h-full p-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg' placeholder={labels.exOutputLabel} defaultValue={texAreaTwo} />
                                     )
                             }
-
                     </div>    
                 </div>
             </div>
         </div>
     </div>
+
   )
 }
 

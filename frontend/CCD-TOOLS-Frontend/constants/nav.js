@@ -17,5 +17,14 @@ export const links = [
         display: 'XSL Template Tester',
         desc: 'Isolate and test XSL templates'
     },
+    {
+        to: '/fhirsdatransform',
+        display: 'FHIR to SDA Transforms',
+        desc: 'Apply standard IRIS transforms'
+    },
+    {
+        to: '/sdafhirtransform',
+        display: 'SDA to FHIR Transforms',
+        desc: 'Apply standard IRIS transforms'
+    }
 ]
-
