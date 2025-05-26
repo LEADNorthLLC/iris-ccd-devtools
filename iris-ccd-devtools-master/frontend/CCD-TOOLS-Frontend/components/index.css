@@ -1,0 +1,128 @@
+* {
+    color: black;
+}
+
+.home {
+    height: 80vh;
+}
+
+textarea, input {
+    border-radius: .5em;
+}
+
+.comp {
+    width: 80vw;
+    height: fit-content;
+}
+
+.comp-input {
+    width: 70vw;
+    padding: 2rem;
+}
+
+/* HTML: <div class="loader"></div> */
+.loader {
+    height: 15px;
+    aspect-ratio: 4;
+    --_g: no-repeat radial-gradient(farthest-side,#000 90%,#0000);
+    background: 
+      var(--_g) left, 
+      var(--_g) right;
+    background-size: 25% 100%;
+    display: grid;
+  }
+  .loader:before,
+  .loader:after {
+    content: "";
+    height: inherit;
+    aspect-ratio: 1;
+    grid-area: 1/1;
+    margin: auto;
+    border-radius: 50%;
+    transform-origin: -100% 50%;
+    background: #000;
+    animation: l49 1s infinite linear;
+  }
+  .loader:after {
+    transform-origin: 200% 50%;
+    --s:-1;
+    animation-delay: -.5s;
+  }
+  
+  @keyframes l49 {
+    58%,
+    100% {transform: rotate(calc(var(--s,1)*1turn))}
+  }
+
+.comp-area {
+    padding: 2rem;
+    width: 70vw;
+    height: 60vh;
+}
+
+.btn {
+    width: 6rem;
+    height: 3rem;
+    margin: 0 auto;
+}
+
+.col {
+    width: 12%;
+}
+
+.big-col {
+    width: 45%;
+}
+
+.xml1 {
+    height: 40vh;
+}
+
+.xml2 {
+    height: 40vh;
+    overflow-y: scroll;
+}
+
+.title {
+    font-size: 2rem;
+}
+
+.subTitle {
+    font-size: 1.5rem;
+}
+
+.labelOne {
+    width: fit-content;
+}
+
+.customGrey {
+    background-color: rgb(174, 190, 213);
+}
+
+.custom-bg {
+    background-color: rgb(194, 219, 251);
+}
+
+.transformBtn {
+    width: 6rem;
+}
+
+button {
+    margin: .15em;
+    padding: .4em;
+    z-index: 99;
+    border-radius: .5em;
+    border: 1px solid rgb(174, 190, 213);
+}
+
+button:hover {
+    background-color: rgb(194, 219, 251);
+}
+
+button:active {
+    background-color: rgb(171, 192, 219);
+}
+
+.customFont {
+    font-size: 1.4rem;
+}
