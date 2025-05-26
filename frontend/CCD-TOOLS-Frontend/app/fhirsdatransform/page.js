@@ -23,7 +23,7 @@ export default function FHIRSDATransform() {
         options={fhirsdatransforms} 
         labels={fhirsdatransformLabels} 
         baseUrl='http://localhost:62773' 
-        url='/csp/visualizer/service/fhirtransform/' 
+        url='/csp/visualizer/service/fhirsdatransform/' 
       />
     </div>
   )
