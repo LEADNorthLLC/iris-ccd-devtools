@@ -1,6 +1,12 @@
-## iris-interop-tools
+## IRIS Interoperability DevTools (iris-ccd-devtools) 
 
-A UI and API for testing FHIR and CCDA documents against the IRIS XPath Utilities and C-CDA to SDA XSLT code base. 
+One of the biggest challenges for health data integration and interoperability is orchestrating between different message formats and standards, most notably the **Big Three**: HL7, CCDA, and FHIR. 
+
+The InterSystems IRIS product suite provides a robust toolset including templates and a pre-build code base for handling all three of these standards, but the challenge for developers is accessing the code base in a quick and reliable way without having to dig deep into configuration or code. 
+
+The IRIS Interoperability DevTools (formerly *IRIS CCD DevTools*) allows developers to test CCD and FHIR messages against the code base in the backend of an IRIS for Health instance, while providing visbility and user-friendly tools. With these development tools, health data implementers, developers, and analysts can rapidly inspect and test messages, increasing the speed of IRIS adoption and health data mastery. 
+
+> **Platform: This application is installed IRIS for Health, but the dashboard is compatible with IRIS for Health or HealthShare/UCR. The front-end is built on NextJS. The build instantiates both IRIS for Health Community and a React environment running on Node 18-alpine to run the UI** 
 
 ## Contributors
 
@@ -8,17 +14,16 @@ Chi Nguyen-Rettig (LEAD North)
 
 Nathan Holt (LEAD North)
 
-Shawntelle Madison-Coker (Lead North)
+Shawntelle Madison-Coker (LEAD North)
 
 ## Inspiration
-To create a user-friendly front-end to organize several testing utilities and methods used to facility FHIR and CCD transform development
+To create a user-friendly front-end to organize several testing utilities and methods used to accelerate FHIR and CCD analysis transformation development.
 
 ## What it does
-Creates /csp/visualizer/service web app in IRIS with endpoints for XPath testing, XSLT testing, and CCD to SDA transform testing. 
 
-<!--
-It uses [swagger-ui](https://openexchange.intersystems.com/package/iris-web-swagger-ui) module to provide documentation and test environment for API.
--->
+1. **Backend:** A /csp/visualizer/service web application in IRIS with endpoints for XPath evaluation, XSLT, CCD to SDA, FHIR to SDA, and SDA to FHIR transformation testing.
+2. **Frontend:** A graphical Development Tools portal built in NextJS React makes it easy to load data from files or copy/paste data for testing. 
+
 
 # Getting Started
 
@@ -31,7 +36,7 @@ Make sure you have [git](https://git-scm.com/book/en/v2/Getting-Started-Installi
 Clone/git pull the repo into any local directory e.g. like it is shown below:
 
 ```bash
-$ git clone git@github.com:LEADNorthLLC/iris-interop-tools.git/
+$ git clone git@github.com:LEADNorthLLC/iris-devtools-tools.git/
 ```
 
 Open the terminal in this directory and run:
@@ -40,7 +45,16 @@ Open the terminal in this directory and run:
 $ docker-compose up -d --build
 ```
 
-## Management portal: 
+## Interoperability DevTools Dashboard:
+
+The UI is served from a second container and is available after docker startup at: 
+
+[CCD DevTools URL](http://localhost:4000)
+
+![CCD DevTools UI](misc/images/interop_devtools_Transform_Tester.png)
+
+
+## IRIS Management portal: 
 
 The management portal is available at: 
 [Management portal](http://localhost:62773/csp/sys/UtilHome.csp)
@@ -50,15 +64,6 @@ Login: _system/SYS
 ```
 The API is available on localhost:62773/csp/visusalier/service
 
-
-## CCD DevTools UI:
-
-The UI is served from a second container and is available after docker startup at: 
-
-[CCD DevTools URL](http://localhost:4000)
-
-![CCD DevTools UI](misc/images/interop_devtools_Transform_Tester.png)
-
 ## REST APIs - TESTING
 
 **Sample Data**
@@ -66,9 +71,9 @@ Sample C-CDAs from the [SyntheaMass](https://synthea.mitre.org/downloads) open-s
 
 **Postman export*
 An export for a Postman Collection to test the available APIs is located in the **testing** folder of this project. 
-Import `Visualizer.postman_collection.json` in Postman to run tests. 
+Import `interop-devtools-ccd-fhir.postman_collection.json` in Postman to run tests. 
 
-Data set up in the Postman import is also from Synthea. 
+Data set up in the Postman import is from a combination of Synthea or the HL7 FHIR R4 Specification. 
 
 
 # XPath Evaluation Test #
