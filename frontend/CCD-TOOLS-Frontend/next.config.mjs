@@ -5,7 +5,7 @@ const nextConfig = {
         return [
             {
                 source: '/csp/visualizer/service/:path*/',
-                destination: 'http://localhost:62773/csp/visualizer/service/:path*/', // This is your actual API backend
+                destination: 'http://host.docker.internal:62773/csp/visualizer/service/:path*/', // This is your actual API backend
             },
         ];
     },
