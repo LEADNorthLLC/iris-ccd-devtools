@@ -92,16 +92,14 @@ ClassMethod TransformSDAToFHIR() As %Status
 		do SDAStream.Rewind()
 		//set SDA3Container=##class(HS.SDA3.Container).%New()
     	//do SDA3Container.XMLImportSDAString(tRequest.SDAContentStream.Read($$$MaxLocalLength))	
-		//Set ^zStatus = "SDA Container"
-		//set ^zContainer = SDA3Container.Patient.Name.GivenName
+		
 		#dim resourceJSON As HS.FHIR.DTL.Util.API.Transform.SDA3ToFHIR
 		set resourceJSON = ##class(HS.FHIR.DTL.Util.API.Transform.SDA3ToFHIR).TransformStream(SDAStream, "HS.SDA3.Container","R4", "123","456")
-        Set ^zStatus = "SDA to FHIR attempted"
+        
 		//Instantiate pResponse as clone of pRequest
 		set resultStream = ##class(%Stream.TmpCharacter).%New()
         set result = resourceJSON.bundle.%ToJSON()
-		Set ^zStatus = "SDA to FHIR done"
-		set ^zfhirData = result
+		
 		do resultStream.Write(result)
 		
 

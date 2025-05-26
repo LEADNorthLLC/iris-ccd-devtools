@@ -3,7 +3,7 @@
 import TestComponent from '@/components/TestComponent'
 
 const sdafhirtransforms = [
-  { value: 'SDAtoFHIR', desc: 'SDA to FHIR Transform' },
+  { value: 'SDAToFHIR', desc: 'SDA to FHIR Transform' },
 ]
 
 const sdafhirtransformLabels = {
@@ -11,7 +11,11 @@ const sdafhirtransformLabels = {
   inputLabelOne: 'SDA to FHIR Transform',
   inputLabelTwo: 'Input SDA',
   outputLabel: 'Output',
+<<<<<<< HEAD
   exInputLabelOne: 'EX. SDAtoFHIR',
+=======
+  exInputLabelOne: 'EX. SDAToFHIR',
+>>>>>>> 9ed6efb (fix postman collection)
   exInputLabelTwo: 'Enter SDA XML',
   exOutputLabel: 'FHIR output will appear here'
 }

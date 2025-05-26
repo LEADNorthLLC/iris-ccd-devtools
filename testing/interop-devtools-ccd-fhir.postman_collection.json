@@ -358,7 +358,7 @@
 					]
 				},
 				"url": {
-					"raw": "http://localhost:62773/csp/visualizer/service/fhirtransform/",
+					"raw": "http://localhost:62773/csp/visualizer/service/fhirsdatransform/",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -368,7 +368,7 @@
 						"csp",
 						"visualizer",
 						"service",
-						"fhirtransform",
+						"fhirsdatransform",
 						""
 					]
 				}
@@ -420,7 +420,7 @@
 					]
 				},
 				"url": {
-					"raw": "http://localhost:62773/csp/visualizer/service/fhirtransform/",
+					"raw": "http://localhost:62773/csp/visualizer/service/fhirsdatransform/",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -430,7 +430,7 @@
 						"csp",
 						"visualizer",
 						"service",
-						"fhirtransform",
+						"fhirsdatransform",
 						""
 					]
 				}
