@@ -3,7 +3,7 @@
 import TestComponent from '@/components/TestComponent'
 
 const fhirsdatransforms = [
-  { value: 'FHIRtoSDA', desc: 'FHIR to SDA Transform' },
+  { value: 'FHIRToSDA', desc: 'FHIR to SDA Transform' },
 ]
 
 const fhirsdatransformLabels = {
@@ -11,7 +11,7 @@ const fhirsdatransformLabels = {
   inputLabelOne: 'FHIR to SDA Transform',
   inputLabelTwo: 'Input FHIR',
   outputLabel: 'Output',
-  exInputLabelOne: 'EX. TODO....',
+  exInputLabelOne: 'EX. FHIRToSDA',
   exInputLabelTwo: 'Enter FHIR JSON',
   exOutputLabel: 'SDA output will appear here'
 }
