@@ -8,8 +8,6 @@ const transformLabels = {
     exOutputLabel: "Your output will appear here after clicking submit",
 }
 
-<<<<<<< HEAD
-=======
 const fhirsdatransformLabels = {
     pageTitle: "FHIR to SDA Transforms Tester",
     inputLabelOne: "FHIR to SDA Transform",
@@ -30,7 +28,6 @@ const sdafhirtransformLabels = {
     exOutputLabel: "Your output will appear here after clicking submit",
 }
 
->>>>>>> main
 const xpathLabels = {
     pageTitle: "XPath Evaluator",
     inputLabelOne: "XPath Expression",
