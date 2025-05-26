@@ -3,8 +3,8 @@
   <Document name="iris-ccd-devtools.ZPM">
     <Module>
       <Name>iris-ccd-devtools</Name>
-      <Version>1.0.0</Version>
-      <Description>Repository for CCD DevTools UI and API - InterSystems Dev Tools Programming Contest</Description>
+      <Version>2.0.0</Version>
+      <Description>Repository for IRIS DevTools UI and API - Support for CCD and FHIR Development</Description>
       <Packaging>module</Packaging>
       <SourcesRoot>src</SourcesRoot>
       <Resource Name="CCD.PKG"/>

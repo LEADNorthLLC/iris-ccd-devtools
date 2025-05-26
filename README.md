@@ -34,6 +34,13 @@ To create a user-friendly front-end to organize several testing utilities and me
 
 # Getting Started
 
+<!--
+## ZPM/IPM
+The code for the backend APIs and web application can be installed through IPM. This will install the CSP Application, the **IRISAPP** Production, and the APIs used by toolkit. 
+
+The NextJS/React front-end application is not included in the ZPM package.
+-->
+
 ## Installation with Docker 
 
 ## Prerequisites
@@ -46,11 +53,15 @@ Clone/git pull the repo into any local directory e.g. like it is shown below:
 $ git clone git@github.com:LEADNorthLLC/iris-ccd-devtools.git/
 ```
 
+
 Open the terminal in this directory and run:
 
 ```bash
 $ docker-compose up -d --build
 ```
+
+> The **docker-compose** command will install the front-end application and the backend APIs. 
+
 
 ## Interoperability DevTools Dashboard:
 
@@ -69,7 +80,7 @@ The management portal is available at:
 ```bash
 Login: _system/SYS
 ```
-The API is available on localhost:62773/csp/visusalier/service
+The API is available on `http://localhost:62773/csp/visusalier/service`
 
 ## REST APIs - TESTING
 
