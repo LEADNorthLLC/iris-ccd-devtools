@@ -12,21 +12,11 @@ set prop("AutheEnabled")=48
 do ##class(Security.Services).Modify("%Service_CallIn",.prop)
 
 // create IRISAPP namespace
-//do $SYSTEM.OBJ.Load("/home/irisowner/dev/App.Installer.cls", "cbuk")
-//set sc = ##class(App.Installer).setup()
+
 zn "HSLIB"
 
 // Install a Foundation namespace and change to it
 Do ##class(HS.Util.Installer.Foundation).Install("IRISAPP")
-
-// do ##class(%SYSTEM.Process).CurrentDirectory("$PWD")
-// $@
-// if '\$Get(sc) do ##class(%SYSTEM.Process).Terminate(, 1)
-//zn "%SYS"
-//do ##class(SYS.Container).QuiesceForBundling()
-// Do ##class(Security.Users).UnExpireUserPasswords("*")
-//s props("Database")="HSLIB",sc=##Class(Config.MapPackages).Create("%ALL","HS",.props)
-// do ##class(%EnsembleMgr).EnableNamespace("IRISAPP")
 
 
 zn "IRISAPP"
