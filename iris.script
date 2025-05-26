@@ -12,7 +12,7 @@ set prop("AutheEnabled")=48
 do ##class(Security.Services).Modify("%Service_CallIn",.prop)
 
 // create IRISAPP namespace
-//do $SYSTEM.OBJ.Load("/irisdev/app/dev/App.Installer.cls", "cbuk")
+//do $SYSTEM.OBJ.Load("/home/irisowner/dev/App.Installer.cls", "cbuk")
 //set sc = ##class(App.Installer).setup()
 zn "HSLIB"
 

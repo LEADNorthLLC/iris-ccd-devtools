@@ -5,15 +5,20 @@ FROM $IMAGE AS builder
 
 WORKDIR /home/irisowner/dev
 
-COPY Installer.cls .
+COPY App.Installer.cls .
 
 COPY src src
-# COPY misc/csp /usr/irissys/csp
-COPY irissession.sh /
-SHELL ["/irissession.sh"]
+
+COPY .iris_init /home/irisowner/.iris_init
+
+RUN --mount=type=bind,src=.,dst=. \
+    pip3 install -r requirements.txt && \
+    iris start IRIS && \
+	iris session IRIS < iris.script && \
+    iris stop IRIS quietly
 
 RUN \
-  do $SYSTEM.OBJ.Load("Installer.cls", "ck") \
+  do $SYSTEM.OBJ.Load("App.Installer.cls", "ck") \
   set sc = ##class(App.Installer).setup() \
   zn "%SYS" \
   write "Create web application ..." \
