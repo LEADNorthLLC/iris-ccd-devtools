@@ -54,7 +54,7 @@ $ git clone git@github.com:LEADNorthLLC/iris-ccd-devtools.git/
 ```
 
 
-Open the terminal in this directory and run:
+Open the terminal in this directory and run on Windows:
 
 ```bash
 $ docker-compose up -d --build
@@ -62,7 +62,10 @@ $ docker-compose up -d --build
 
 > The **docker-compose** command will install the front-end application and the backend APIs. 
 
-
+> **Note:** For Apple Silicon/ARM64 architecture machines, the React container might fail to build. Try
+```bash
+$ docker compose build --build-arg DOCKERFILE=Dockerfile.mac
+```
 ## Interoperability DevTools Dashboard:
 
 The UI is served from a second container and is available after docker startup at: 
