@@ -4,8 +4,6 @@ import TestComponent from '@/components/TestComponent'
 
 const fhirsdatransforms = [
   { value: 'FHIRtoSDA', desc: 'FHIR to SDA Transform' },
-  { value: 'FHIRtoSDA_2_0', desc: 'FHIR to SDA 2.0 Transform' },
-  { value: 'FHIRtoSDA_2_1', desc: 'FHIR to SDA 2.1 Transform' }
 ]
 
 const fhirsdatransformLabels = {
@@ -25,7 +23,7 @@ export default function FHIRSDATransform() {
         options={fhirsdatransforms} 
         labels={fhirsdatransformLabels} 
         baseUrl='http://localhost:62773' 
-        url='/csp/visualizer/service/fhirsdatransform/' 
+        url='/csp/visualizer/service/fhirtransform/' 
       />
     </div>
   )

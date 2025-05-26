@@ -113,6 +113,19 @@ ClassMethod ReportHttpStatusCode(pHttpStatus, pSC As %Status = {$$$OK}) As %Stat
   Return $$$OK
 }
 
+/*
+ClassMethod OnHandleCorsRequest(pUrl As %String) As %Status
+{
+
+
+    Do %response.SetHeaderIfEmpty("Access-Control-Allow-Origin","*")
+    Do %response.SetHeaderIfEmpty("Access-Control-Allow-Credentials","true")
+    Do %response.SetHeaderIfEmpty("Access-Control-Allow-Methods","GET, PUT, POST, DELETE, PATCH, OPTIONS")
+    Do %response.SetHeaderIfEmpty("Access-Control-Allow-Headers","Access-Control-*, Content-Type, Authorization, Accept, Accept-Language, X-Requested-With, Origin")
+    
+    Quit $$$OK
+}
+*/
 ClassMethod SwaggerSpec() As %Status
 {
   Set tSC = ##class(%REST.API).GetWebRESTApplication($NAMESPACE, %request.Application, .swagger)
