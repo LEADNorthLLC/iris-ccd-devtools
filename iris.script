@@ -31,6 +31,6 @@ Do ##class(HS.Util.Installer.Foundation).Install("IRISAPP")
 
 zn "IRISAPP"
 set ^UnitTest("TestDirectory")="/opt/irisapp"    
-zpm "load /irisdev/app/dev/ -v":1:1
+zpm "load /home/irisowner/dev -v":1:1
 
 halt

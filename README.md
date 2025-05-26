@@ -10,11 +10,11 @@ The IRIS Interoperability DevTools (formerly *IRIS CCD DevTools*) allows develop
 
 ## Contributors
 
-Chi Nguyen-Rettig (LEAD North)
+[Chi Nguyen-Rettig (LEAD North)](https://community.intersystems.com/user/chi-nguyen-rettig)
 
-Nathan Holt (LEAD North)
+[Nathan Holt (LEAD North)] (https://community.intersystems.com/user/nathan-holt)
 
-Shawntelle Madison-Coker (LEAD North)
+[Shawntelle Madison-Coker (LEAD North)] (https://community.intersystems.com/user/shawntelle-madison-coker)
 
 ## Inspiration
 To create a user-friendly front-end to organize several testing utilities and methods used to accelerate FHIR and CCD analysis transformation development.
@@ -36,7 +36,7 @@ Make sure you have [git](https://git-scm.com/book/en/v2/Getting-Started-Installi
 Clone/git pull the repo into any local directory e.g. like it is shown below:
 
 ```bash
-$ git clone git@github.com:LEADNorthLLC/iris-devtools-tools.git/
+$ git clone git@github.com:LEADNorthLLC/iris-ccd-devtools.git/
 ```
 
 Open the terminal in this directory and run:
