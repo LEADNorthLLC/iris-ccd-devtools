@@ -4,6 +4,7 @@ Class CCD.Visualizer.REST.ServiceMap Extends CCD.Visualizer.REST.Service.Base
 
 /** Change Log
 2024-01-20 - Chi Nguyen-Rettig: initial
+2025-05-23 - Chi Nguyen-Rettig: Version 2.0 - FHIR Support
 **/
 Parameter Version = "1.0.0";
 /// Enable Cross-origin resource sharing handling.
@@ -18,7 +19,6 @@ XData UrlMap [ XMLNamespace = "http://www.intersystems.com/urlmap" ]
     <Route Url="/xpath/" Method="POST" Call="GetXPathValue"/>
 	<Route Url="/transform/" Method="POST" Call="TransformCCD"/>
 	<Route Url="/xslt/" Method="POST" Call="TestXSL"/>
-	<Route Url="/fhirtransform/" Method="POST" Call="TransformFHIRToSDA"/>
 	<Route Url="/fhirsdatransform/" Method="POST" Call="TransformFHIRToSDA"/>
 	<Route Url="/sdafhirtransform/" Method="POST" Call="TransformSDAToFHIR"/>
   </Routes>
@@ -121,7 +121,8 @@ ClassMethod TransformSDAToFHIR() As %Status
 	}
 	Catch Ex {
 		Set tSC = Ex.AsStatus()
-		Set %response.Status = 500
+		Set errorMessage = Ex.DisplayString()
+		Set %response.Status = 504
 	}
 	Quit tSC
 }
@@ -177,8 +178,10 @@ ClassMethod TransformFHIRToSDA() As %Status
 
 		#; Prepare tResponse
 		Set tResponse = ##class(CCD.Visualizer.Model.Record).%New()
-		set tResponse.SDAContentXML = tOutput.SDAContentStream
-
+		if $ISOBJECT(tOutput.SDAContentStream) {
+			set tResponse.SDAContentXML = tOutput.SDAContentStream
+		}
+		set tResponse.Response = tOutput.Response
 
 		#;Write response
 		Set tSC = $$$OK
@@ -190,8 +193,17 @@ ClassMethod TransformFHIRToSDA() As %Status
 		Do tStream.OutputToDevice()
 	}
 	Catch Ex {
+		Set tSC = $$$OK
+		//Set tResponse = ##class(CCD.Visualizer.Model.Record).%New()
+		//set tResponse.Response = "ERROR: in FHIRToSDA Transform"
+		//Set %response.Status = 200
+		//do tResponse.XMLExportToStream(.tStream)
+		//Do tStream.OutputToDevice()
+
 		Set tSC = Ex.AsStatus()
-		Set %response.Status = 500
+		Set errorMessage = Ex.DisplayString()
+		Set %response.Status = 504
+
 	}
 	Quit tSC
 }
@@ -271,9 +283,9 @@ ClassMethod GetXPathValue() As %Status
 		Do tStream.OutputToDevice()
 		
 		#; Clean up the QuickStream.
-		//if $ISOBJECT(tFileStream) {		
-		//	Do tFileStream.Clear(1)
-		//}
+		if $ISOBJECT(tFileStream) {		
+			Do tFileStream.Clear(1)
+		}
 	
 	Quit tSC
 }
@@ -291,8 +303,6 @@ ClassMethod TransformCCD() As %Status
 		}
 		
 		// The Data should contain 2 parts, the first is JSON metadata, the second is the file data.
-		// If we have MIME Data, then this is coming from Ensemble.  If we have Data then it is coming over from Angular / JQuery.
-		
 		
 		#dim tFileStream As HS.SDA3.QuickStream
 		if ($D(%request.Data)) 
@@ -313,7 +323,7 @@ ClassMethod TransformCCD() As %Status
 
 			if (name = "") $$$ThrowStatus($$$ERROR($$$GeneralError,"Unable to identify Data Sections."))
 			Set stream = %request.Get(name)
-			//CNR: even though it's not an SDA, the CCD data is being saved to the HS.SDA3.QuickStream?
+			//CNR: even though it's not an SDA, the CCD data is being saved to the HS.SDA3.QuickStream
 			if ('$ISOBJECT(stream))
 			{
 				set tFileStream = ##class(HS.SDA3.QuickStream).%New()
@@ -344,8 +354,13 @@ ClassMethod TransformCCD() As %Status
 		Set %response.ContentType="application/xml"
 		$$$ThrowOnError(tResponse.XMLExportToStream(.tStream))
 		
-
 		Do tStream.OutputToDevice()
+
+		#; Clean up the QuickStream.
+		if $ISOBJECT(tFileStream) {		
+			Do tFileStream.Clear(1)
+		}
+	
 	}
 	Catch Ex {
 		Set tSC = Ex.AsStatus()
@@ -421,6 +436,12 @@ ClassMethod TestXSL() As %Status
 	$$$ThrowOnError(tResponse.XMLExportToStream(.tStream))
 
 	Do tStream.OutputToDevice()
+
+	#; Clean up the QuickStream.
+	if $ISOBJECT(tFileStream) {		
+		Do tFileStream.Clear(1)
+	}
+	
 
 	Quit tSC
 }

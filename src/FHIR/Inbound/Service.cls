@@ -16,7 +16,9 @@ Method OnProcessInput(pRequest As CCD.Visualizer.Model.Record, pResponse As CCD.
 	#Dim tSC  As %Status = $$$OK
 
     #Dim eException  As %Exception.AbstractException
-        
+
+    //Instantiate response
+    Set pResponse = pRequest.%ConstructClone(1)       
     
     Try {
 	    if pRequest.TransformName = "SDAToFHIR" {
@@ -26,14 +28,13 @@ Method OnProcessInput(pRequest As CCD.Visualizer.Model.Record, pResponse As CCD.
 		    $$$ThrowOnError(..SendRequestSync(..TargetConfigName, pRequest, .pResponse))
         }   
         else {
-            Set pResponse = pRequest.%ConstructClone(1)
+ 
 	        Set pResponse.Response = "Error: Unrecognized Transform Name <"_pRequest.TransformName_">. Expecting SDAToFHIR or FHIRToSDA"    
         } 
     }
     Catch eException {
-	    Set pResponse = ##class(CCD.Visualizer.Model.Record).%New()
 	    Set pResponse.Response = "Error: "_eException.DisplayString()
-	    Set tSC = eException.AsStatus()
+	    Set tSC = $$$OK
     } 
 	Quit tSC
 }
