@@ -1,6 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     output: 'standalone',
+    async rewrites() {
+        return [
+            {
+                source: '/csp/visualizer/service/:path*/',
+                destination: 'http://host.docker.internal:62773/csp/visualizer/service/:path*/', // This is your actual API backend
+            },
+        ];
+    },
+    trailingSlash: true,
 };
 
 export default nextConfig;

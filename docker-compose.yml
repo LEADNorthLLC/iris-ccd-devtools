@@ -1,12 +1,12 @@
 
 services:
   iris:
-    build:
+    build: 
       context: .
       dockerfile: Dockerfile
     restart: always
     command: --check-caps false
-    ports:
+    ports: 
       - 1972
       - 62773:52773
       - 63773

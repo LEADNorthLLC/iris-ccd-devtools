@@ -8,10 +8,14 @@
       <Packaging>module</Packaging>
       <SourcesRoot>src</SourcesRoot>
       <Resource Name="CCD.PKG"/>
+      <Resource Name="FHIR.PKG"/>
+      <Resource Name="IRISAPP.PKG"/>
+      <Resource Name="IRISAPPPKG.PKG"/>
     
-      <CSPApplication 
+      <WebApplication 
       Url="/csp/visualizer/service"
       DispatchClass="CCD.Visualizer.REST.ServiceMap"
+      NameSpace="IRISAPP"
       MatchRoles=":%All"
       PasswordAuthEnabled="0"
       UnauthenticatedEnabled="1"
@@ -20,6 +24,15 @@
       UseCookies="2"
       CookiePath="/csp/visualizer/service"
     />
+    
+     <Invoke Class="Ens.Director" Method="SetAutoStart">
+        <Arg>IRISAPPPKG.FoundationProduction</Arg>
+      </Invoke>
+      <Invoke Class="Ens.Director" Method="StartProduction">
+        <Arg>IRISAPPPKG.FoundationProduction</Arg>
+      </Invoke>
+       <Invoke Class="IRISAPP.Install" Method="Run">
+     </Invoke>
     </Module>
     
   </Document>

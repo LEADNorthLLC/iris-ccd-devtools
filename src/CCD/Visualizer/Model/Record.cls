@@ -25,27 +25,42 @@ Property CCDContentXML As %Stream.Object;
 
 Property SDAContentXML As %Stream.Object;
 
-/// SDA XML Content
+Property SDAContentStream As %Stream.GlobalBinary;
+
+Property FHIRContentJSON As %Stream.GlobalBinary;
+
+Property FHIRContentJSONString As %Stream.Object;
+
 Storage Default
 {
 <Data name="RecordDefaultData">
+<Subscript>"Record"</Subscript>
 <Value name="1">
-<Value>%%CLASSNAME</Value>
+<Value>TransformName</Value>
 </Value>
 <Value name="2">
 <Value>XPathForEval</Value>
 </Value>
 <Value name="3">
+<Value>Response</Value>
+</Value>
+<Value name="4">
 <Value>CCDContentXML</Value>
 </Value>
+<Value name="5">
+<Value>SDAContentXML</Value>
+</Value>
+<Value name="6">
+<Value>FHIRContentJSON</Value>
+</Value>
+<Value name="7">
+<Value>SDAContentStream</Value>
+</Value>
+<Value name="8">
+<Value>FHIRContentJSONString</Value>
+</Value>
 </Data>
-<DataLocation>^CCD.Visualizer.Model.RecordD</DataLocation>
 <DefaultData>RecordDefaultData</DefaultData>
-<Description>
-<![CDATA[SDA XML Content]]></Description>
-<IdLocation>^CCD.Visualizer.Model.RecordD</IdLocation>
-<IndexLocation>^CCD.Visualizer.Model.RecordI</IndexLocation>
-<StreamLocation>^CCD.Visualizer.Model.RecordS</StreamLocation>
 <Type>%Storage.Persistent</Type>
 }
 

@@ -1,0 +1,98 @@
+<Container>
+	<Patient>
+		<Name>
+			<FamilyName>Chalmers</FamilyName>
+			<GivenName>Peter James</GivenName>
+			<Type>Legal</Type>
+		</Name>
+		<Aliases>
+			<Name>
+				<GivenName>Jim</GivenName>
+				<Type>Display</Type>
+			</Name>
+			<Name>
+				<FamilyName>Windsor</FamilyName>
+				<GivenName>Peter James</GivenName>
+				<Type>Maiden</Type>
+			</Name>
+		</Aliases>
+		<Gender>
+			<Code>M</Code>
+		</Gender>
+		<SupportContacts>
+			<SupportContact>
+				<Name>
+					<FamilyName>du Marché</FamilyName>
+					<GivenName>Bénédicte</GivenName>
+				</Name>
+				<Gender>
+					<Code>F</Code>
+				</Gender>
+				<Address>
+					<FromTime>1974-12-25T00:00:00</FromTime>
+					<Street>534 Erewhon St</Street>
+					<City>
+						<Code>PleasantVille</Code>
+						<Description>PleasantVille</Description>
+					</City>
+					<State>
+						<Code>Vic</Code>
+						<Description>Vic</Description>
+					</State>
+					<Zip>
+						<Code>3999</Code>
+						<Description>3999</Description>
+					</Zip>
+					<County>
+						<Code>Rainbow</Code>
+						<Description>Rainbow</Description>
+					</County>
+				</Address>
+				<ContactInfo>
+					<HomePhoneNumber>+33 (237) 998327</HomePhoneNumber>
+				</ContactInfo>
+				<ContactType>
+					<Code>N</Code>
+				</ContactType>
+			</SupportContact>
+		</SupportContacts>
+		<BirthTime>1974-12-25T00:00:00</BirthTime>
+		<IsDead>false</IsDead>
+		<PatientNumbers>
+			<PatientNumber>
+				<FromTime>2001-05-06T00:00:00</FromTime>
+				<Number>12345</Number>
+				<NumberType>MRN</NumberType>
+				<ISOAssigningAuthority>urn:oid:1.2.36.146.595.217.0.1</ISOAssigningAuthority>
+			</PatientNumber>
+		</PatientNumbers>
+		<Addresses>
+			<Address>
+				<FromTime>1974-12-25T00:00:00</FromTime>
+				<Street>534 Erewhon St</Street>
+				<City>
+					<Code>PleasantVille</Code>
+					<Description>PleasantVille</Description>
+				</City>
+				<State>
+					<Code>Vic</Code>
+					<Description>Vic</Description>
+				</State>
+				<Zip>
+					<Code>3999</Code>
+					<Description>3999</Description>
+				</Zip>
+				<County>
+					<Code>Rainbow</Code>
+					<Description>Rainbow</Description>
+				</County>
+			</Address>
+		</Addresses>
+		<ContactInfo>
+			<WorkPhoneNumber>(03) 5555 6473</WorkPhoneNumber>
+			<MobilePhoneNumber>(03) 3410 5613</MobilePhoneNumber>
+		</ContactInfo>
+	</Patient>
+	<UpdateECRDemographics>true</UpdateECRDemographics>
+	<SendingFacility>FHIR</SendingFacility>
+</Container>

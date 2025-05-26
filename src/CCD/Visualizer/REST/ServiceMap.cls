@@ -1,5 +1,5 @@
 /// Directs requests to the appropriate class
-Class CCD.Visualizer.REST.ServiceMap Extends CCD.Visualizer.REST.Service.Base 
+Class CCD.Visualizer.REST.ServiceMap Extends CCD.Visualizer.REST.Service.Base
 {
 
 /** Change Log
@@ -18,10 +18,183 @@ XData UrlMap [ XMLNamespace = "http://www.intersystems.com/urlmap" ]
     <Route Url="/xpath/" Method="POST" Call="GetXPathValue"/>
 	<Route Url="/transform/" Method="POST" Call="TransformCCD"/>
 	<Route Url="/xslt/" Method="POST" Call="TestXSL"/>
+	<Route Url="/fhirtransform/" Method="POST" Call="TransformFHIRToSDA"/>
+	<Route Url="/fhirsdatransform/" Method="POST" Call="TransformFHIRToSDA"/>
+	<Route Url="/sdafhirtransform/" Method="POST" Call="TransformSDAToFHIR"/>
   </Routes>
 }
 
+ClassMethod TransformSDAToFHIR() As %Status
+{
+	Set tSC = $$$OK
+	
+	try {
+		If (%request.ContentType '= "multipart/form-data") {	
+			Set %response.Status = 406
+			QUIT
+		}
+		
+		// The Data should contain 2 parts, the first is JSON metadata, the second is the SDA XMLData.		
+		
+		if ($D(%request.Data)) 
+		{
+			
+			Set name=""
+			set name = %request.Next(name)
+			
+			if (name = "") $$$ThrowStatus($$$ERROR($$$GeneralError,"Unable to identify Data Sections."))
+			Set stream = %request.Get(name)
 
+			Set tRequest = ##class(CCD.Visualizer.Model.Record).%New()
+    		$$$THROWONERROR(tSC,tRequest.%JSONImport(stream))
+
+			#; Pull elements from API call
+			set tTransformName = tRequest.TransformName
+			//Hardcode the transform name
+			set tTransformName = "SDAToFHIR"
+ 			Set name = %request.Next(name) 
+
+			if (name = "") {
+				$$$ThrowStatus($$$ERROR($$$GeneralError,"Unable to identify Data Sections."))
+			}
+			Set stream = %request.Get(name)
+			//CNR: even though it's not an SDA, the CCD data is being saved to the HS.SDA3.QuickStream?
+			if ('$ISOBJECT(stream))
+			{
+				#; Copy the Stream to tRequest
+				set tRequest.SDAContentStream = ##class(%Stream.GlobalBinary).%New()
+				do tRequest.SDAContentStream.Write(stream)
+			}
+			else
+			{
+				set tRequest.SDAContentStream = ##class(%Stream.GlobalBinary).%New()
+				do tRequest.SDAContentStream.CopyFrom(stream)
+			
+			}
+		}
+		else
+		{
+			Set %response.Status = 406
+			QUIT
+		}
+		
+
+		//Inject the message into a Production by instantiating a Business Host
+		// Construct the business service
+		// $$$ThrowOnError( ##class(Ens.Director).CreateBusinessService("FHIR.REST.Service", .tService) )
+
+		// Now, process it
+		// $$$ThrowOnError( tService.ProcessInput(tRequest, .tOutput) )
+
+		#; Try to do transform here with container objects
+		set SDAStream = ##class(%Stream.TmpCharacter).%New()
+		do SDAStream.Write(tRequest.SDAContentStream.Read($$$MaxLocalLength))
+		do SDAStream.Rewind()
+		//set SDA3Container=##class(HS.SDA3.Container).%New()
+    	//do SDA3Container.XMLImportSDAString(tRequest.SDAContentStream.Read($$$MaxLocalLength))	
+		//Set ^zStatus = "SDA Container"
+		//set ^zContainer = SDA3Container.Patient.Name.GivenName
+		#dim resourceJSON As HS.FHIR.DTL.Util.API.Transform.SDA3ToFHIR
+		set resourceJSON = ##class(HS.FHIR.DTL.Util.API.Transform.SDA3ToFHIR).TransformStream(SDAStream, "HS.SDA3.Container","R4", "123","456")
+        Set ^zStatus = "SDA to FHIR attempted"
+		//Instantiate pResponse as clone of pRequest
+		set resultStream = ##class(%Stream.TmpCharacter).%New()
+        set result = resourceJSON.bundle.%ToJSON()
+		Set ^zStatus = "SDA to FHIR done"
+		set ^zfhirData = result
+		do resultStream.Write(result)
+		
+
+		#; Prepare tResponse
+		Set tResponse = ##class(CCD.Visualizer.Model.Record).%New()
+		set tResponse.FHIRContentJSONString = resultStream
+		
+
+		#;Write response
+		Set tSC = $$$OK
+		Set %response.Status = 200
+		Set %response.ContentType="application/xml"
+		
+		//$$$ThrowOnError(tSDAStream.XMLExportToStream(.tStream))
+		$$$ThrowOnError(tResponse.XMLExportToStream(.tStream))
+		Do tStream.OutputToDevice()
+	}
+	Catch Ex {
+		Set tSC = Ex.AsStatus()
+		Set %response.Status = 500
+	}
+	Quit tSC
+}
+
+ClassMethod TransformFHIRToSDA() As %Status
+{
+	Set tSC = $$$OK
+	
+	try {
+		If (%request.ContentType '= "multipart/form-data") {	
+			Set %response.Status = 406
+			QUIT
+		}
+		
+		// The Data should contain 2 parts, the first is JSON metadata, the second is the file data.		
+		
+		if ($D(%request.Data)) 
+		{
+			
+			Set name=""
+			set name = %request.Next(name)
+			
+			if (name = "") $$$ThrowStatus($$$ERROR($$$GeneralError,"Unable to identify Data Sections."))
+			Set stream = %request.Get(name)
+
+			Set tRequest = ##class(CCD.Visualizer.Model.Record).%New()
+    		$$$THROWONERROR(tSC,tRequest.%JSONImport(stream))
+
+			#; Pull elements from API call
+			set tTransformName = tRequest.TransformName
+ 			Set name = %request.Next(name) 
+
+			if (name = "") $$$ThrowStatus($$$ERROR($$$GeneralError,"Unable to identify Data Sections."))
+			Set stream = %request.Get(name)
+
+			Set fhirStream=##class(%Stream.GlobalBinary).%New()
+			Set fhirData = {}.%FromJSON(stream)
+			Set tSC=fhirData.%ToJSON(tRequest.FHIRContentJSON)
+		}
+		else
+		{
+			Set %response.Status = 406
+			QUIT
+		}
+		
+	
+		//Inject the message into a Production by instantiating a Business Host
+		// Construct the business service
+		$$$ThrowOnError( ##class(Ens.Director).CreateBusinessService("FHIR.REST.Service", .tService) )
+
+		// Now, process it
+		$$$ThrowOnError( tService.ProcessInput(tRequest, .tOutput) )
+
+		#; Prepare tResponse
+		Set tResponse = ##class(CCD.Visualizer.Model.Record).%New()
+		set tResponse.SDAContentXML = tOutput.SDAContentStream
+
+
+		#;Write response
+		Set tSC = $$$OK
+		Set %response.Status = 200
+		Set %response.ContentType="application/xml"
+		
+		//$$$ThrowOnError(tSDAStream.XMLExportToStream(.tStream))
+		$$$ThrowOnError(tResponse.XMLExportToStream(.tStream))
+		Do tStream.OutputToDevice()
+	}
+	Catch Ex {
+		Set tSC = Ex.AsStatus()
+		Set %response.Status = 500
+	}
+	Quit tSC
+}
 
 ClassMethod GetXPathValue() As %Status
 {
@@ -252,10 +425,9 @@ ClassMethod TestXSL() As %Status
 	Quit tSC
 }
 
-
 /// Helper methods:
 /// /// pLocation can be set using XPATH
-ClassMethod GetLocationValue(pStream As %Stream.Object, pLocation As %String, ByRef pValue As %String) 
+ClassMethod GetLocationValue(pStream As %Stream.Object, pLocation As %String, ByRef pValue As %String)
 {
 	
     Set pValue = ""
@@ -357,7 +529,8 @@ ClassMethod FormatResultsToJSON(pResults As %ListOfDataTypes, Output pJsonString
 
     // Convert the array to JSON string
 	set pJsonString = jsonArray.%ToJSON()
-  
-
 }
+
+
+
 }

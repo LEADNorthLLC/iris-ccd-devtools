@@ -8,6 +8,29 @@ const transformLabels = {
     exOutputLabel: "Your output will appear here after clicking submit",
 }
 
+<<<<<<< HEAD
+=======
+const fhirsdatransformLabels = {
+    pageTitle: "FHIR to SDA Transforms Tester",
+    inputLabelOne: "FHIR to SDA Transform",
+    inputLabelTwo: "Input Document",
+    outputLabel: "Output",
+    exInputLabelOne: "EX: SDA3/FHIR-to-SDA.xsl",
+    exInputLabelTwo: "TODO....",
+    exOutputLabel: "Your output will appear here after clicking submit",
+}
+
+const sdafhirtransformLabels = {
+    pageTitle: "SDA to FHIR Transforms Tester",
+    inputLabelOne: "SDA to FHIR Transform",
+    inputLabelTwo: "Input Document",
+    outputLabel: "Output",
+    exInputLabelOne: "EX: SDA3/SDA-to-FHIR.xsl",
+    exInputLabelTwo: "TODO....",
+    exOutputLabel: "Your output will appear here after clicking submit",
+}
+
+>>>>>>> main
 const xpathLabels = {
     pageTitle: "XPath Evaluator",
     inputLabelOne: "XPath Expression",

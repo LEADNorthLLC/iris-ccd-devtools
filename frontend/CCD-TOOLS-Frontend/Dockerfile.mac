@@ -1,0 +1,28 @@
+FROM node:18 AS build
+# Install dependencies only when needed
+WORKDIR /app
+# Copy and install the dependencies for the project
+COPY package.json package-lock.json ./
+RUN npm ci
+# Install additional required dependencies
+RUN npm install lucide-react sharp
+# Copy all other project files to working directory
+COPY . .
+# Run the next build process and generate the artifacts
+RUN npm run build
+
+# we are using multi stage build process to keep the image size as small as possible
+FROM node:18
+# add a non root user
+RUN useradd -m nextuser
+
+# set work dir as app
+WORKDIR /app
+# copy the standalone folder inside the .next folder generated from the build process 
+COPY --from=build --chown=nextuser:nextuser /app/.next/standalone ./
+# copy the static folder inside the .next folder generated from the build process 
+COPY --from=build --chown=nextuser:nextuser /app/.next/static ./.next/static
+# set non root user
+USER nextuser
+# expose 3000 on container
+EXPOSE 3000 

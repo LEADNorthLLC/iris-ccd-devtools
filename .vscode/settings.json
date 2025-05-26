@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
     "files.associations": {
 
         "Dockerfile*": "dockerfile",
@@ -20,4 +21,11 @@
 
 
 
+=======
+    "objectscript.conn": {
+        "server": "iris-interop-tools",
+        "ns": "IRISAPP",
+        "active": false
+    }
+>>>>>>> main
 }
