@@ -34,12 +34,29 @@ To create a user-friendly front-end to organize several testing utilities and me
 
 # Getting Started
 
-<!--
-## ZPM/IPM
+## ZPM/IPM Installation
 The code for the backend APIs and web application can be installed through IPM. This will install the CSP Application, the **IRISAPP** Production, and the APIs used by toolkit. 
 
-The NextJS/React front-end application is not included in the ZPM package.
--->
+The NextJS/React front-end application is not included in the ZPM package. For local installs, the Dashboard would need to be installed using `npm`. 
+
+The application is built to run on Docker on an IRIS for Health community image, however the solution only requires a Foundation namespace and is compatible with HealthConnect, IRIS for Health, or HealthShare UCR.
+
+1. The backend IRIS web application and REST APIs is available for installation via IPM.
+
+From IRIS terminal:
+
+```bash
+zpm "install iris-ccd-devtools"
+```
+2. The front-end application can be installed locally by changing directories to the  "frontend/CCD-Tools-Frontend" folder and then running the following commands:
+
+```bash
+npm install
+```
+After installation is complete, then run:
+```bash
+npm rundev
+```
 
 ## Installation with Docker 
 
