@@ -1,5 +1,12 @@
 zn "%SYS"
 
+// install zpm
+s n="SL" d ##class(Security.SSLConfigs).Create(n):'##class(Security.SSLConfigs).Exists(n),##class(%Net.URLParser).Parse("https://pm.community.intersystems.com/packages/zpm/latest/installer",.c) s h=##class(%Net.HttpRequest).%New(),h.Server=c("host"),h.Port=443,h.Https=1,h.SSLConfiguration=n,s=h.Get(c("path")) q:'s $System.Status.GetErrorText(s) s x=##class(%File).TempFilename("xml"),f=##class(%Stream.FileBinary).%New(),f.Filename=x d f.CopyFromAndSave(h.HttpResponse.Data) d h.%Close(),$system.OBJ.Load(x,"ck") do ##class(%File).Delete(x)
+
+// map zpm globally
+zpm "enable -map -globally"
+
+
 // Unexpire passwords and set up passwordless mode to simplify dev use.
 // ** Comment out these two line for Production use **
 do ##class(Security.Users).UnExpireUserPasswords("*")
@@ -11,6 +18,7 @@ set prop("Enabled")=1
 set prop("AutheEnabled")=48
 do ##class(Security.Services).Modify("%Service_CallIn",.prop)
 
+    
 // create IRISAPP namespace
 
 zn "HSLIB"
@@ -21,6 +29,6 @@ Do ##class(HS.Util.Installer.Foundation).Install("IRISAPP")
 
 zn "IRISAPP"
 set ^UnitTest("TestDirectory")="/opt/irisapp"    
-zpm "load /home/irisowner/dev -v":1:1
+zpm "load /home/irisowner/dev -v"
 
 halt
