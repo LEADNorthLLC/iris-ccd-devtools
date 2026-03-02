@@ -10,7 +10,7 @@ The IRIS Interoperability DevTools (formerly *IRIS CCD DevTools*) allows develop
 
 ## Version 3.0 Updates - TBD
 This upcoming version has these additional features:
-- HL7 to SDA, SDA to HL7 transformation
+- HL7 to CCD/SDA/FHIR transformations
 
 ## Version 2.0 Updates
 This current version has these additional features: 
