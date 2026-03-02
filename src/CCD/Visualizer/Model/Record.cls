@@ -11,8 +11,6 @@ Property Response As %String(MAXLEN = 1024);
 
 // Property ErrorLoc As %String(MAXLEN = 500);
 
-// Property HL7Content As %Stream.Object;
-
 /// Record holds possible streams
 /// CCD XML Content: CCDContentXML
 /// SDA XML Content: SDAContentXML
@@ -21,11 +19,19 @@ Property Response As %String(MAXLEN = 1024);
 /// This property is populated along with Error
 /// HL7 Content
 /// CCD XML Content
+Property HL7Content As %Stream.GlobalCharacter;
+
+Property CCDContent As %Stream.GlobalCharacter;
+
 Property CCDContentXML As %Stream.Object;
+
+Property SDAContent As %Stream.GlobalCharacter;
 
 Property SDAContentXML As %Stream.Object;
 
 Property SDAContentStream As %Stream.GlobalBinary;
+
+Property FHIRContent As %Stream.GlobalCharacter;
 
 Property FHIRContentJSON As %Stream.GlobalBinary;
 
@@ -33,35 +39,7 @@ Property FHIRContentJSONString As %Stream.Object;
 
 Storage Default
 {
-<Data name="RecordDefaultData">
-<Subscript>"Record"</Subscript>
-<Value name="1">
-<Value>TransformName</Value>
-</Value>
-<Value name="2">
-<Value>XPathForEval</Value>
-</Value>
-<Value name="3">
-<Value>Response</Value>
-</Value>
-<Value name="4">
-<Value>CCDContentXML</Value>
-</Value>
-<Value name="5">
-<Value>SDAContentXML</Value>
-</Value>
-<Value name="6">
-<Value>FHIRContentJSON</Value>
-</Value>
-<Value name="7">
-<Value>SDAContentStream</Value>
-</Value>
-<Value name="8">
-<Value>FHIRContentJSONString</Value>
-</Value>
-</Data>
-<DefaultData>RecordDefaultData</DefaultData>
-<Type>%Storage.Persistent</Type>
+
 }
 
 }

@@ -11,6 +11,7 @@
       <Resource Name="FHIR.PKG"/>
       <Resource Name="IRISAPP.PKG"/>
       <Resource Name="IRISAPPPKG.PKG"/>
+      <Resource Name="LEAD.PKG"/>
     
       <WebApplication 
       Url="/csp/visualizer/service"

@@ -5,6 +5,7 @@ Class CCD.Visualizer.REST.ServiceMap Extends CCD.Visualizer.REST.Service.Base
 /** Change Log
 2024-01-20 - Chi Nguyen-Rettig: initial
 2025-05-23 - Chi Nguyen-Rettig: Version 2.0 - FHIR Support
+2026-03-02 - Adam Sechler: Version 3.0 - HL7 Support
 **/
 Parameter Version = "1.0.0";
 /// Enable Cross-origin resource sharing handling.
@@ -21,7 +22,83 @@ XData UrlMap [ XMLNamespace = "http://www.intersystems.com/urlmap" ]
 	<Route Url="/xslt/" Method="POST" Call="TestXSL"/>
 	<Route Url="/fhirsdatransform/" Method="POST" Call="TransformFHIRToSDA"/>
 	<Route Url="/sdafhirtransform/" Method="POST" Call="TransformSDAToFHIR"/>
+	<Route Url="/hl7sdatransform/" Method="POST" Call="TransformHL7ToSDA"/>
   </Routes>
+}
+
+ClassMethod TransformHL7ToSDA() As %Status
+{
+	Set tSC = $$$OK
+	try {
+		if (%request.ContentType '= "multipart/form-data") {	
+			Set %response.Status = 406
+			QUIT
+		}
+
+		if ($D(%request.Data)) 
+		{			
+			Set name=""
+			set name = %request.Next(name)
+	
+			if (name = "") $$$ThrowStatus($$$ERROR($$$GeneralError,"Unable to identify Data Sections."))
+			Set stream = %request.Get(name)
+
+			Set tRequest = ##class(CCD.Visualizer.Model.Record).%New()
+    		$$$THROWONERROR(tSC,tRequest.%JSONImport(stream))
+
+			#; Pull elements from API call
+			set tTransformName = tRequest.TransformName
+ 			Set name = %request.Next(name) 
+
+			if (name = "") $$$ThrowStatus($$$ERROR($$$GeneralError,"Unable to identify Data Sections."))
+			Set stream = %request.Get(name)
+			Set hl7Data = {}.%FromJSON(stream)
+			Set tSC=hl7Data.%ToJSON(tRequest.HL7Content)
+			
+			
+		}
+		else
+		{
+			Set %response.Status = 406
+			QUIT
+		}
+		
+	
+		//Inject the message into a Production by instantiating a Business Host
+		// Construct the business service
+		$$$ThrowOnError( ##class(Ens.Director).CreateBusinessService("From_HL7_REST", .tService) )
+
+		// Now, process it
+		$$$ThrowOnError( tService.ProcessInput(tRequest, .tOutput) )
+
+		#; Prepare tResponse
+		Set tResponse = ##class(CCD.Visualizer.Model.Record).%New()
+		if $ISOBJECT(tOutput.SDAContent) {
+			set tResponse.SDAContent = tOutput.SDAContent
+			if (tRequest.TransformName = "HL7ToAll"){
+			set tResponse.HL7Content = tOutput.HL7Content
+			set tResponse.FHIRContent = tOutput.FHIRContent
+			set tResponse.CCDContent = tOutput.CCDContent
+			}
+		}
+		set tResponse.Response = tOutput.Response
+
+		#;Write response
+		Set tSC = $$$OK
+		Set %response.Status = 200
+		Set %response.ContentType="application/xml"
+
+		$$$ThrowOnError(tResponse.XMLExportToStream(.tStream))
+		Do tStream.OutputToDevice()
+	}
+	Catch Ex {
+		Set tSC = $$$OK
+		Set tSC = Ex.AsStatus()
+		Set errorMessage = Ex.DisplayString()
+		Set %response.Status = 504
+
+	}
+	Quit tSC
 }
 
 ClassMethod TransformSDAToFHIR() As %Status
