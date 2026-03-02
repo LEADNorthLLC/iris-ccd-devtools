@@ -25,6 +25,18 @@ XData ProductionDefinition
     <Setting Target="Host" Name="FHIRMetadataSet">HL7v40 / FHIR R4 Core Specification</Setting>
     <Setting Target="Host" Name="TargetConfigName">FHIR.REST.Operation</Setting>
   </Item>
+  <Item Name="From_HL7_REST" Category="" ClassName="LEAD.DevTools.Service.FromHL7REST" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Host" Name="TargetConfigName">HL7_To_SDA_Router</Setting>
+  </Item>
+  <Item Name="HL7_To_SDA_Router" Category="" ClassName="LEAD.DevTools.Process.HL7ToSDARouter" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Host" Name="TraceOperations">*FULL*</Setting>
+  </Item>
+  <Item Name="SDA_To_FHIR_Router" Category="" ClassName="LEAD.DevTools.Process.SDAToFHIRRouter" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Host" Name="TraceOperations">*FULL*</Setting>
+  </Item>
+  <Item Name="SDA_To_CCD_Router" Category="" ClassName="LEAD.DevTools.Process.SDAToCCDRouter" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+    <Setting Target="Host" Name="TraceOperations">*FULL*</Setting>
+  </Item>
 
 </Production>
 }
