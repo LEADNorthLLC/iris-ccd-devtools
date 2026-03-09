@@ -59,6 +59,10 @@ export default function ClientLayout({ children }) {
       icon: <FileCode className="w-5 h-5 dark:stroke-gray-300" />,
       label: 'SDA to FHIR Transforms',
     },
+    { type: 'separator' },
+    {path: '/hl7sdatransform', 
+      icon: <FileCode className="w-5 h-5 dark:stroke-gray-300" />, 
+      label: 'HL7 to SDA Transforms'},
   ];
 
   const closeSidebarIfMobile = () => {

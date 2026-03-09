@@ -1,0 +1,13 @@
+MSH|^~\&|Alvenaland Radiology Information System|Wehner Home Health Agency|Bauch Radiology Information System|West Abigale Community Hospital|20250611T12541||ADT^03|7dc30383-956b-462e-8a66-81169c34cbd7|P|2.5
+EVN|A08|20250611T12541||||
+PID|1|69829370|8e7c5e0a-844d-4e45-ad37-7ffd97e3a0a5||Jaskolski^Ashley^Nico|Reilly-Treutel|19640512|female|||3901 Huel Falls||881-274-0247 x049|325-962-0472 x8514|ENG|S|||405-74-6895
+NK1|1|Haag^Leann^Reese||63852 Cavendish Road|241-745-7722 x32825|1-817-328-7667 x014||||||
+NK1|2|Zboncak^Lane^Cameron||8954 W 6th Avenue|764.407.3522 x75048|(435) 307-9340||||||
+NK1|3|Luettgen^Cody^Bailey||300 Guy Rapid|1-370-274-2075 x3585|854-921-5955 x0466||||||
+PV1|1|I|Room^Bed|||PhysicianID|||AdmissionType
+AL1|1|Contrast Dye|SNOMED CT|Food Allergy|Skin Rash|Moderate||Patient should follow up in a year.
+AL1|2|Ibuprofen|SNOMED CT|Food Allergy|Heart Palpitations|Moderate||Patient should follow up in a year.
+NTE|1|L|Patient prefers morning appointments.|RE
+GT1|1||GUARANTOR_NAME^Wiegand^Marcel||905 Freda Heights|330.684.2858 x263|1-400-360-7020 x38157||Fri Jan 19 1951 07:21:28 GMT-0600 (Central Standard Time)|female|||90647 Konopelski Crossing|1-505-957-3213 x0605||||
+GT1|2||GUARANTOR_NAME^Welch-Becker^Jackie||7735 Waters Track|1-923-415-5071|712-347-8840||Tue Sep 07 2004 06:13:52 GMT-0500 (Central Daylight Time)|male|||47916 Martin Luther King Drive|549-429-0211||||
+IN1|1|||||||||||||||||||||

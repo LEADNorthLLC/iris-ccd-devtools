@@ -10,7 +10,7 @@ const sdafhirtransformLabels = {
   pageTitle: 'SDA to FHIR Transforms Tester',
   inputLabelOne: 'SDA to FHIR Transform',
   inputLabelTwo: 'Input SDA',
-  outputLabel: 'Output',
+  outputLabel: 'Output FHIR',
   exInputLabelOne: 'EX. SDAToFHIR',
   exInputLabelTwo: 'Enter SDA XML',
   exOutputLabel: 'FHIR output will appear here'

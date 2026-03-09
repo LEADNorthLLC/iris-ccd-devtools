@@ -1,0 +1,147 @@
+/**
+ * Sample HL7 messages for the new Sample HL7 Loader dropdown.
+ * Each entry: { value: string, label: string, message: string }
+ */
+export const hl7Samples = [
+  {
+    value: 'ADT_A01',
+    label: 'ADT^A01: Admit/visit notification (patient assigned to a bed)',
+    message: `MSH|^~\&|HIS|Hospital|EHR|HealthSystem|202409231030||ADT^A01|123456|P|2.5
+EVN|A01|202409231030|||1234^DOCTOR^JAMES^M^MD
+PID|1||123456^^^HOSPITAL^MR||DOE^JOHN^A||19800101|M||C|123 MAIN ST^^ANYTOWN^ST^12345^USA||(555)555-1234||(555)555-6789||S|CAT|123456789|999-99-9999
+PV1|1|I|ICU^101^A^HOSPITAL|3|||1234^DOCTOR^JAMES^M^MD||||||||||||12345|||||||||||||||||||||||||||A|
+DG1|1||J45.909^Asthma, unspecified^I10|20240923|A||||`,
+  },
+  {
+    value: 'ADT_A02',
+    label: 'ADT^A02: Transfer a patient (change of location/unit)',
+    message: `MSH|^~\&|Fairfield Nursing Information System|Lake Sarah Veterans Affairs Medical Center|Wilkinsoncester Pharmacy Information System|Marionstead Home Health Agency|20250611T12541||ADT^02|5a2c49c3-db9f-4868-a511-6c7095fac9b7|P|2.5
+EVN|A08|20250611T12541||||
+PID|2|14949528|c04d8e63-91f9-454d-8c45-adf9051de086||Hartmann^Carmine^Skyler|McDermott|19450802|male|||91418 West Road||(714) 949-5955 x190|(692) 794-5972|ENG|S|||799-29-2736
+OBX|1|49145861|20250611T12541|Geriatric Care|Provider001|Chronic Disease Management|Stable, continue current regimen.|Some observation value|||||||||||`,
+  },
+  {
+    value: 'ADT_A03',
+    label: 'ADT^A03: Discharge/end visit',
+    message: `MSH|^~\\&|Alvenaland Radiology Information System|Wehner Home Health Agency|Bauch Radiology Information System|West Abigale Community Hospital|20250611T12541||ADT^03|7dc30383-956b-462e-8a66-81169c34cbd7|P|2.5
+EVN|A08|20250611T12541||||
+PID|1|69829370|8e7c5e0a-844d-4e45-ad37-7ffd97e3a0a5||Jaskolski^Ashley^Nico|Reilly-Treutel|19640512|female|||3901 Huel Falls||881-274-0247 x049|325-962-0472 x8514|ENG|S|||405-74-6895
+NK1|1|Haag^Leann^Reese||63852 Cavendish Road|241-745-7722 x32825|1-817-328-7667 x014||||||
+NK1|2|Zboncak^Lane^Cameron||8954 W 6th Avenue|764.407.3522 x75048|(435) 307-9340||||||
+NK1|3|Luettgen^Cody^Bailey||300 Guy Rapid|1-370-274-2075 x3585|854-921-5955 x0466||||||
+PV1|1|I|Room^Bed|||PhysicianID|||AdmissionType
+AL1|1|Contrast Dye|SNOMED CT|Food Allergy|Skin Rash|Moderate||Patient should follow up in a year.
+AL1|2|Ibuprofen|SNOMED CT|Food Allergy|Heart Palpitations|Moderate||Patient should follow up in a year.
+NTE|1|L|Patient prefers morning appointments.|RE
+GT1|1||GUARANTOR_NAME^Wiegand^Marcel||905 Freda Heights|330.684.2858 x263|1-400-360-7020 x38157||Fri Jan 19 1951 07:21:28 GMT-0600 (Central Standard Time)|female|||90647 Konopelski Crossing|1-505-957-3213 x0605||||
+GT1|2||GUARANTOR_NAME^Welch-Becker^Jackie||7735 Waters Track|1-923-415-5071|712-347-8840||Tue Sep 07 2004 06:13:52 GMT-0500 (Central Daylight Time)|male|||47916 Martin Luther King Drive|549-429-0211||||
+IN1|1|||||||||||||||||||||`,
+  },
+  {
+    value: 'ADT_A08',
+    label: 'ADT^A08: Update Patient Information',
+    message: `MSH|^~\&|EMR|GH_ER|ADT|GH_HIS|20260303113000||ADT^A08^ADT_A08|MSG00002|P|2.5.1
+EVN|A08|20260303112500|||1234^Smith^Emily^A^^MD
+PID|1||123456^^^GH^MR||Doe^John^Michael||19850515|M||2106-3^White^HL70005|456 Oak Avenue^Apt 5B^Brooklyn^NY^11201^USA||(718)555-7890|(718)555-2222|EN^English^HL70296|M|CHR|123-45-6789|||2186-5^Not Hispanic or Latino^HL70189
+PD1|||4567^Brown^Lisa^K^^MD|N
+NK1|1|Doe^Jane^Marie|SPO^Spouse^HL70063|456 Oak Avenue^Apt 5B^Brooklyn^NY^11201^USA|(718)555-3333|EC^Emergency Contact^HL70131
+NK1|2|Doe^Robert^James|FTH^Father^HL70063|789 Pine Street^^Albany^NY^12207^USA|(518)555-4444|EC^Emergency Contact^HL70131
+PV1|1|E|ER^01^01^GH|||1234^Smith^Emily^A^^MD|||||||||||V123456|||
+PV2|||Influenza-like illness
+GT1|1|123456|Doe^John^Michael|456 Oak Avenue^Apt 5B^Brooklyn^NY^11201^USA|(718)555-7890||19850515|F|P/F|SLF|123-45-6789
+IN1|1|BCBS001|BlueCross BlueShield|PO Box 12345^^New York^NY^10008^USA|(800)555-1000||POL123456789||Doe^John^Michael|SELF|19850515|456 Oak Avenue^Apt 5B^Brooklyn^NY^11201^USA|||||||||||||||||||PPO|20260101|20261231
+IN2|||Doe^John^Michael
+IN1|2|MEDICAID01|New York Medicaid|PO Box 23456^^Albany^NY^12237^USA|(800)555-2000||NYM987654321||Doe^John^Michael|SELF|19850515|456 Oak Avenue^Apt 5B^Brooklyn^NY^11201^USA|||||||||||||||||||Medicaid|20260101|20261231`,
+  },
+  {
+    value: 'ADT_A08',
+    label: 'ADT^A08: Update Patient Information, contact/insurance etc.',
+    message: `MSH|^~\\&|ADM+|GC||EPI|201508131424|CHPFOREA|ADT^A08|201508131424430035|T|2.2||||||||
+ZSH|ADT
+EVN|A08|2015081311|||NREALM|
+PID|1|5080232|000070009377|32970^^^VXJ^PI~124000930^6^M10^VXJ^PN~000070009377^^^VXJ^MR~771401751^^^US GOVT^SS|TESTERONE^KENDRICK^^^^^L^|MAUER MILLI|19480527111322|M||B|100 MAIN ST^SUITE 703^WESTBURY^NY^11590^^^^280||(516)555-6669X^PRN^^^^516^5556669^|(516)777-8892X^ALT^^^^516^7778892^||M|BAP|1240009306|000091401751||||||BOHR ALCOTT|||||
+NK1|0001|GRIFFIN^JEN^^^^^L|2|100 MAIN ST^SUITE 703^WESTBURY^NY^11590|(516)555-6669^PRN^^^^516^5556669||EMCON
+NK1|0002|TESTER^BILL^^^^^L|||||PTEMP|||NONE
+PV1|1|O|MYFACSOMPL||||^POTTERS^LOUIS|||VIN|||||||080754^POTTERS^LOUIS|T|000000022931|M^20150808|||N|||||||||||||||||||VIN|||||201508080403
+PV2||||||||0403||||||||||||1||||OA
+DG1|1|9|235.3^LIVER UNC BEHAV NEOPL^I9|LIVER UNC BEHAV NEOPL|201508080403|DA|072||||||||01|080754
+DG1|2|9|153.9^COLON CA NOS^I9|COLON CA NOS|201508080403|DA|025||||||||02|080754
+DG1|3|9|308.9^ACUTE STRESS RXN NOS^I9|ACUTE STRESS RXN NOS|201508080403|DA|117||||||||03|080754
+DG1|4|9|787.01^NAUSEA W VOMITING^I9|NAUSEA W VOMITING|201508080403|DA|356||||||||04|080754
+DG1|5|9|275.2^DISORD MAGNESIUM METABOL^I9|DISORD MAGNESIUM METABOL|201508080403|DA|084||||||||05|080754
+DG1|6|0|D37.6^NEOPLASM OF UNCERTAIN BEHAVIOR OF LIVER, GB & BILE DUCT^I10|NEOPLASM OF UNCERTAIN BEHAVIOR OF LIVER, GB & BILE DUCT|201508080403|DA|||||||||06|080754
+DG1|7|0|C18.9^MALIGNANT NEOPLASM OF COLON, UNSPECIFIED^I10|MALIGNANT NEOPLASM OF COLON, UNSPECIFIED|201508080403|DA|||||||||07|080754
+DG1|8|0|Z51.11^ENCOUNTER FOR ANTINEOPLASTIC CHEMOTHERAPY^I10|ENCOUNTER FOR ANTINEOPLASTIC CHEMOTHERAPY|201508080403|DA|||||||||08|080754
+DG1|9|0|R11.2^NAUSEA WITH VOMITING, UNSPECIFIED^I10|NAUSEA WITH VOMITING, UNSPECIFIED|201508080403|DA|||||||||09|080754
+DG1|10|0|E83.40^DISORDERS OF MAGNESIUM METABOLISM, UNSPECIFIED^I10|DISORDERS OF MAGNESIUM METABOLISM, UNSPECIFIED|201508080403|DA|||||||||10|080754
+GT1|0001|771401751^^^VXJ^GN|GRIFFIN^KENDRICK||100 MAIN ST^SUITE 703^WESTBURY^NY^11590|(516)555-6669^PRN^^^^516^5556669||19480527||P|1|771401751
+NPU|^^^GCV
+IN1|0001|M75||MEDICARE OUTPATIENT|||||||||||M|GRIFFIN^KENDRICK^^^^^L|1|19480527|100 MAIN ST^SUITE 703^WESTBURY^NY^11590^|||1||||||||||||||123456789A|||||||M||Y||S
+ZIN||||||||||||S|||||||||||||||||||||||||||||||||||||||||||||||||GRIFFIN^KENDRICK^^^^^L|100 MAIN ST^SUITE 703^WESTBURY^NY^11590^
+ACC||0
+ZG1||||||||||||||||||||||||||||||||||||||||||||||||||^^2PTGARSX^^M|||||771401751^^^VXJ^GN~771401751^^^US GOVT^SS|GRIFFIN^KENDRICK||100 MAIN ST^SUITE 703^WESTBURY^NY^11590|(516)555-6669^PRN^^^^^516^5556669~(516)777-8892X^ALT^^^^^516^7778892^
+ZK1||||||EMCON||||||||||||||||||||GRIFFIN^JEN^^^^^L|100 MAIN ST^SUITE 703^WESTBURY^NY^11590|(516)555-6669^PRN^^^^^516^5556669
+ZPV|OA|||||||||||||||||||||||1||||||||||||||||||||||||||NA||||||||VIN|||^^%SBHEADR^^Revise Patient Info~^^2OADATE^^080815~^^2OATIME^^0403~^^2PMSETHI^^1~^^2PMSLANG^^ENG
+ZP1||KENDRICK@XYZ.COM||||||||||||||||||||||||||||||||||^^1PMSETHI^^1~^^1PMSLANG^^ENG~^^1PTDAD^^BOHR ALCOTT~^^2INS1CID^^123456789A~^^2INS1NAM^^MEDICARE OUTPATIENT~^^2PTEMAIL^^KENDRICK@XYZ.COM|124000930^6^M10^VXJ^PN~70009346^^^VXJ^MR~771401751^^^US GOVT^SS~32970^^^VXJ^PI||100 MAIN ST^SUITE 703^WESTBURY^NY^11590^|(516)555-6669X^PRN^^^^^516^5556669^~(516)777-8892X^ALT^^^^^516^7778892^
+ZVS|||201508080403|||080754^POTTERS^LOUIS|||M|001240009306||N|||VIN|||1|||||OV|^^2CPPDOBA^^~^^2CPPDOBB^^~^^2CPPDOBC^^~^^2CPPDOBD^^~^^2CPPGRP1^^~^^2CPPGRP2^^~^^2CPPGRP3^^~^^2CPPGRP4^^~^^2CPPMEDA^^~^^2CPPMEDB^^~^^2CPPMEDC^^~^^2CPPMEDD^^~^^2CPPNEI1^^~^^2CPPNEI2^^~^^2CPPNEI3^^~^^2CPPNEI4^^~^^2CPPREL1^^~^^2CPPREL2^^~^^2CPPREL3^^~^^2CPPREL4^^~^^2CPPRVW1^^SBILAL~^^2CPPSEX1^^~^^2CPPSEX2^^~^^2CPPSEX3^^~^^2CPPSEX4^^~^^2GUARDOB^^05271948~^^2IS1PRTA^^N~^^2NSHSEMP^^N~^^2PTDAD^^BOHR ALCOTT~^^2PTMOM^^MAUER MILLI
+ZVI|M75|Y`,
+  },
+  {
+    value: 'ORU_R01',
+    label: 'ORU^R01: Order status update - Influenza Patient Results',
+    message: `MSH|^~\&|LIS|GH_LAB|EMR|GH_ER|20260303103000||ORU^R01^ORU_R01|MSG00001|P|2.5.1
+PID|1||123456^^^GH^MR||Doe^John||19850515|M|||123 Main St^^Metropolis^NY^10001^USA||(555)555-1234
+PV1|1|E|ER^01^01^GH|||1234^Smith^Emily^A^^MD|||||||||||V123456
+ORC|RE|ORD1001|||
+OBR|1|ORD1001||57021-8^CBC panel^LN|||20260303100000||||||||1234^Smith^Emily^A^^MD|||||||F
+OBX|1|NM|6690-2^WBC^LN||12.5|10*3/uL|4.0-11.0|H|||F
+OBX|2|NM|789-8^RBC^LN||4.8|10*6/uL|4.5-5.9|||F
+OBX|3|NM|718-7^Hemoglobin^LN||13.8|g/dL|13.5-17.5|||F
+OBX|4|NM|4544-3^Hematocrit^LN||41|%|41-53|||F
+OBX|5|NM|787-2^MCV^LN||88|fL|80-100|||F
+OBX|6|NM|777-3^Platelets^LN||210|10*3/uL|150-450|||F
+ORC|RE|ORD1002|||
+OBR|2|ORD1002||24323-8^Basic metabolic panel^LN|||20260303100500||||||||1234^Smith^Emily^A^^MD|||||||F
+OBX|7|NM|2160-0^Creatinine^LN||1.1|mg/dL|0.6-1.3|||F
+OBX|8|NM|3094-0^Urea nitrogen (BUN)^LN||18|mg/dL|7-20|||F
+OBX|9|NM|2951-2^Sodium^LN||138|mmol/L|135-145|||F
+OBX|10|NM|2823-3^Potassium^LN||4.2|mmol/L|3.5-5.1|||F
+ORC|RE|ORD1003|||
+OBR|3|ORD1003||24325-3^Hepatic function panel^LN|||20260303100500||||||||1234^Smith^Emily^A^^MD|||||||F
+OBX|11|NM|1920-8^AST^LN||65|U/L|10-40|H|||F
+OBX|12|NM|1742-6^ALT^LN||72|U/L|7-56|H|||F
+OBX|13|NM|6768-6^Alkaline phosphatase^LN||110|U/L|44-147|||F
+OBX|14|NM|1975-2^Total bilirubin^LN||1.0|mg/dL|0.3-1.2|||F
+ORC|RE|ORD1004|||
+OBR|4|ORD1004||34487-9^Influenza virus A RNA [Presence] by NAA^LN|||20260303101000||||||||1234^Smith^Emily^A^^MD|||||||F
+OBX|15|CWE|34487-9^Influenza A RNA^LN||260373001^Detected^SCT||||||F
+OBX|16|CWE|34488-7^Influenza B RNA^LN||260415000^Not detected^SCT||||||F
+ORC|RE|ORD1005|||
+OBR|5|ORD1005||LP14239-5^Influenza rapid Ag test^LN|||20260303101000||||||||1234^Smith^Emily^A^^MD|||||||F
+OBX|17|CWE|44551-7^Influenza A Ag^LN||260373001^Positive^SCT||||||F
+OBX|18|CWE|44552-5^Influenza B Ag^LN||260415000^Negative^SCT||||||F
+ORC|RE|ORD1006|||
+OBR|6|ORD1006||30746-2^CT Chest^LN|||20260303102000||||||||1234^Smith^Emily^A^^MD|||||||F
+OBX|19|TX|30746-2^CT Chest Impression^LN||Bilateral ground-glass opacities consistent with viral pneumonia. No pleural effusion.||||||F
+ORC|RE|ORD1007|||
+OBR|7|ORD1007||626-2^Bacteria identified in Sputum by Culture^LN|||20260303101500||||||||1234^Smith^Emily^A^^MD|||||||F
+OBX|20|CWE|626-2^Sputum culture result^LN||260385009^No growth^SCT||||||F`,
+  },
+  {
+    value: 'ORM^001',
+    label: 'ORM^001: Order Response for Allergy to Dogwood',
+    message: `MSH|^~\&|FP_EMR|FAMILYCARE^1234567890^NPI|REGIONAL_LAB|LABCORP|20260304113000||ORM^O01^ORM_O01|MSG00004|P|2.5.1|||AL|NE
+PID|1||123456^^^GH^MRS||Doe^Jane^Marie||19950515|F|||123 Main St^^Metropolis^NY^10001^USA||(555)555-8933
+PV1|1|O|FP^01^01^FAMILYCARE|||5678^Johnson^Mark^T^^MD^NPI|5678^Johnson^Mark^T^^MD^NPI|||||||||||V789456|SELF||||||||||||||||||||||||20260304110000|||COM
+GT1|1|123456|Doe^Jane^Marie|123 Main St^^Metropolis^NY^10001^USA|(555)555-8933|R|19950515|F|P/F|SLF|987654321
+IN1|1|BCBSNY01|BlueCross BlueShield of NY|PO Box 1407^^Church Street Station^NY^10008^USA|(800)555-2583||BCBS123456789|GRP98765|Smith^Laura^Anne|SELF|19920412|789 Maple Drive^Apt 2A^Queens^NY^11375^USA|||||||||||||||||||PPO|20260101|20261231
+IN2|||Smith^Laura^Anne|||||||||||||||||||||||||||||||||||||
+AL1|1||91936005^Allergy to dogwood pollen^SCT|SV^Severe^HL70055|Anaphylaxis with facial swelling, dyspnea and hypotension|||20260302
+RXE|1|Q24H^Daily^HL70162|860975^Cetirizine 10 MG Oral Tablet^RXNORM|10|mg|||PO^Oral^HL70162|||||||||||||||A
+RXR|PO^Oral Route^HL70162
+ORC|NW|PLAC20001^FAMILYCARE|FILL20001^LABCORP||CM||||20260304112000|||5678^Johnson^Mark^T^^MD^NPI|1234567890^FAMILYCARE^NPI
+OBR|1|PLAC20001^FAMILYCARE|FILL20001^LABCORP|6095-3^Tree pollen IgE Ab [Units/volume] in Serum^LN|||20260304112000||||||||5678^Johnson^Mark^T^^MD^NPI|||||||R
+SPM|1|SPM20001|S12345^Serum Sample^LABCORP||119364003^Serum specimen^SCT|||||||||||20260304112500
+NTE|1|L|Patient experienced severe anaphylactic reaction after exposure to blooming dogwood trees. Evaluate for allergen-specific IgE (RAST).`,
+  }
+]

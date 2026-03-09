@@ -27,4 +27,10 @@ export const links = [
         display: 'SDA to FHIR Transforms',
         desc: 'Apply standard IRIS transforms'
     }
+    ,
+    {
+        to: '/hl7sdatransform',
+        display: 'HL7 to SDA Transforms',
+        desc: 'Apply standard IRIS transforms'
+    }
 ]
