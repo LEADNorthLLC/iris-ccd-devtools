@@ -11,6 +11,9 @@ import { parseHL7Message } from '../utils/hl7Parser';
  * @param {boolean} [props.embedded] - If true, render without outer card for use inside TestComponent panel
  */
 export function HL7TreeView({ message, embedded = false }) {
+  const [searchTerm, setSearchTerm] = React.useState('');
+  const treeRef = React.useRef(null);
+
   if (!message || !message.trim()) return null;
 
   // If message looks like JSON, try to extract raw HL7 (e.g. {"content": "MSH|..."} or plain HL7 string in JSON)
@@ -36,9 +39,6 @@ export function HL7TreeView({ message, embedded = false }) {
       </div>
     );
   }
-
-  const [searchTerm, setSearchTerm] = React.useState('');
-  const treeRef = React.useRef(null);
 
   const treeData = segments.map((segment, segmentIndex) => ({
     id: `segment-${segmentIndex}`,
@@ -108,9 +108,9 @@ export function HL7TreeView({ message, embedded = false }) {
             <>
               <span className="flex-shrink-0 text-emerald-900 dark:text-emerald-400">
                 {node.isOpen ? (
-                  <ChevronDown className="w-4 h-4" />
+                  <ChevronDown className="w-4 h-4 dark:text-white" />
                 ) : (
-                  <ChevronRight className="w-4 h-4" />
+                  <ChevronRight className="w-4 h-4 dark:text-white" />
                 )}
               </span>
               <ListTree className="w-4 h-4 flex-shrink-0 text-blue-600 dark:text-blue-400" aria-hidden />
@@ -121,15 +121,15 @@ export function HL7TreeView({ message, embedded = false }) {
               <span className="flex-shrink-0 w-4 h-4 flex items-center justify-center text-emerald-900 dark:text-emerald-400">
                 {hasChildren ? (
                   node.isOpen ? (
-                    <ChevronDown className="w-4 h-4" />
+                    <ChevronDown className="w-4 h-4 dark:text-white" />
                   ) : (
-                    <ChevronRight className="w-4 h-4" />
+                    <ChevronRight className="w-4 h-4 dark:text-white" />
                   )
                 ) : (
-                  <Tag className="w-3.5 h-3.5 text-gray-500 dark:text-gray-400" aria-hidden />
+                  <Tag className="w-3.5 h-3.5 text-gray-500 dark:text-white" aria-hidden />
                 )}
               </span>
-              <span className="font-mono text-xs truncate min-w-0 flex-1" title={displayName}>
+              <span className="font-mono text-xs truncate min-w-0 flex-1 dark:text-white" title={displayName}>
                 {displayName || '\u2014'}
               </span>
             </>
@@ -189,7 +189,7 @@ export function HL7TreeView({ message, embedded = false }) {
   const treeHeight = 300;
   const tree = (
     <div className={embedded ? 'w-full h-full min-h-[300px]' : 'w-full min-h-[300px]'}>
-      <div className="flex h-full flex-col gap-2 pl-2">
+      <div className="flex h-full flex-col gap-2 pl-2 dark:bg-gray-700 text-gray-900 dark:text-white">
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-1 text-xs mt-1">
             <button

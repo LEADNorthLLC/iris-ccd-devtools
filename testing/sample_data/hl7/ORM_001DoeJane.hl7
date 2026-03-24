@@ -1,0 +1,13 @@
+MSH|^~\&|FP_EMR|FAMILYCARE^1234567890^NPI|REGIONAL_LAB|LABCORP|20260304113000||ORM^O01^ORM_O01|MSG00004|P|2.5.1|||AL|NE
+PID|1||123456^^^GH^MRS||Doe^Jane^Marie||19950515|F|||123 Main St^^Metropolis^NY^10001^USA||(555)555-8933
+PV1|1|O|FP^01^01^FAMILYCARE|||5678^Johnson^Mark^T^^MD^NPI|5678^Johnson^Mark^T^^MD^NPI|||||||||||V789456|SELF||||||||||||||||||||||||20260304110000|||COM
+GT1|1|123456|Doe^Jane^Marie|123 Main St^^Metropolis^NY^10001^USA|(555)555-8933|R|19950515|F|P/F|SLF|987654321
+IN1|1|BCBSNY01|BlueCross BlueShield of NY|PO Box 1407^^Church Street Station^NY^10008^USA|(800)555-2583||BCBS123456789|GRP98765|Smith^Laura^Anne|SELF|19920412|789 Maple Drive^Apt 2A^Queens^NY^11375^USA|||||||||||||||||||PPO|20260101|20261231
+IN2|||Smith^Laura^Anne|||||||||||||||||||||||||||||||||||||
+AL1|1||91936005^Allergy to dogwood pollen^SCT|SV^Severe^HL70055|Anaphylaxis with facial swelling, dyspnea and hypotension|||20260302
+RXE|1|Q24H^Daily^HL70162|860975^Cetirizine 10 MG Oral Tablet^RXNORM|10|mg|||PO^Oral^HL70162|||||||||||||||A
+RXR|PO^Oral Route^HL70162
+ORC|NW|PLAC20001^FAMILYCARE|FILL20001^LABCORP||CM||||20260304112000|||5678^Johnson^Mark^T^^MD^NPI|1234567890^FAMILYCARE^NPI
+OBR|1|PLAC20001^FAMILYCARE|FILL20001^LABCORP|6095-3^Tree pollen IgE Ab [Units/volume] in Serum^LN|||20260304112000||||||||5678^Johnson^Mark^T^^MD^NPI|||||||R
+SPM|1|SPM20001|S12345^Serum Sample^LABCORP||119364003^Serum specimen^SCT|||||||||||20260304112500
+NTE|1|L|Patient experienced severe anaphylactic reaction after exposure to blooming dogwood trees. Evaluate for allergen-specific IgE (RAST).

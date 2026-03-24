@@ -1,9 +1,9 @@
 "use client"
 
 import React from 'react'
-import axios from "axios";
 import { useState, useRef } from "react";
 import { saveAs } from 'file-saver';
+import JSZip from 'jszip';
 import XMLViewer from 'react-xml-viewer'
 import { HL7TreeView } from './HL7TreeView'
 // import Dropdown from 'react-bootstrap/Dropdown';
@@ -27,19 +27,82 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
     const [hl7TransformType, setHl7TransformType] = useState('sda') // 'sda' | 'sdaAndCcd'
     const [parsedSdaContent, setParsedSdaContent] = useState(null)
     const [parsedCcdContent, setParsedCcdContent] = useState(null)
-    const [hl7OutputActive, setHl7OutputActive] = useState('sda') // 'sda' | 'ccd' when showing SDA+CCD output
+    const [parsedFhirContent, setParsedFhirContent] = useState(null)
+    const [hl7OutputActive, setHl7OutputActive] = useState('sda') // 'sda' | 'ccd' | 'fhir' when showing SDA+CCD+FHIR output
     const inputRef = useRef(null)
     const inputTextareaRef = useRef(null)
     const outputTextareaRef = useRef(null)
 
-    /** Parse hl7toall response: extract CDATA from <SDAContent> and <CCDContent>. */
+    /** Parse hl7toall response: extract CDATA from <SDAContent>, <CCDContent>, and <FHIRContent>. */
     const parseHl7ToAllResponse = (raw) => {
         const sdaMatch = raw.match(/<SDAContent>\s*<!\[CDATA\[([\s\S]*?)\]\]>\s*<\/SDAContent>/)
         const ccdMatch = raw.match(/<CCDContent>\s*<!\[CDATA\[([\s\S]*?)\]\]>\s*<\/CCDContent>/)
+        const fhirMatch = raw.match(/<FHIRContent>\s*<!\[CDATA\[([\s\S]*?)\]\]>\s*<\/FHIRContent>/)
         return {
             sda: sdaMatch ? sdaMatch[1].trim() : null,
             ccd: ccdMatch ? ccdMatch[1].trim() : null,
+            fhir: fhirMatch ? fhirMatch[1].trim() : null,
         }
+    }
+
+    const prettifyXMLTextResponse = (rawText) => {
+        let text = String(rawText ?? '').trim()
+        if (!text) return ''
+
+        // If response wraps the payload in CDATA, show only the CDATA contents.
+        const splits = text.split(new RegExp('(\<Container.*?\<\/Container\>)')).filter(function(x) { 
+            return x !== undefined;
+        })
+        console.log("splits:", splits)
+        if(splits.length > 1) {
+            text = splits[1].trim()
+        }
+        // const cdataMatch = text.match(new RegExp('/<!\[CDATA\[([\s\S]*?)\]\]>/', 'g'))
+        // console.log("CDATA contents:", cdataMatch)
+        // if (cdataMatch?.[1]) {
+        //    text = cdataMatch[1].trim()
+        // }
+
+        // Pretty-print JSON payloads when possible.
+        try {
+            if (text.startsWith('{') || text.startsWith('[')) {
+                return JSON.stringify(JSON.parse(text), null, 2)
+            }
+        } catch {
+            // Fallback to XML/plain text formatting below.
+        }
+
+        // Add newlines/indentation for XML-like payloads.
+        if (text.startsWith('<') && text.endsWith('>')) {
+            const withBreaks = text.replace(/>\s*</g, '>\n<')
+            const lines = withBreaks.split('\n')
+            let indentLevel = 0
+            return lines
+                .map((line) => {
+                    const trimmed = line.trim()
+                    if (!trimmed) return ''
+
+                    if (/^<\//.test(trimmed)) {
+                        indentLevel = Math.max(indentLevel - 1, 0)
+                    }
+
+                    const indented = `${'  '.repeat(indentLevel)}${trimmed}`
+                    const opens = (trimmed.match(/<[^/!?][^>]*>/g) || []).length
+                    const closes = (trimmed.match(/<\/[^>]+>/g) || []).length
+                    const selfClosing = (trimmed.match(/<[^>]+\/>/g) || []).length
+                    const commentsOrDecl = /^<(\?|!)/.test(trimmed)
+
+                    if (!commentsOrDecl && opens > closes + selfClosing) {
+                        indentLevel += opens - closes - selfClosing
+                    }
+
+                    return indented
+                })
+                .join('\n')
+                .trim()
+        }
+
+        return text
     }
 
     const postReqest = async () => {
@@ -69,11 +132,46 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
             data = `{"TransformName": "${inputOne}"}`
         }
         else if (labels.pageTitle === "HL7 to SDA Transforms Tester") {
-            data = `{"TransformName": "${inputOne}"}`
+            const transformName = hl7TransformType === 'sdaAndCcd' ? 'HL7ToAll' : 'HL7ToSDA'
+            data = `{"TransformName": "${transformName}"}`
         }
 
         formdata.append("CONTENT1", data);
-        formdata.append("CONTENT2", texAreaOne)
+        // HL7 endpoints expect CONTENT2 to be JSON of the shape:
+        // {"HL7Content":"MSH|^~\\&|..."}
+        // Also ensure MSH-2 includes the escape sequence for subcomponent (&): ^~\&
+        if (labels.pageTitle === 'HL7 to SDA Transforms Tester') {
+            const extractHl7Text = (value) => {
+                const trimmed = String(value ?? '').trim()
+                if (!trimmed) return ''
+                if (!trimmed.startsWith('{')) return trimmed
+                try {
+                    const parsed = JSON.parse(trimmed)
+                    if (typeof parsed?.HL7Content === 'string') return parsed.HL7Content
+                    if (typeof parsed?.content === 'string') return parsed.content
+                    if (typeof parsed?.message === 'string') return parsed.message
+                    return trimmed
+                } catch {
+                    return trimmed
+                }
+            }
+
+            const ensureMsh2HasEscapedAmpersand = (hl7Text) => {
+                const desiredEncodingChars = '^~\\&' // JS string -> actual HL7 contains ^~\&
+                const text = String(hl7Text ?? '')
+                // Replace encoding chars field (MSH-2) so it always contains the required ^~\&
+                return text.replace(/(^\s*MSH\|)([^|]*)(\|)/m, (_match, p1, _encoding, p3) => {
+                    return `${p1}${desiredEncodingChars}${p3}`
+                })
+            }
+
+            const rawHl7 = extractHl7Text(texAreaOne)
+            const normalizedHl7 = ensureMsh2HasEscapedAmpersand(rawHl7)
+            const content2 = JSON.stringify({ HL7Content: normalizedHl7 })
+            formdata.append('CONTENT2', content2)
+        } else {
+            formdata.append("CONTENT2", texAreaOne)
+        }
 
         const requestOptions = {
           method: "POST",
@@ -84,8 +182,9 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
           }
         };
 
-        // For HL7 page with SDA + CCD use hl7ToAllUrl when provided; otherwise use url
-        const effectiveUrl = (labels.pageTitle === "HL7 to SDA Transforms Tester" && hl7TransformType === 'sdaAndCcd' && hl7ToAllUrl) ? hl7ToAllUrl : url;
+        // All transform types use the same base URL; HL7-to-ALL vs HL7-to-SDA
+        // is controlled by CONTENT1.TransformName (HL7ToAll vs HL7ToSDA).
+        const effectiveUrl = url;
 
         // Remove any duplicate path segments and ensure trailing slash
         const cleanUrl = effectiveUrl.replace(/^\/csp\/visualizer\/service\//, '').replace(/\/$/, '');
@@ -113,28 +212,60 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
             // console.log('Status Text:', response.statusText);
             // console.log('Headers:', Object.fromEntries(response.headers.entries()));
             
-            const result = await response.text();
-            // console.log('Response Body:', result);
+            const rawResult = await response.text();
+            // console.log('Response Body:', rawResult);
 
-            if (result === '[]') {
+            if (rawResult === '[]') {
                 setTexAreaTwo('No result found.')
                 setParsedSdaContent(null)
                 setParsedCcdContent(null)
+                setParsedFhirContent(null)
             } else {
-                setTexAreaTwo(result)
+                let processedResult = rawResult
+                //If the labels.pageTitle is SDA to FHIR, then I need to grab the CDATA contents of the FHIRContentJSONString tag
+                if(labels.pageTitle === 'SDA to FHIR Transforms Tester') {
+                    const fhirContentJsonString = rawResult.match(/<FHIRContentJSONString>\s*<!\[CDATA\[([\s\S]*?)\]\]>\s*<\/FHIRContentJSONString>/)
+                    if(fhirContentJsonString) {
+                        processedResult = fhirContentJsonString[1].trim()
+                    }
+                }
+
+                if(labels.pageTitle === 'XSL Template Tester') {
+                    const xslContentString = rawResult.match(/<CCDContentXML>\s*<!\[CDATA\[([\s\S]*?)\]\]>\s*<\/CCDContentXML>/)
+                    if(xslContentString) {
+                        processedResult = xslContentString[1].trim()
+                    }
+                }
+
+                if(labels.pageTitle === 'HL7 to SDA Transforms Tester'  && hl7TransformType === 'sda') {
+                    const xslContentString = rawResult.match(/<SDAContent>\s*<!\[CDATA\[([\s\S]*?)\]\]>\s*<\/SDAContent>/)
+                    if(xslContentString) {
+                        processedResult = xslContentString[1].trim()
+                    }
+                 }
+
+                const outputText = labels.pageTitle === 'FHIR to SDA Transforms Tester'
+                    || labels.pageTitle === 'CCDA to SDA Transforms Tester'
+                    || labels.pageTitle === 'HL7 to SDA Transforms Tester'
+                    ? prettifyXMLTextResponse(processedResult)
+                    : processedResult
+                setTexAreaTwo(outputText)
                 if (labels.pageTitle === 'HL7 to SDA Transforms Tester' && hl7TransformType === 'sdaAndCcd') {
-                    const { sda, ccd } = parseHl7ToAllResponse(result)
-                    if (sda != null || ccd != null) {
+                    const { sda, ccd, fhir } = parseHl7ToAllResponse(processedResult)
+                    if (sda != null || ccd != null || fhir != null) {
                         setParsedSdaContent(sda)
                         setParsedCcdContent(ccd)
+                        setParsedFhirContent(fhir)
                         setHl7OutputActive('sda')
                     } else {
                         setParsedSdaContent(null)
                         setParsedCcdContent(null)
+                        setParsedFhirContent(null)
                     }
                 } else {
                     setParsedSdaContent(null)
                     setParsedCcdContent(null)
+                    setParsedFhirContent(null)
                 }
             }
         } catch (error) {
@@ -159,12 +290,37 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
         setTexAreaOne(text)
     }
 
-    const download = () => {
+    const download = async () => {
         const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
         const pageTitle = labels.pageTitle.replace(/\s+/g, '_');
-        const filename = `${pageTitle}_${timestamp}.txt`;
-        const blob = new Blob([getOutputDisplayValue()], { type: 'plain/text' });
-        saveAs(blob, filename);
+
+        if (
+            labels.pageTitle === 'HL7 to SDA Transforms Tester' &&
+            hl7TransformType === 'sdaAndCcd' &&
+            (parsedSdaContent != null || parsedCcdContent != null || parsedFhirContent != null)
+        ) {
+            const zip = new JSZip();
+
+            if (parsedSdaContent != null) {
+                zip.file(`${pageTitle}_${timestamp}_SDA.txt`, parsedSdaContent);
+            }
+
+            if (parsedCcdContent != null) {
+                zip.file(`${pageTitle}_${timestamp}_CCD.txt`, parsedCcdContent);
+            }
+
+            if (parsedFhirContent != null) {
+                zip.file(`${pageTitle}_${timestamp}_FHIR.txt`, parsedFhirContent);
+            }
+
+            const zipBlob = await zip.generateAsync({ type: 'blob' });
+            const zipFilename = `${pageTitle}_${timestamp}_ALL.zip`;
+            saveAs(zipBlob, zipFilename);
+        } else {
+            const filename = `${pageTitle}_${timestamp}.txt`;
+            const blob = new Blob([getOutputDisplayValue()], { type: 'plain/text' });
+            saveAs(blob, filename);
+        }
     }
 
     const clear = () => {
@@ -172,11 +328,18 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
         setTexAreaTwo('')
         setParsedSdaContent(null)
         setParsedCcdContent(null)
+        setParsedFhirContent(null)
     }
 
     const getOutputDisplayValue = () =>
-        (labels.pageTitle === 'HL7 to SDA Transforms Tester' && hl7TransformType === 'sdaAndCcd' && (parsedSdaContent != null || parsedCcdContent != null))
-            ? (hl7OutputActive === 'sda' ? (parsedSdaContent ?? '') : (parsedCcdContent ?? ''))
+        (labels.pageTitle === 'HL7 to SDA Transforms Tester' && hl7TransformType === 'sdaAndCcd' && (parsedSdaContent != null || parsedCcdContent != null || parsedFhirContent != null))
+            ? (
+                hl7OutputActive === 'sda'
+                    ? (parsedSdaContent ?? '')
+                    : hl7OutputActive === 'ccd'
+                        ? (parsedCcdContent ?? '')
+                        : (parsedFhirContent ?? '')
+            )
             : texAreaTwo
 
     const copy = () => {
@@ -228,9 +391,15 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
         ref.current.scrollTop = ref.current.scrollHeight * (idx / text.length) - ref.current.clientHeight / 2
     }
 
-
     const outputDisplayValue = getOutputDisplayValue()
-    const showHl7OutputPills = labels.pageTitle === 'HL7 to SDA Transforms Tester' && hl7TransformType === 'sdaAndCcd' && (parsedSdaContent != null || parsedCcdContent != null)
+    const showHl7OutputPills = labels.pageTitle === 'HL7 to SDA Transforms Tester'
+        && hl7TransformType === 'sdaAndCcd'
+        && (parsedSdaContent != null || parsedCcdContent != null || parsedFhirContent != null)
+
+    const outputLabelWithType =
+        showHl7OutputPills
+            ? `${labels.outputLabel} ${hl7OutputActive.toUpperCase()}`
+            : labels.outputLabel
 
   return (
     <div className='comp m-5'>
@@ -263,7 +432,7 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
                 }
             </div>
 
-            {(labels.pageTitle === "HL7 to SDA Transforms Tester") && (
+            {/* {(labels.pageTitle === "HL7 to SDA Transforms Tester") && (
             <div className="m-5 flex flex-col bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-lg px-8 py-3 w-[70vw]">
                 <div className="flex justify-around">
                     <div className="flex justify-between w-full items-center gap-4">
@@ -292,7 +461,7 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
                     </div>
                 </div>
             </div>
-            )}
+            )} */}
             <div className='m-5 flex flex-col justify-center bg-white dark:bg-gray-800 comp-area rounded-lg border border-gray-200 dark:border-gray-700 shadow-lg'>
                 <div className='flex justify-around mb-4'>
                     <div className='flex justify-between w-full'>
@@ -305,28 +474,27 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
                             <button onClick={() => copy()} className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-2 py-0.5 rounded-md transition-colors duration-200 ml-2">Copy</button>
                             <button onClick={() => fileUploadAction()} className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-2 py-0.5 rounded-md transition-colors duration-200 ml-2">Import</button>
                             {(labels.pageTitle === "SDA to FHIR Transforms Tester" || labels.pageTitle === "CCDA to SDA Transforms Tester" || labels.pageTitle === "XSL Template Tester") && (
-                            <button onClick={() => load(1)} className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-2 py-0.5 rounded-md transition-colors duration-200 ml-2"> {viewer ? 'Raw View' : 'XML View'}</button>
+                            <button onClick={() => load(1)} className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-2 py-0.5 rounded-md transition-colors duration-200 ml-2"> {viewer ? 'Raw' : 'XML'}</button>
                             )}
                             {(labels.pageTitle === "HL7 to SDA Transforms Tester") && (
                             <button onClick={() => load(1)} className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-2 py-0.5 rounded-md transition-colors duration-200 ml-2">
-                              {viewer ? 'Raw View' : 'Tree View'}
+                              {viewer ? 'Raw' : 'Tree'}
                             </button>
                             )}
                         </div>
                     </div>
                     <div className='w-3/12'></div>
                     <div className='flex justify-between w-full'>
-                        <h2 className='big-col subTitle text-gray-900 dark:text-white'>{labels.outputLabel}</h2>
+                        <h2 className='big-col subTitle text-gray-900 dark:text-white'>{outputLabelWithType}</h2>
                         <div className='flex'>
 
                             <button onClick={() => clear()} className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-2 py-0.5 rounded-md transition-colors duration-200 ml-2">
                               Clear
                             </button>
                             <button onClick={() => copy()} className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-2 py-0.5 rounded-md transition-colors duration-200 ml-2">Copy</button>
-                           
-                            <button onClick={() => download()} className='bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-4 py-2 rounded-lg transition-colors duration-200'>Export</button>
-                            {!(labels.pageTitle === "FHIR to SDA Transforms Tester" || labels.pageTitle === "SDA to FHIR Transforms Tester") && (
-                            <button onClick={() => load(2)} className='bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-4 py-2 rounded-lg transition-colors duration-200 ml-2'>Viewer</button>
+                            <button onClick={() => download()} className='bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-2 py-0.5 rounded-md transition-colors duration-200 ml-2'>Export</button>
+                            {!(labels.pageTitle === "FHIR to SDA Transforms Tester" || labels.pageTitle === "SDA to FHIR Transforms Tester" || labels.pageTitle === "XPath Evaluator") && hl7OutputActive !== 'fhir' && (
+                            <button onClick={() => load(2)} className='bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-4 py-2 rounded-lg transition-colors duration-200 ml-2'>XML</button>
                             )}
                        
                         </div>
@@ -350,11 +518,9 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
                             </>
                         )}
                     </div>
-                    <div className="col flex-shrink-0 w-8" />
+                    <div className="col flex-shrink-0 w-18" />
                     <div className="big-col flex items-center gap-2 flex-1">
-                        {!viewerTwo && (
-                            <>
-                                {showHl7OutputPills && (
+                        {showHl7OutputPills && (
                                     <div className="flex rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 p-0.5 shrink-0" role="group" aria-label="Output view">
                                         <button
                                             type="button"
@@ -378,8 +544,24 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
                                         >
                                             CCD
                                         </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => setHl7OutputActive('fhir')}
+                                            disabled={viewerTwo}
+                                            className={`px-2.5 py-1 text-xs font-medium rounded-md transition-colors ${
+                                                hl7OutputActive === 'fhir'
+                                                    ? 'bg-emerald-600 text-white'
+                                                    : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
+                                            } ${viewerTwo ? 'opacity-50 cursor-not-allowed hover:text-gray-600 dark:hover:text-gray-400' : ''}`}
+                                        >
+                                            FHIR
+                                        </button>
                                     </div>
                                 )}
+                               
+                          
+                        {!viewerTwo && (
+                            <>
                                 <input
                                     type="text"
                                     placeholder="Find in output"
@@ -408,7 +590,7 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
                                         viewer ? (
                                             labels.pageTitle === 'HL7 to SDA Transforms Tester'
                                                 ? <HL7TreeView message={texAreaOne}  /> 
-                                                : <div className='w-full xml2 bg-white dark:bg-gray-700 rounded-lg p-4'>   
+                                                : <div className='w-full xml2 bg-white dark:bg-gray-700 rounded-lg p-4 text-gray-900 dark:text-white'>   
                                                     <XMLViewer collapsible xml={texAreaOne} /> 
                                                   </div>
                                         ) : (
@@ -444,7 +626,7 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
                                                 : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
                                         }`}
                                     >
-                                        SDA + CCD
+                                        SDA to ALL
                                     </button>
                                 </div>
                                 </>

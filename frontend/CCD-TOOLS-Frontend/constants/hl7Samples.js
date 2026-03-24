@@ -6,41 +6,16 @@ export const hl7Samples = [
   {
     value: 'ADT_A01',
     label: 'ADT^A01: Admit/visit notification (patient assigned to a bed)',
-    message: `MSH|^~\&|HIS|Hospital|EHR|HealthSystem|202409231030||ADT^A01|123456|P|2.5
+    message: `MSH|^~\\&|HIS|Hospital|EHR|HealthSystem|202409231030||ADT^A01|123456|P|2.5
 EVN|A01|202409231030|||1234^DOCTOR^JAMES^M^MD
 PID|1||123456^^^HOSPITAL^MR||DOE^JOHN^A||19800101|M||C|123 MAIN ST^^ANYTOWN^ST^12345^USA||(555)555-1234||(555)555-6789||S|CAT|123456789|999-99-9999
 PV1|1|I|ICU^101^A^HOSPITAL|3|||1234^DOCTOR^JAMES^M^MD||||||||||||12345|||||||||||||||||||||||||||A|
 DG1|1||J45.909^Asthma, unspecified^I10|20240923|A||||`,
   },
   {
-    value: 'ADT_A02',
-    label: 'ADT^A02: Transfer a patient (change of location/unit)',
-    message: `MSH|^~\&|Fairfield Nursing Information System|Lake Sarah Veterans Affairs Medical Center|Wilkinsoncester Pharmacy Information System|Marionstead Home Health Agency|20250611T12541||ADT^02|5a2c49c3-db9f-4868-a511-6c7095fac9b7|P|2.5
-EVN|A08|20250611T12541||||
-PID|2|14949528|c04d8e63-91f9-454d-8c45-adf9051de086||Hartmann^Carmine^Skyler|McDermott|19450802|male|||91418 West Road||(714) 949-5955 x190|(692) 794-5972|ENG|S|||799-29-2736
-OBX|1|49145861|20250611T12541|Geriatric Care|Provider001|Chronic Disease Management|Stable, continue current regimen.|Some observation value|||||||||||`,
-  },
-  {
-    value: 'ADT_A03',
-    label: 'ADT^A03: Discharge/end visit',
-    message: `MSH|^~\\&|Alvenaland Radiology Information System|Wehner Home Health Agency|Bauch Radiology Information System|West Abigale Community Hospital|20250611T12541||ADT^03|7dc30383-956b-462e-8a66-81169c34cbd7|P|2.5
-EVN|A08|20250611T12541||||
-PID|1|69829370|8e7c5e0a-844d-4e45-ad37-7ffd97e3a0a5||Jaskolski^Ashley^Nico|Reilly-Treutel|19640512|female|||3901 Huel Falls||881-274-0247 x049|325-962-0472 x8514|ENG|S|||405-74-6895
-NK1|1|Haag^Leann^Reese||63852 Cavendish Road|241-745-7722 x32825|1-817-328-7667 x014||||||
-NK1|2|Zboncak^Lane^Cameron||8954 W 6th Avenue|764.407.3522 x75048|(435) 307-9340||||||
-NK1|3|Luettgen^Cody^Bailey||300 Guy Rapid|1-370-274-2075 x3585|854-921-5955 x0466||||||
-PV1|1|I|Room^Bed|||PhysicianID|||AdmissionType
-AL1|1|Contrast Dye|SNOMED CT|Food Allergy|Skin Rash|Moderate||Patient should follow up in a year.
-AL1|2|Ibuprofen|SNOMED CT|Food Allergy|Heart Palpitations|Moderate||Patient should follow up in a year.
-NTE|1|L|Patient prefers morning appointments.|RE
-GT1|1||GUARANTOR_NAME^Wiegand^Marcel||905 Freda Heights|330.684.2858 x263|1-400-360-7020 x38157||Fri Jan 19 1951 07:21:28 GMT-0600 (Central Standard Time)|female|||90647 Konopelski Crossing|1-505-957-3213 x0605||||
-GT1|2||GUARANTOR_NAME^Welch-Becker^Jackie||7735 Waters Track|1-923-415-5071|712-347-8840||Tue Sep 07 2004 06:13:52 GMT-0500 (Central Daylight Time)|male|||47916 Martin Luther King Drive|549-429-0211||||
-IN1|1|||||||||||||||||||||`,
-  },
-  {
     value: 'ADT_A08',
     label: 'ADT^A08: Update Patient Information',
-    message: `MSH|^~\&|EMR|GH_ER|ADT|GH_HIS|20260303113000||ADT^A08^ADT_A08|MSG00002|P|2.5.1
+    message: `MSH|^~\\&|EMR|GH_ER|ADT|GH_HIS|20260303113000||ADT^A08^ADT_A08|MSG00002|P|2.5.1
 EVN|A08|20260303112500|||1234^Smith^Emily^A^^MD
 PID|1||123456^^^GH^MR||Doe^John^Michael||19850515|M||2106-3^White^HL70005|456 Oak Avenue^Apt 5B^Brooklyn^NY^11201^USA||(718)555-7890|(718)555-2222|EN^English^HL70296|M|CHR|123-45-6789|||2186-5^Not Hispanic or Latino^HL70189
 PD1|||4567^Brown^Lisa^K^^MD|N
@@ -89,7 +64,7 @@ ZVI|M75|Y`,
   {
     value: 'ORU_R01',
     label: 'ORU^R01: Order status update - Influenza Patient Results',
-    message: `MSH|^~\&|LIS|GH_LAB|EMR|GH_ER|20260303103000||ORU^R01^ORU_R01|MSG00001|P|2.5.1
+    message: `MSH|^~\\&|LIS|GH_LAB|EMR|GH_ER|20260303103000||ORU^R01^ORU_R01|MSG00001|P|2.5.1
 PID|1||123456^^^GH^MR||Doe^John||19850515|M|||123 Main St^^Metropolis^NY^10001^USA||(555)555-1234
 PV1|1|E|ER^01^01^GH|||1234^Smith^Emily^A^^MD|||||||||||V123456
 ORC|RE|ORD1001|||
@@ -130,7 +105,7 @@ OBX|20|CWE|626-2^Sputum culture result^LN||260385009^No growth^SCT||||||F`,
   {
     value: 'ORM^001',
     label: 'ORM^001: Order Response for Allergy to Dogwood',
-    message: `MSH|^~\&|FP_EMR|FAMILYCARE^1234567890^NPI|REGIONAL_LAB|LABCORP|20260304113000||ORM^O01^ORM_O01|MSG00004|P|2.5.1|||AL|NE
+    message: `MSH|^~\\&|FP_EMR|FAMILYCARE^1234567890^NPI|REGIONAL_LAB|LABCORP|20260304113000||ORM^O01^ORM_O01|MSG00004|P|2.5.1|||AL|NE
 PID|1||123456^^^GH^MRS||Doe^Jane^Marie||19950515|F|||123 Main St^^Metropolis^NY^10001^USA||(555)555-8933
 PV1|1|O|FP^01^01^FAMILYCARE|||5678^Johnson^Mark^T^^MD^NPI|5678^Johnson^Mark^T^^MD^NPI|||||||||||V789456|SELF||||||||||||||||||||||||20260304110000|||COM
 GT1|1|123456|Doe^Jane^Marie|123 Main St^^Metropolis^NY^10001^USA|(555)555-8933|R|19950515|F|P/F|SLF|987654321

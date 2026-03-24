@@ -10,7 +10,7 @@ const HL7sdatransformLabels = {
   pageTitle: 'HL7 to SDA Transforms Tester',
   inputLabelOne: 'HL7 to SDA Transform',
   inputLabelTwo: 'Input HL7',
-  outputLabel: 'Output SDA',
+  outputLabel: 'Output',
   exInputLabelOne: 'EX. HL7ToSDA',
   exInputLabelTwo: 'Enter HL7 JSON',
   exOutputLabel: 'SDA output will appear here'

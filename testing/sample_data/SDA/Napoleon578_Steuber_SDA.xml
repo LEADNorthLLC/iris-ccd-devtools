@@ -1,0 +1,49 @@
+<Container>
+    <Patient>
+        <SdaID>340</SdaID>
+        <Name>
+            <FamilyName>Steuber698</FamilyName>
+            <GivenName>Napoleon578</GivenName>
+            <Type>Legal</Type>
+        </Name>
+        <Gender>
+            <Code>M</Code>
+        </Gender>
+        <BirthTime>1974-12-25T00:00:00</BirthTime>
+    </Patient>
+    <Diagnoses>
+        <Diagnosis>
+            <FromTime>2019-06-12T00:00:00</FromTime>
+            <SdaID>341</SdaID>
+            <Diagnosis>
+                <SDACodingStandard>SCT</SDACodingStandard>
+                <Code>44054006</Code>
+                <Description>Type 2 diabetes mellitus</Description>
+            </Diagnosis>
+            <Status>
+                <Code>55561003</Code>
+            </Status>
+            <OnsetTime>2019-06-12T00:00:00</OnsetTime>
+        </Diagnosis>
+    </Diagnoses>
+    <Observations>
+        <Observation>
+            <FromTime>2026-02-12T00:00:00</FromTime>
+            <SdaID>342</SdaID>
+            <ObservationTime>2026-02-12T00:00:00</ObservationTime>
+            <ObservationCode>
+                <SDACodingStandard>LN</SDACodingStandard>
+                <Code>4548-4</Code>
+                <Description>Hemoglobin A1c</Description>
+                <ObservationValueUnits>
+                    <SDACodingStandard>UCUM</SDACodingStandard>
+                    <Code>%</Code>
+                    <Description>%</Description>
+                </ObservationValueUnits>
+            </ObservationCode>
+            <ObservationValue>8.4</ObservationValue>
+        </Observation>
+    </Observations>
+    <UpdateECRDemographics>true</UpdateECRDemographics>
+    <SendingFacility>FHIR</SendingFacility>
+</Container>

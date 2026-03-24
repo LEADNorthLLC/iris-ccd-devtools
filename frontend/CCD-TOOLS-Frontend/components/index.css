@@ -126,3 +126,8 @@ button:active {
 .customFont {
     font-size: 1.4rem;
 }
+
+/* This is to fix the color of the XML viewer in dark mode */
+.dark .rxv-container span {
+    color: #ffffff !important;
+  }
