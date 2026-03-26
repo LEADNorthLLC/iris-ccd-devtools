@@ -604,7 +604,7 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
                         <div className={`btn h-full flex ${labels.pageTitle === 'HL7 to SDA Transforms Tester' ? 'flex-col items-center gap-3' : ''}`}>
                             {(labels.pageTitle === 'HL7 to SDA Transforms Tester') && (
                                 <>
-                                    <span className="text-xs text-gray-600 dark:text-gray-400 text-center">Choose transform type</span>
+                                    <span className="text-xs text-gray-600 dark:text-gray-400 text-center">Choose output type</span>
                                     <div className="flex rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 p-0.5" role="group" aria-label="Transform output type">
                                     <button
                                         type="button"
@@ -615,7 +615,7 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
                                                 : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
                                         }`}
                                     >
-                                        SDA only
+                                        SDA
                                     </button>
                                     <button
                                         type="button"
@@ -626,7 +626,7 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
                                                 : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
                                         }`}
                                     >
-                                        SDA to ALL
+                                        ALL
                                     </button>
                                 </div>
                                 </>
@@ -637,13 +637,13 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
                     <div className='big-col relative xml1 h-full'>
                     {
                                 loaderTwo ?
-                                    <div className='flex justify-center content-center align-middle h-64'>
+                                    <div className='flex justify-center content-center align-middle h-64 mt-4'>
                                         <div className='loader'></div>
                                     </div>
                                     :
                                     (
                                         viewerTwo ? 
-                                            <div className='w-full xml2 bg-white dark:bg-gray-700 rounded-lg p-4'>   
+                                            <div className='w-full xml2 bg-white dark:bg-gray-700 dark:border-white border rounded-lg p-4'>   
                                                 <XMLViewer collapsible xml={outputDisplayValue} />  
                                             </div>
                                                 :

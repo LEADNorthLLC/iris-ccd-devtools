@@ -12,7 +12,7 @@ const HL7sdatransformLabels = {
   inputLabelTwo: 'Input HL7',
   outputLabel: 'Output',
   exInputLabelOne: 'EX. HL7ToSDA',
-  exInputLabelTwo: 'Enter HL7 JSON',
+  exInputLabelTwo: 'Enter HL7 Message',
   exOutputLabel: 'SDA output will appear here'
 }
 
