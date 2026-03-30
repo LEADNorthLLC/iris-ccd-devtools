@@ -1,10 +1,11 @@
 "use client"
 
 import React from 'react'
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { saveAs } from 'file-saver';
 import JSZip from 'jszip';
 import XMLViewer from 'react-xml-viewer'
+import JsonView from '@uiw/react-json-view';
 import { HL7TreeView } from './HL7TreeView'
 // import Dropdown from 'react-bootstrap/Dropdown';
 // import DropdownButton from 'react-bootstrap/DropdownButton';
@@ -18,9 +19,9 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
     const [texAreaOne, setTexAreaOne] = useState('')
     const [texAreaTwo, setTexAreaTwo] = useState('')
     const [viewer, setViewer] = useState(false)
-    const [viewerTwo, setViewerTwo] = useState(false)
     const [loaderOne, setLoaderOne] = useState(false)
-    const [loaderTwo, setLoaderTwo] = useState(false)
+    /** Output pane: plain text vs XML viewer vs JSON tree (HL7 ALL + FHIR pill only for json). */
+    const [outputViewMode, setOutputViewMode] = useState('raw') // 'raw' | 'xml' | 'json'
     const [searchOne, setSearchOne] = useState('')
     const [searchTwo, setSearchTwo] = useState('')
     const [selectedHl7Sample, setSelectedHl7Sample] = useState(hl7Samples[0]?.value ?? '')
@@ -222,6 +223,7 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
                 setParsedFhirContent(null)
             } else {
                 let processedResult = rawResult
+                let tempProcessedResult = null
                 //If the labels.pageTitle is SDA to FHIR, then I need to grab the CDATA contents of the FHIRContentJSONString tag
                 if(labels.pageTitle === 'SDA to FHIR Transforms Tester') {
                     const fhirContentJsonString = rawResult.match(/<FHIRContentJSONString>\s*<!\[CDATA\[([\s\S]*?)\]\]>\s*<\/FHIRContentJSONString>/)
@@ -237,19 +239,26 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
                     }
                 }
 
-                if(labels.pageTitle === 'HL7 to SDA Transforms Tester'  && hl7TransformType === 'sda') {
+                if(labels.pageTitle === 'HL7 to SDA Transforms Tester') {
                     const xslContentString = rawResult.match(/<SDAContent>\s*<!\[CDATA\[([\s\S]*?)\]\]>\s*<\/SDAContent>/)
                     if(xslContentString) {
-                        processedResult = xslContentString[1].trim()
+                        tempProcessedResult = xslContentString[1].trim()
                     }
                  }
 
-                const outputText = labels.pageTitle === 'FHIR to SDA Transforms Tester'
+                let outputText = labels.pageTitle === 'FHIR to SDA Transforms Tester'
                     || labels.pageTitle === 'CCDA to SDA Transforms Tester'
                     || labels.pageTitle === 'HL7 to SDA Transforms Tester'
                     ? prettifyXMLTextResponse(processedResult)
                     : processedResult
+
+                //We do not want to overwrite the processedResult with the tempProcessedResult if the user jumps back and selects sda, we want to keep the original processedResult.
+                //Just grab the SDAContent block from the original processedResult.
+                if (tempProcessedResult) {
+                    outputText = tempProcessedResult
+                }
                 setTexAreaTwo(outputText)
+                
                 if (labels.pageTitle === 'HL7 to SDA Transforms Tester' && hl7TransformType === 'sdaAndCcd') {
                     const { sda, ccd, fhir } = parseHl7ToAllResponse(processedResult)
                     if (sda != null || ccd != null || fhir != null) {
@@ -262,6 +271,7 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
                         setParsedCcdContent(null)
                         setParsedFhirContent(null)
                     }
+
                 } else {
                     setParsedSdaContent(null)
                     setParsedCcdContent(null)
@@ -329,6 +339,7 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
         setParsedSdaContent(null)
         setParsedCcdContent(null)
         setParsedFhirContent(null)
+        setOutputViewMode('raw')
     }
 
     const getOutputDisplayValue = () =>
@@ -347,27 +358,27 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
     }
 
     const load = (opt) => {
-
-        if ((texAreaOne === '' && opt === 1) || (texAreaTwo === '' && opt === 2)) {
-            return
-        }
+        if (texAreaOne === '' && opt === 1) return
 
         if (opt === 1) {
             setLoaderOne(true)
-        } else if (opt === 2) {
-            setLoaderTwo(true)
-        }
-        
-        setTimeout(() => {
-            if (opt === 1) {
+            setTimeout(() => {
                 setLoaderOne(false)
                 setViewer(!viewer)
-            } else if (opt === 2) {
-                setLoaderTwo(false)
-                setViewerTwo(!viewerTwo)
-            }
-        }, 2000);
+            }, 2000)
+        }
     }
+
+    useEffect(() => {
+        setOutputViewMode('raw')
+    }, [hl7OutputActive])
+
+    useEffect(() => {
+        if (hl7TransformType !== 'sdaAndCcd') {
+            setOutputViewMode('raw')
+            setHl7OutputActive('sda')
+        }
+    }, [hl7TransformType])
 
     const findInTextarea = (which, direction, outputContent) => {
         const isInput = which === 1
@@ -395,6 +406,21 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
     const showHl7OutputPills = labels.pageTitle === 'HL7 to SDA Transforms Tester'
         && hl7TransformType === 'sdaAndCcd'
         && (parsedSdaContent != null || parsedCcdContent != null || parsedFhirContent != null)
+
+    const hideOutputStructuring =
+        labels.pageTitle === 'FHIR to SDA Transforms Tester'
+        || labels.pageTitle === 'SDA to FHIR Transforms Tester'
+        || labels.pageTitle === 'XPath Evaluator'
+
+    const outputJsonTreeValue = useMemo(() => {
+        const s = String(outputDisplayValue ?? '').trim()
+        if (!s) return null
+        try {
+            return JSON.parse(s)
+        } catch {
+            return null
+        }
+    }, [outputDisplayValue])
 
     const outputLabelWithType =
         showHl7OutputPills
@@ -493,9 +519,23 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
                             </button>
                             <button onClick={() => copy()} className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-2 py-0.5 rounded-md transition-colors duration-200 ml-2">Copy</button>
                             <button onClick={() => download()} className='bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-2 py-0.5 rounded-md transition-colors duration-200 ml-2'>Export</button>
-                            {!(labels.pageTitle === "FHIR to SDA Transforms Tester" || labels.pageTitle === "SDA to FHIR Transforms Tester" || labels.pageTitle === "XPath Evaluator") && hl7OutputActive !== 'fhir' && (
-                            <button onClick={() => load(2)} className='bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-4 py-2 rounded-lg transition-colors duration-200 ml-2'>XML</button>
-                            )}
+                            {!hideOutputStructuring && (showHl7OutputPills && hl7OutputActive === 'fhir' ? (
+                            <button
+                                type="button"
+                                onClick={() => setOutputViewMode((m) => (m === 'json' ? 'raw' : 'json'))}
+                                className='bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-4 py-2 rounded-lg transition-colors duration-200 ml-2'
+                            >
+                                {outputViewMode === 'json' ? 'Raw' : 'JSON'}
+                            </button>
+                            ) : (
+                            <button
+                                type="button"
+                                onClick={() => setOutputViewMode((m) => (m === 'xml' ? 'raw' : 'xml'))}
+                                className='bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-4 py-2 rounded-lg transition-colors duration-200 ml-2'
+                            >
+                                {outputViewMode === 'xml' ? 'Raw' : 'XML'}
+                            </button>
+                            ))}
                        
                         </div>
                     </div>
@@ -547,12 +587,12 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
                                         <button
                                             type="button"
                                             onClick={() => setHl7OutputActive('fhir')}
-                                            disabled={viewerTwo}
+                                            disabled={outputViewMode === 'xml'}
                                             className={`px-2.5 py-1 text-xs font-medium rounded-md transition-colors ${
                                                 hl7OutputActive === 'fhir'
                                                     ? 'bg-emerald-600 text-white'
                                                     : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
-                                            } ${viewerTwo ? 'opacity-50 cursor-not-allowed hover:text-gray-600 dark:hover:text-gray-400' : ''}`}
+                                            } ${outputViewMode === 'xml' ? 'opacity-50 cursor-not-allowed hover:text-gray-600 dark:hover:text-gray-400' : ''}`}
                                         >
                                             FHIR
                                         </button>
@@ -560,7 +600,7 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
                                 )}
                                
                           
-                        {!viewerTwo && (
+                        {outputViewMode === 'raw' && (
                             <>
                                 <input
                                     type="text"
@@ -635,22 +675,22 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
                         </div>
                     </div>
                     <div className='big-col relative xml1 h-full'>
-                    {
-                                loaderTwo ?
-                                    <div className='flex justify-center content-center align-middle h-64 mt-4'>
-                                        <div className='loader'></div>
-                                    </div>
-                                    :
-                                    (
-                                        viewerTwo ? 
-                                            <div className='w-full xml2 bg-white dark:bg-gray-700 dark:border-white border rounded-lg p-4'>   
-                                                <XMLViewer collapsible xml={outputDisplayValue} />  
+                        {outputViewMode === 'xml' ? (
+                                            <div className='w-full xml2 bg-white dark:bg-gray-700 dark:border-white border rounded-lg p-4'>
+                                                <XMLViewer collapsible xml={outputDisplayValue} />
                                             </div>
-                                                :
+                        ) : outputViewMode === 'json' ? (
+                                            <div className='w-full xml2 bg-white dark:bg-gray-700 dark:border-white border rounded-lg p-4'>
+                                                {outputJsonTreeValue != null ? (
+                                                <JsonView value={outputJsonTreeValue} />
+                                                ) : (
+                                                <p className="text-sm text-red-600 dark:text-red-400">Output is not valid JSON. Switch to Raw to inspect.</p>
+                                                )}
+                                            </div>
+                        ) : (
                                             <textarea ref={outputTextareaRef} readOnly className='border w-full h-full p-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg' placeholder={labels.exOutputLabel} value={outputDisplayValue} />
-                                    )
-                            }
-                    </div>    
+                        )}
+                    </div>
                 </div>
             </div>
         </div>

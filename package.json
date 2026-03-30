@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@uiw/react-json-view": "^2.0.0-alpha.41"
+  }
+}
