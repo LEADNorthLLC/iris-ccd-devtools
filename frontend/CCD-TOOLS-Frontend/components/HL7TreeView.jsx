@@ -2,8 +2,12 @@
 
 import React from 'react';
 import { Tree } from 'react-arborist';
-import { ChevronRight, ChevronDown, LayoutList, Tag, X, ListTree, Copy } from 'lucide-react';
+import { ChevronRight, ChevronDown, X, ListTree, Copy } from 'lucide-react';
 import { parseHL7Message } from '../utils/hl7Parser';
+
+/** HL7 MSH: first pipe-delimited value after segment name is MSH-2; parser uses 1-based field index from that slice — offset +1 for spec field numbers. */
+const hl7FieldNumberForDisplay = (segmentType, parserFieldNumber) =>
+  segmentType === 'MSH' ? parserFieldNumber + 1 : parserFieldNumber;
 
 /**
  * @param {{ message: string; embedded?: boolean }} props
@@ -48,20 +52,33 @@ export function HL7TreeView({ message, embedded = false }) {
       .filter((field) => field.value != null && String(field.value).trim() !== '')
       .map((field, i) => {
         const value = field.value.trim();
+        const hl7FieldNumber = hl7FieldNumberForDisplay(segment.type, field.fieldNumber);
         const components = value.split(/\^|\\S\\/).map((c) => c.trim()).filter(Boolean);
         const fieldId = `segment-${segmentIndex}-field-${i}`;
         if (components.length <= 1) {
-          return { id: fieldId, name: value, isField: true };
+          return {
+            id: fieldId,
+            name: value,
+            isField: true,
+            segmentType: segment.type,
+            hl7FieldNumber,
+            componentNumber: 1,
+          };
         }
         return {
           id: fieldId,
           name: value,
           isField: true,
           isComposite: true,
+          segmentType: segment.type,
+          hl7FieldNumber,
           children: components.map((comp, k) => ({
             id: `${fieldId}-comp-${k}`,
             name: comp,
             isComponent: true,
+            segmentType: segment.type,
+            hl7FieldNumber,
+            componentNumber: k + 1,
           })),
         };
       }),
@@ -71,6 +88,10 @@ export function HL7TreeView({ message, embedded = false }) {
     const isSegment = node.data.isSegment;
     const hasChildren = node.isInternal;
     const displayName = node.data.name ?? '';
+    const refLabel =
+      node.data.hl7FieldNumber != null && node.data.componentNumber != null
+        ? `${node.data.segmentType ?? ''} ${node.data.hl7FieldNumber}.${node.data.componentNumber}`.trim()
+        : '';
 
     const handleCopy = (e) => {
       e.stopPropagation();
@@ -118,7 +139,7 @@ export function HL7TreeView({ message, embedded = false }) {
             </>
           ) : (
             <>
-              <span className="flex-shrink-0 w-4 h-4 flex items-center justify-center text-emerald-900 dark:text-emerald-400">
+              <span className="flex-shrink-0 flex w-9 items-center justify-center text-emerald-900 dark:text-emerald-400">
                 {hasChildren ? (
                   node.isOpen ? (
                     <ChevronDown className="w-4 h-4 dark:text-white" />
@@ -126,10 +147,16 @@ export function HL7TreeView({ message, embedded = false }) {
                     <ChevronRight className="w-4 h-4 dark:text-white" />
                   )
                 ) : (
-                  <Tag className="w-3.5 h-3.5 text-gray-500 dark:text-white" aria-hidden />
+                  <span
+                    className="flex h-7 min-w-[1.75rem] max-w-[2.75rem] px-1 items-center justify-center rounded-full border border-emerald-600/55 bg-emerald-50 text-[10px] font-mono font-semibold tabular-nums leading-none text-emerald-900 dark:border-emerald-400/45 dark:bg-emerald-950/50 dark:text-emerald-100"
+                    title={refLabel || undefined}
+                    aria-label={refLabel || 'Field reference'}
+                  >
+                    {node.data.hl7FieldNumber}.{node.data.componentNumber}
+                  </span>
                 )}
               </span>
-              <span className="font-mono text-xs truncate min-w-0 flex-1 dark:text-white" title={displayName}>
+              <span className="font-mono text-xs truncate min-w-0 flex-1 dark:text-white" title={refLabel ? `${refLabel}: ${displayName}` : displayName}>
                 {displayName || '\u2014'}
               </span>
             </>
