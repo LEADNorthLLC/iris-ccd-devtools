@@ -6,6 +6,7 @@ import { saveAs } from 'file-saver';
 import JSZip from 'jszip';
 import XMLViewer from 'react-xml-viewer'
 import JsonView from '@uiw/react-json-view';
+import XMLSearchableContainer from './XMLSearchableContainer'
 import { HL7TreeView } from './HL7TreeView'
 // import Dropdown from 'react-bootstrap/Dropdown';
 // import DropdownButton from 'react-bootstrap/DropdownButton';
@@ -54,7 +55,7 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
         const splits = text.split(new RegExp('(\<Container.*?\<\/Container\>)')).filter(function(x) { 
             return x !== undefined;
         })
-        console.log("splits:", splits)
+        //console.log("splits:", splits)
         if(splits.length > 1) {
             text = splits[1].trim()
         }
@@ -630,9 +631,8 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
                                         viewer ? (
                                             labels.pageTitle === 'HL7 to SDA Transforms Tester'
                                                 ? <HL7TreeView message={texAreaOne}  /> 
-                                                : <div className='w-full xml2 bg-white dark:bg-gray-700 rounded-lg p-4 text-gray-900 dark:text-white'>   
-                                                    <XMLViewer collapsible xml={texAreaOne} /> 
-                                                  </div>
+                                                : <XMLSearchableContainer xmlData={texAreaOne} /> 
+                                                  
                                         ) : (
                                             <textarea ref={inputTextareaRef} rows={15} className='border w-full h-full p-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg' placeholder={labels.exInputLabelTwo} value={texAreaOne} onChange={(e) => setTexAreaOne(e.target.value)} />
                                         )

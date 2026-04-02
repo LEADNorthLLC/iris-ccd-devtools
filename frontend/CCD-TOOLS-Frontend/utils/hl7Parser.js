@@ -16,33 +16,121 @@ function splitSegmentFields(segment) {
  * @param {string} message
  * @returns {{ type: string; raw: string; fields: Array<{ fieldNumber: number; value: string; description: string }> }[]}
  */
-export const parseHL7Message = (message) => {
-  if (!message) return [];
+// export const parseHL7Message = (message) => {
+//   if (!message) return [];
 
-  const segments = message.split('\n').filter(Boolean);
+//   const segments = message.split('\n').filter(Boolean);
 
-  return segments.map((segment) => {
-    const allParts = splitSegmentFields(segment);
-    const [type, ...fieldValues] = allParts;
+//   return segments.map((segment) => {
+//     const allParts = splitSegmentFields(segment);
+//     const [type, ...fieldValues] = allParts;
+
+//     return {
+//       type,
+//       raw: segment,
+//       fields: fieldValues.map((value, index) => ({
+//         fieldNumber: index + 1,
+//         value,
+//         description: getFieldDescription(type, index + 1),
+//       })),
+//     };
+//   });
+// };
+
+export function parseHL7Message(rawMessage) {
+  if (!rawMessage) return [];
+
+  const lines = rawMessage
+    .split(/\r?\n/)
+    .map((l) => l.trim())
+    .filter(Boolean);
+
+  if (!lines.length) return [];
+
+  // --- Extract separators from MSH ---
+  const mshLine = lines[0];
+  const fieldSep = mshLine[3];
+  const encodingChars = mshLine.substring(4, 8);
+
+  const separators = {
+    field: fieldSep,
+    component: encodingChars[0],
+    repetition: encodingChars[1],
+    escape: encodingChars[2],
+    subcomponent: encodingChars[3],
+  };
+
+  // --- Parse segments ---
+  return lines.map((line) => {
+    const segmentType = line.substring(0, 3);
+    const rawFields = line.split(separators.field);
+
+    if (segmentType === 'MSH') {
+      // MSH-1 = field separator (char after "MSH"); MSH-2 = encoding chars (4 chars); rest align with HL7 field numbers 3+
+      const mshFieldSep = line[3];
+      const mshEncoding = line.substring(4, 8);
+
+      const fields = [
+        {
+          raw: mshFieldSep,
+          fieldNumber: 1,
+          parsed: atomicParsed(mshFieldSep),
+        },
+        {
+          raw: mshEncoding,
+          fieldNumber: 2,
+          parsed: atomicParsed(mshEncoding),
+        },
+        ...rawFields.slice(2).map((value, index) => ({
+          raw: value,
+          fieldNumber: index + 3,
+          parsed: parseField(value, separators),
+        })),
+      ];
+
+      return {
+        type: segmentType,
+        separators,
+        fields,
+      };
+    }
+
+    const fields = rawFields.slice(1).map((value, index) => ({
+      raw: value,
+      fieldNumber: index + 1,
+      parsed: parseField(value, separators),
+    }));
 
     return {
-      type,
-      raw: segment,
-      fields: fieldValues.map((value, index) => ({
-        fieldNumber: index + 1,
-        value,
-        description: getFieldDescription(type, index + 1),
-      })),
+      type: segmentType,
+      separators,
+      fields,
     };
   });
-};
+}
+
+function parseField(value, sep) {
+  if (!value) return [];
+
+  return value.split(sep.repetition).map((repeat) =>
+    repeat.split(sep.component).map((component) =>
+      component.split(sep.subcomponent)
+    )
+  );
+}
+
+/** One repetition, one component, one subcomponent — avoids splitting MSH-2 on ^ ~ \\ & */
+function atomicParsed(value) {
+  return [[[value]]];
+}
 
 /**
+ * HL7 version 2.5.1 field descriptions.
  * @param {string} segmentType
- * @param {number} fieldIndex
+ * @param {number} fieldIndex - HL7 field number (1-based)
  * @returns {string}
  */
-const getFieldDescription = (segmentType, fieldIndex) => {
+export function getFieldDescription(segmentType, fieldIndex) {
   const descriptions = {
     MSH: {
       1: 'Field Separator',
@@ -451,7 +539,394 @@ const getFieldDescription = (segmentType, fieldIndex) => {
       51: "Insured's Birth Place",
       52: 'VIP Indicator',
     },
+    ABS: {
+      1: 'Discharge Care Level',
+      2: 'Quotation of Care',
+      3: 'Leave of Absence',
+      4: 'Special Diet',
+      5: 'Service',
+      6: 'External Cause of Injury',
+      7: 'Attending Doctor',
+      8: 'Birth Weight',
+      9: 'Duration of Pregnancy',
+      10: 'Admission Condition',
+      11: 'Living Will Code',
+      12: 'Organ Donor Code',
+      13: 'C-Section Indicator',
+      14: 'Cestational Age',
+    },
+    ACC: {
+      1: 'Accident Date/Time',
+      2: 'Accident Code',
+      3: 'Accident Location',
+      4: 'Auto Accident State',
+      5: 'Job Related Indicator',
+      6: 'Death Indicator',
+      7: 'Entered By',
+      8: 'Accident Description',
+      9: 'Bring-In Transport',
+      10: 'Police Notified Indicator',
+      11: 'Accident Address',
+    },
+    ADD: {
+      1: 'Addendum Continuation Pointer',
+    },
+    AFF: {
+      1: 'Set ID',
+      2: 'Professional Organization',
+      3: 'Professional Organization Address',
+      4: 'Professional Organization Affiliation Date Range',
+      5: 'Professional Affiliation Additional Information',
+    },
+    AIG: {
+      1: 'Set ID',
+      2: 'Segment Action Code',
+      3: 'Resource ID',
+      4: 'Resource Type',
+      5: 'Resource Group',
+      6: 'Resource Quantity',
+      7: 'Resource Quantity Units',
+      8: 'Start Date/Time',
+      9: 'Start Date/Time Offset',
+      10: 'Start Date/Time Offset Units',
+      11: 'Duration',
+      12: 'Duration Units',
+      13: 'Allow Substitution Code',
+      14: 'Filler Status Code',
+    },
+    AIL: {
+      1: 'Set ID',
+      2: 'Segment Action Code',
+      3: 'Location Resource ID',
+      4: 'Location Type',
+      5: 'Location Group',
+      6: 'Start Date/Time',
+      7: 'Start Date/Time Offset',
+      8: 'Start Date/Time Offset Units',
+      9: 'Duration',
+      10: 'Duration Units',
+      11: 'Allow Substitution Code',
+      12: 'Filler Status Code',
+    },
+    AIP: {
+      1: 'Set ID',
+      2: 'Segment Action Code',
+      3: 'Personnel Resource ID',
+      4: 'Resource Type',
+      5: 'Resource Group',
+      6: 'Start Date/Time',
+      7: 'Start Date/Time Offset',
+      8: 'Start Date/Time Offset Units',
+      9: 'Duration',
+      10: 'Duration Units',
+      11: 'Allow Substitution Code',
+      12: 'Filler Status Code',
+    },
+    AIS: {
+      1: 'Set ID',
+      2: 'Segment Action Code',
+      3: 'Universal Service Identifier',
+      4: 'Start Date/Time',
+      5: 'Start Date/Time Offset',
+      6: 'Start Date/Time Offset Units',
+      7: 'Duration',
+      8: 'Duration Units',
+      9: 'Allow Substitution Code',
+      10: 'Filler Status Code',
+      11: 'Placer Supplemental Service Information',
+      12: 'Filler Supplemental Service Information',
+    },
+    APR: {
+      1: 'Time Selection Criteria',
+      2: 'Resource Selection Criteria',
+      3: 'Location Selection Criteria',
+      4: 'Slot Spacing Criteria',
+      5: 'Filler Override Criteria',
+    },
+    ARQ: {
+      1: 'Placer Appointment ID',
+      2: 'Filler Appointment ID',
+      3: 'Occurrence Number',
+      4: 'Placer Group Number',
+      5: 'Schedule ID',
+      6: 'Request Event Reason',
+      7: 'Appointment Reason',
+      8: 'Appointment Type',
+      9: 'Appointment Duration',
+      10: 'Appointment Duration Units',
+      11: 'Requested Start Date/Time Range',
+      12: 'Priority',
+      13: 'Repeating Interval',
+      14: 'Repeating Interval Duration',
+      15: 'Placer Contact Person',
+      16: 'Placer Contact Phone Number',
+      17: 'Placer Contact Address',
+      18: 'Placer Contact Location',
+      19: 'Entered By Person',
+      20: 'Entered By Phone Number',
+      21: 'Entered By Location',
+      22: 'Parent Placer Appointment ID',
+      23: 'Parent Filler Appointment ID',
+      24: 'Placer Order Number',
+      25: 'Filler Order Number',
+    },
+    AUT: {
+      1: 'Authorizing Payor, Plan ID',
+      2: 'Authorizing Payor, Company ID',
+      3: 'Authorizing Payor, Company Name',
+      4: 'Authorization Effective Date',
+      5: 'Authorization Expiration Date',
+      6: 'Authorization Identifier',
+      7: 'Reimbursement Limit',
+      8: 'Requested Number of Treatments',
+      9: 'Authorized Number of Treatments',
+      10: 'Process Date',
+    },
+    BHS: {
+      1: 'Batch Field Separator',
+      2: 'Batch Encoding Characters',
+      3: 'Batch Sending Application',
+      4: 'Batch Sending Facility',
+      5: 'Batch Receiving Application',
+      6: 'Batch Receiving Facility',
+      7: 'Batch Creation Date/Time',
+      8: 'Batch Security',
+      9: 'Batch Name/ID/Type',
+      10: 'Batch Comment',
+      11: 'Batch Control ID',
+      12: 'Reference Batch Control ID',
+    },
+    BLC: {
+      1: 'Blood Product Code',
+      2: 'Blood Amount',
+    },
+    BLG: {
+      1: 'When to Charge',
+      2: 'Charge Type',
+      3: 'Account ID',
+      4: 'Charge Amount',
+    },
+    BPO: {
+      1: 'Set ID',
+      2: 'BP Universal Service Identifier',
+      3: 'BP Prompt Code',
+      4: 'BP Quantity',
+      5: 'BP Amount',
+      6: 'BP Units',
+      7: 'BP Intended Use Date/Time',
+      8: 'BP Intended Use Location',
+      9: 'BP Indication for Use',
+      10: 'BP Informed Consent Indicator',
+      11: 'BP Special Requirements',
+      12: 'BP Requested Date/Time',
+      13: 'BP Collector Identifier',
+      14: 'BP Processing Requirements',
+    },
+    BPX: {
+      1: 'Set ID',
+      2: 'BP Dispense Status',
+      3: 'BP Status Change Date/Time',
+      4: 'BP Blood Unit Identifier',
+      5: 'BP Component',
+      6: 'BP Donation Type',
+      7: 'BP Component AB0/Rh',
+      8: 'BP Blood Product Attributes',
+      9: 'BP Unit Expiration Date/Time',
+      10: 'BP Unit Quantity',
+      11: 'BP Unit Amount',
+      12: 'BP Unit Units',
+      13: 'BP Unique ID',
+      14: 'BP Method of Collection',
+      15: 'BP Dispensing Provider',
+      16: 'BP Dispensing Location',
+      17: 'BP Dispense Date/Time',
+      18: 'BP Dispensing Adherence',
+      19: 'BP Dispensing Notes',
+      20: 'BP Lot Number',
+      21: 'BP Manufacturer',
+    },
+    BTS: {
+      1: 'Batch Message Count',
+      2: 'Batch Comment',
+      3: 'Batch Totals',
+    },
+    BTX: {
+      1: 'Set ID',
+      2: 'BC Donation ID',
+      3: 'BC Component',
+      4: 'BC Blood Group',
+      5: 'CP Transfusion/Disposition Status',
+      6: 'CP Transfusion/Disposition Reason',
+      7: 'CP Transfusion/Disposition Date/Time',
+      8: 'CP Transfusion Provider',
+      9: 'CP Transfusion Location',
+      10: 'CP Adherence',
+      11: 'CP Adverse Reaction Type',
+      12: 'CP Transfusion Interrupt Reason',
+      13: 'CP Transfusion Total Volume',
+      14: 'CP Lot Number',
+      15: 'CP Manufacturer',
+    },
+    CDM: {
+      1: 'Primary Key Value',
+      2: 'Charge Code Alias',
+      3: 'Charge Description Short',
+      4: 'Charge Description Long',
+      5: 'Description Format Indicator',
+      6: 'Department Code',
+      7: 'Charge Category Service Section ID',
+      8: 'Validity Selection Date',
+      9: 'Charge Amount',
+      10: 'Room Fee Indicator',
+      11: 'G/L Account Number',
+      12: 'Healthcare Service Location ID',
+      13: 'Credit Rating',
+    },
+    CER: {
+      1: 'Set ID',
+      2: 'Certificate Type',
+      3: 'Certificate ID',
+      4: 'Certificate Authority',
+      5: 'Certificate Signature',
+      6: 'Certificate Issued Date',
+      7: 'Certificate Expiry Date',
+      8: 'Certificate Status',
+      9: 'Certificate Subject',
+      10: 'Certificate Subject Public Key',
+      // ... continues up to index 31
+    },
+    CM0: {
+      1: 'Set ID',
+      2: 'Clinical Study ID',
+      3: 'Clinical Study Phase ID',
+      4: 'Clinical Study Description',
+      5: 'Clinical Study Status',
+    },
+    CM1: {
+      1: 'Set ID',
+      2: 'Clinical Study Phase ID',
+      3: 'Clinical Study Phase Description',
+    },
+    CM2: {
+      1: 'Set ID',
+      2: 'Scheduled Time Point ID',
+      3: 'Scheduled Time Point Description',
+      4: 'Events Scheduled',
+    },
+    CNS: {
+      1: 'Starting Notification Reference Number',
+      2: 'Ending Notification Reference Number',
+      3: 'Starting Notification Date/Time',
+      4: 'Ending Notification Date/Time',
+    },
+    CON: {
+      1: 'Set ID',
+      2: 'Consent Type',
+      3: 'Consent Form ID',
+      4: 'Consent Form Number',
+      5: 'Consent Text',
+      6: 'Consent State',
+      7: 'Consent Discussion Date/Time',
+      8: 'Consent Decision Date/Time',
+      9: 'Consent Effective Date/Time',
+      10: 'Consent End Date/Time',
+      11: 'Subject Participation',
+      12: 'Subject ID',
+      13: 'Subject Name',
+    },
+    CSP: {
+      1: 'Study Phase ID',
+      2: 'Date/Time Study Phase Began',
+      3: 'Date/Time Study Phase Ended',
+      4: 'Study Phase Evaluability',
+    },
+    CSR: {
+      1: 'Sponsor Study ID',
+      2: 'Alternate Study ID',
+      3: 'Institution Registering the Patient',
+      4: 'Sponsor Patient ID',
+      5: 'Alternate Patient ID - CSR',
+      6: 'Date/Time Patient Registered',
+      7: 'Person Registering Patient',
+      8: 'Study Authorizer',
+      9: 'Date/Time Patient Study Consent Signed',
+      10: 'Patient Study Eligibility Status',
+    },
+    CSS: {
+      1: 'Study Scheduled Time Point',
+      2: 'Study Scheduled Patient Time Point',
+      3: 'Study Quality Control Code',
+    },
+    CTD: {
+      1: 'Contact Role',
+      2: 'Contact Name',
+      3: 'Contact Address',
+      4: 'Contact Location',
+      5: 'Contact Communication Information',
+      6: 'Preferred Method of Contact',
+      7: 'Contact Identifiers',
+    },
+    CTI: {
+      1: 'Sponsor Study ID',
+      2: 'Study Phase Identifier',
+      3: 'Study Scheduled Time Point',
+    },
+    DB1: {
+      1: 'Set ID',
+      2: 'Disabled Person Code',
+      3: 'Disabled Person Identifier',
+      4: 'Disability Indicator',
+      5: 'Disability Start Date',
+      6: 'Disability End Date',
+      7: 'Disability Return to Work Date',
+      8: 'Disability Unable to Work Date',
+    },
+    DG1: {
+      1: 'Set ID',
+      2: 'Diagnosis Coding Method',
+      3: 'Diagnosis Code',
+      4: 'Diagnosis Description',
+      5: 'Diagnosis Date/Time',
+      6: 'Diagnosis Type',
+      7: 'Major Diagnostic Category',
+      8: 'Diagnostic Related Group',
+      9: 'DRG Approval Indicator',
+      10: 'DRG Grouper Review Code',
+      11: 'Outlier Type',
+      12: 'Outlier Days',
+      13: 'Outlier Cost',
+      14: 'Grouper Version and Type',
+      15: 'Diagnosis Priority',
+      16: 'Diagnosing Clinician',
+      17: 'Diagnosis Classification',
+      18: 'Confidential Indicator',
+      19: 'Attestation Date/Time',
+    },
+    DRG: {
+      1: 'Diagnostic Related Group',
+      2: 'DRG Assigned Date/Time',
+      3: 'DRG Approval Indicator',
+      4: 'DRG Grouper Review Code',
+      5: 'Outlier Type',
+      6: 'Outlier Days',
+      7: 'Outlier Cost',
+      8: 'DRG Payor',
+      9: 'Outlier Reimbursement',
+      10: 'Confidential Indicator',
+      11: 'DRG Transfer Type',
+    },
+    DSC: {
+      1: 'Continuation Pointer',
+      2: 'Continuation Style',
+    },
+    DSP: {
+      1: 'Set ID',
+      2: 'Display Level',
+      3: 'Data Line',
+      4: 'Logical Break',
+      5: 'Result ID',
+    },
   };
 
   return descriptions[segmentType]?.[fieldIndex] ?? 'Field Description';
-};
+}

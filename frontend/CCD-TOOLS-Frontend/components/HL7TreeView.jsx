@@ -3,11 +3,7 @@
 import React from 'react';
 import { Tree } from 'react-arborist';
 import { ChevronRight, ChevronDown, X, ListTree, Copy } from 'lucide-react';
-import { parseHL7Message } from '../utils/hl7Parser';
-
-/** HL7 MSH: first pipe-delimited value after segment name is MSH-2; parser uses 1-based field index from that slice — offset +1 for spec field numbers. */
-const hl7FieldNumberForDisplay = (segmentType, parserFieldNumber) =>
-  segmentType === 'MSH' ? parserFieldNumber + 1 : parserFieldNumber;
+import { parseHL7Message, getFieldDescription } from '../utils/hl7Parser';
 
 /**
  * @param {{ message: string; embedded?: boolean }} props
@@ -48,14 +44,25 @@ export function HL7TreeView({ message, embedded = false }) {
     id: `segment-${segmentIndex}`,
     name: segment.type,
     isSegment: true,
+  
     children: segment.fields
-      .filter((field) => field.value != null && String(field.value).trim() !== '')
+      .filter((field) => field.raw != null && String(field.raw).trim() !== '')
       .map((field, i) => {
-        const value = field.value.trim();
-        const hl7FieldNumber = hl7FieldNumberForDisplay(segment.type, field.fieldNumber);
-        const components = value.split(/\^|\\S\\/).map((c) => c.trim()).filter(Boolean);
+        const value = field.raw.trim();
+        const hl7FieldNumber = field.fieldNumber;
+        const fieldDescription = getFieldDescription(segment.type, hl7FieldNumber);
+        const fieldRefTitle = `${segment.type} ${hl7FieldNumber} - ${fieldDescription}`;
+
         const fieldId = `segment-${segmentIndex}-field-${i}`;
-        if (components.length <= 1) {
+
+        const repetitions = field.parsed;
+
+        // --- SIMPLE FIELD ---
+        if (
+          repetitions.length === 1 &&
+          repetitions[0].length === 1 &&
+          repetitions[0][0].length === 1
+        ) {
           return {
             id: fieldId,
             name: value,
@@ -63,8 +70,61 @@ export function HL7TreeView({ message, embedded = false }) {
             segmentType: segment.type,
             hl7FieldNumber,
             componentNumber: 1,
+            fieldRefTitle,
           };
         }
+
+        // --- COMPLEX FIELD (repetitions → components → subcomponents) ---
+        const componentChildrenForRepeat = (repeat, rIdx) =>
+          repeat.map((component, cIdx) => {
+            if (component.length === 1) {
+              return {
+                id: `${fieldId}-rep-${rIdx}-comp-${cIdx}`,
+                name: component[0],
+                isComponent: true,
+                segmentType: segment.type,
+                hl7FieldNumber,
+                componentNumber: cIdx + 1,
+                fieldRefTitle,
+              };
+            }
+
+            return {
+              id: `${fieldId}-rep-${rIdx}-comp-${cIdx}`,
+              name: `Component ${cIdx + 1}`,
+              isComponent: true,
+              isComposite: true,
+              segmentType: segment.type,
+              hl7FieldNumber,
+              componentNumber: cIdx + 1,
+              fieldRefTitle,
+
+              children: component.map((sub, sIdx) => ({
+                id: `${fieldId}-rep-${rIdx}-comp-${cIdx}-sub-${sIdx}`,
+                name: sub,
+                isSubcomponent: true,
+                segmentType: segment.type,
+                hl7FieldNumber,
+                componentNumber: `${cIdx + 1}.${sIdx + 1}`,
+                fieldRefTitle,
+              })),
+            };
+          });
+
+        // Single repetition: skip a repeat row labeled with the full field value (was duplicating e.g. MSH-9 "ADT^02").
+        if (repetitions.length === 1) {
+          return {
+            id: fieldId,
+            name: value,
+            isField: true,
+            isComposite: true,
+            segmentType: segment.type,
+            hl7FieldNumber,
+            fieldRefTitle,
+            children: componentChildrenForRepeat(repetitions[0], 0),
+          };
+        }
+
         return {
           id: fieldId,
           name: value,
@@ -72,26 +132,82 @@ export function HL7TreeView({ message, embedded = false }) {
           isComposite: true,
           segmentType: segment.type,
           hl7FieldNumber,
-          children: components.map((comp, k) => ({
-            id: `${fieldId}-comp-${k}`,
-            name: comp,
-            isComponent: true,
+          fieldRefTitle,
+
+          children: repetitions.map((repeat, rIdx) => ({
+            id: `${fieldId}-rep-${rIdx}`,
+            name: `Repeat ${rIdx + 1}`,
+            isRepeat: true,
+            fieldRefTitle,
             segmentType: segment.type,
             hl7FieldNumber,
-            componentNumber: k + 1,
+
+            children: componentChildrenForRepeat(repeat, rIdx),
           })),
         };
       }),
   }));
 
+  // const treeData = segments.map((segment, segmentIndex) => ({
+  //   id: `segment-${segmentIndex}`,
+  //   name: segment.type,
+  //   isSegment: true,
+  //   children: segment.fields
+  //     .filter((field) => field.value != null && String(field.value).trim() !== '')
+  //     .map((field, i) => {
+  //       const value = field.value.trim();
+  //       const hl7FieldNumber = hl7FieldNumberForDisplay(segment.type, field.fieldNumber);
+  //       const components = value.split(/\^|\\S\\/).map((c) => c.trim()).filter(Boolean);
+  //       const fieldId = `segment-${segmentIndex}-field-${i}`;
+  //       if (components.length <= 1) {
+  //         return {
+  //           id: fieldId,
+  //           name: value,
+  //           isField: true,
+  //           segmentType: segment.type,
+  //           hl7FieldNumber,
+  //           componentNumber: 1,
+  //         };
+  //       }
+  //       return {
+  //         id: fieldId,
+  //         name: value,
+  //         isField: true,
+  //         isComposite: true,
+  //         segmentType: segment.type,
+  //         hl7FieldNumber,
+  //         children: components.map((comp, k) => ({
+  //           id: `${fieldId}-comp-${k}`,
+  //           name: comp,
+  //           isComponent: true,
+  //           segmentType: segment.type,
+  //           hl7FieldNumber,
+  //           componentNumber: k + 1,
+  //         })),
+  //       };
+  //     }),
+  // }));
+
   function Node({ node, style, dragHandle }) {
     const isSegment = node.data.isSegment;
     const hasChildren = node.isInternal;
     const displayName = node.data.name ?? '';
+    const fieldRefTitle = node.data.fieldRefTitle ?? '';
     const refLabel =
-      node.data.hl7FieldNumber != null && node.data.componentNumber != null
+      fieldRefTitle ||
+      (node.data.hl7FieldNumber != null && node.data.componentNumber != null
         ? `${node.data.segmentType ?? ''} ${node.data.hl7FieldNumber}.${node.data.componentNumber}`.trim()
-        : '';
+        : '');
+
+    /** Component / subcomponent rows: ABS 7.1; field & repeat rows: ABS 7 */
+    const isComponentOrSub =
+      node.data.isComponent === true || node.data.isSubcomponent === true;
+    const pillLabel =
+      node.data.segmentType != null && node.data.hl7FieldNumber != null
+        ? isComponentOrSub && node.data.componentNumber != null
+          ? `${node.data.segmentType} ${node.data.hl7FieldNumber}.${node.data.componentNumber}`
+          : `${node.data.segmentType} ${node.data.hl7FieldNumber}`
+        : null;
 
     const handleCopy = (e) => {
       e.stopPropagation();
@@ -101,10 +217,19 @@ export function HL7TreeView({ message, embedded = false }) {
       }
     };
 
+    // Row-level title: Chrome often only shows native tooltips for the element under the cursor;
+    // padding/gaps were on the outer div with no title, so hover showed nothing vs inner spans in Firefox.
+    const rowTitle = isSegment
+      ? undefined
+      : fieldRefTitle
+        ? `${fieldRefTitle}: ${displayName || '\u2014'}`
+        : displayName || undefined;
+
     return (
       <div
         ref={dragHandle}
         style={style}
+        title={rowTitle}
         className={`group flex items-center gap-2 px-2 py-1.5 text-sm cursor-pointer rounded-md transition-colors relative ${
           isSegment
             ? 'font-semibold text-blue-700 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30'
@@ -118,7 +243,7 @@ export function HL7TreeView({ message, embedded = false }) {
             key={i}
             className="absolute h-full border-l border-emerald-600 dark:border-emerald-200"
             style={{
-              left: i * 24 + 12,
+              left: i * 24 + 13,
               top: 0,
             }}
           />
@@ -139,24 +264,33 @@ export function HL7TreeView({ message, embedded = false }) {
             </>
           ) : (
             <>
-              <span className="flex-shrink-0 flex w-9 items-center justify-center text-emerald-900 dark:text-emerald-400">
+              {/* Same-width chevron column for every field row so leaf pills line up with expandable rows */}
+              <span className="flex h-7 w-4 flex-shrink-0 items-center justify-center text-emerald-900 dark:text-emerald-400">
                 {hasChildren ? (
                   node.isOpen ? (
-                    <ChevronDown className="w-4 h-4 dark:text-white" />
+                    <ChevronDown className="h-4 w-4 dark:text-white" />
                   ) : (
-                    <ChevronRight className="w-4 h-4 dark:text-white" />
+                    <ChevronRight className="h-4 w-4 dark:text-white" />
                   )
                 ) : (
-                  <span
-                    className="flex h-7 min-w-[1.75rem] max-w-[2.75rem] px-1 items-center justify-center rounded-full border border-emerald-600/55 bg-emerald-50 text-[10px] font-mono font-semibold tabular-nums leading-none text-emerald-900 dark:border-emerald-400/45 dark:bg-emerald-950/50 dark:text-emerald-100"
-                    title={refLabel || undefined}
-                    aria-label={refLabel || 'Field reference'}
-                  >
-                    {node.data.hl7FieldNumber}.{node.data.componentNumber}
-                  </span>
+                  <span className="h-4 w-4 shrink-0" aria-hidden />
                 )}
               </span>
-              <span className="font-mono text-xs truncate min-w-0 flex-1 dark:text-white" title={refLabel ? `${refLabel}: ${displayName}` : displayName}>
+
+              {pillLabel != null ? (
+                <span
+                  className="flex h-7 min-w-[3.75rem] shrink-0 items-center justify-center rounded-full border border-emerald-600/55 bg-emerald-50 px-1.5 text-[10px] font-mono font-semibold tabular-nums leading-none text-emerald-900 dark:border-emerald-400/45 dark:bg-emerald-950/50 dark:text-emerald-100"
+                  title={refLabel || undefined}
+                  aria-label={refLabel || 'Field reference'}
+                >
+                  {pillLabel}
+                </span>
+              ) : null}
+
+              <span
+                className="font-mono text-xs truncate min-w-0 flex-1 dark:text-white ml-2"
+                title={refLabel ? `${refLabel}: ${displayName}` : displayName}
+              >
                 {displayName || '\u2014'}
               </span>
             </>
@@ -175,43 +309,6 @@ export function HL7TreeView({ message, embedded = false }) {
       </div>
     );
   }
-  // function Node({ node, style, dragHandle }) {
-  //   const isSegment = node.data.isSegment;
-  //   const isField = node.data.isField;
-  //   return (
-  //     <div
-  //       ref={dragHandle}
-  //       style={style}
-  //       className={`flex items-center gap-2 px-2 py-1.5 text-sm cursor-pointer rounded-md transition-colors ${
-  //         isSegment
-  //           ? 'font-semibold text-blue-700 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30'
-  //           : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600/50'
-  //       }`}
-  //       onClick={() => node.toggle()}
-  //     >
-  //       {isSegment ? (
-  //         <>
-  //           <span className="flex-shrink-0 text-blue-600 dark:text-blue-400">
-  //             {node.isOpen ? (
-  //               <ChevronDown className="w-4 h-4" />
-  //             ) : (
-  //               <ChevronRight className="w-4 h-4" />
-  //             )}
-  //           </span>
-  //           <LayoutList className="w-4 h-4 flex-shrink-0 text-blue-600 dark:text-blue-400" aria-hidden />
-  //           <span>{node.data.name}</span>
-  //         </>
-  //       ) : (
-  //         <>
-  //           <span className="flex-shrink-0 w-4 h-4 flex items-center justify-center text-gray-500 dark:text-gray-400">
-  //             <Tag className="w-3.5 h-3.5" aria-hidden />
-  //           </span>
-  //           <span className="font-mono text-xs truncate">{node.data.name}</span>
-  //         </>
-  //       )}
-  //     </div>
-  //   );
-  // }
 
   const treeHeight = 300;
   const tree = (
@@ -260,7 +357,7 @@ export function HL7TreeView({ message, embedded = false }) {
           openByDefault={false}
           width="100%"
           height={treeHeight}
-          indent={24}
+          indent={30}
           rowHeight={32}
           disableDrag
           disableDrop
