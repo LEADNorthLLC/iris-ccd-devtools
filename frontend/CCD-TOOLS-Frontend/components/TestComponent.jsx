@@ -35,9 +35,11 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
     const inputTextareaRef = useRef(null)
     const outputTextareaRef = useRef(null)
 
-    /** Parse hl7toall response: extract CDATA from <SDAContent>, <CCDContent>, and <FHIRContent>. */
+    /** Parse hl7toall response: extract CDATA from <SDAContent> or <SDAContentXML>, <CCDContent>, and <FHIRContent>. */
     const parseHl7ToAllResponse = (raw) => {
-        const sdaMatch = raw.match(/<SDAContent>\s*<!\[CDATA\[([\s\S]*?)\]\]>\s*<\/SDAContent>/)
+        const sdaMatch =
+            raw.match(/<SDAContent>\s*<!\[CDATA\[([\s\S]*?)\]\]>\s*<\/SDAContent>/)
+            || raw.match(/<SDAContentXML>\s*<!\[CDATA\[([\s\S]*?)\]\]>\s*<\/SDAContentXML>/)
         const ccdMatch = raw.match(/<CCDContent>\s*<!\[CDATA\[([\s\S]*?)\]\]>\s*<\/CCDContent>/)
         const fhirMatch = raw.match(/<FHIRContent>\s*<!\[CDATA\[([\s\S]*?)\]\]>\s*<\/FHIRContent>/)
         return {
@@ -241,7 +243,9 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
                 }
 
                 if(labels.pageTitle === 'HL7 to SDA Transforms Tester') {
-                    const xslContentString = rawResult.match(/<SDAContent>\s*<!\[CDATA\[([\s\S]*?)\]\]>\s*<\/SDAContent>/)
+                    const xslContentString =
+                        rawResult.match(/<SDAContent>\s*<!\[CDATA\[([\s\S]*?)\]\]>\s*<\/SDAContent>/)
+                        || rawResult.match(/<SDAContentXML>\s*<!\[CDATA\[([\s\S]*?)\]\]>\s*<\/SDAContentXML>/)
                     if(xslContentString) {
                         tempProcessedResult = xslContentString[1].trim()
                     }
@@ -381,6 +385,16 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
         }
     }, [hl7TransformType])
 
+    /** When the server/config exposes exactly one transform, select it so the user does not have to. */
+    useEffect(() => {
+        if (!options || options.length !== 1) return
+        const sole = options[0]?.value
+        if (sole == null) return
+        const trimmed = String(sole).trim()
+        if (!trimmed) return
+        setInputOne((prev) => (prev === '' ? trimmed : prev))
+    }, [options])
+
     const findInTextarea = (which, direction, outputContent) => {
         const isInput = which === 1
         const ref = isInput ? inputTextareaRef : outputTextareaRef
@@ -390,13 +404,15 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
         const text = content
         const len = term.length
         if (!len) return
+        const haystack = text.toLowerCase()
+        const needle = term.toLowerCase()
         const fromNext = ref.current.selectionEnd
         const fromPrev = ref.current.selectionStart - 1
         let idx = direction === 'next'
-            ? text.indexOf(term, fromNext)
-            : text.lastIndexOf(term, fromPrev)
-        if (direction === 'next' && idx < 0) idx = text.indexOf(term, 0)
-        if (direction === 'prev' && idx < 0) idx = text.lastIndexOf(term, text.length)
+            ? haystack.indexOf(needle, fromNext)
+            : haystack.lastIndexOf(needle, fromPrev)
+        if (direction === 'next' && idx < 0) idx = haystack.indexOf(needle, 0)
+        if (direction === 'prev' && idx < 0) idx = haystack.lastIndexOf(needle, haystack.length)
         if (idx < 0) return
         ref.current.setSelectionRange(idx, idx + len)
         ref.current.focus()
@@ -437,7 +453,7 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
                 {
                     largeInput ? (
                         <>
-                        <textarea rows={5} className='border w-full h-full dark:bg-gray-700 text-gray-900 dark:text-white' placeholder={labels.exInputLabelOne} defaultValue={inputOne} onChange={(e) => setInputOne(e.target.value)} />
+                        <textarea rows={5} className='border w-full h-full dark:bg-gray-700 text-gray-900 dark:text-white' placeholder={labels.exInputLabelOne} value={inputOne} onChange={(e) => setInputOne(e.target.value)} />
                         {/* <DropdownButton id="dropdown-basic-button" title="Dropdown button">
                             <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
                             <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
@@ -446,7 +462,7 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
                         </>
                     ) : (
                         <>
-                            <input className='border w-4/5 h-8 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg p-2' type="text" name="option" list="options" placeholder={labels.exInputLabelOne} onChange={(e) => setInputOne(e.target.value)} />
+                            <input className='border w-4/5 h-8 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg p-2' type="text" name="option" list="options" placeholder={labels.exInputLabelOne} value={inputOne} onChange={(e) => setInputOne(e.target.value)} />
                             <datalist id="options">
                                 {
                                     options && options.map((item) => (
@@ -500,7 +516,7 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
                             </button>
                             <button onClick={() => copy()} className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-2 py-0.5 rounded-md transition-colors duration-200 ml-2">Copy</button>
                             <button onClick={() => fileUploadAction()} className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-2 py-0.5 rounded-md transition-colors duration-200 ml-2">Import</button>
-                            {(labels.pageTitle === "SDA to FHIR Transforms Tester" || labels.pageTitle === "CCDA to SDA Transforms Tester" || labels.pageTitle === "XSL Template Tester") && (
+                            {(labels.pageTitle === "FHIR to SDA Transforms Tester" || labels.pageTitle === "SDA to FHIR Transforms Tester" || labels.pageTitle === "CCDA to SDA Transforms Tester" || labels.pageTitle === "XSL Template Tester") && (
                             <button onClick={() => load(1)} className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-2 py-0.5 rounded-md transition-colors duration-200 ml-2"> {viewer ? 'Raw' : 'XML'}</button>
                             )}
                             {(labels.pageTitle === "HL7 to SDA Transforms Tester") && (
