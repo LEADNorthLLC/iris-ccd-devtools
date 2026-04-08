@@ -1,0 +1,17 @@
+MSH|^~\\&|LIS|GH_LAB|EMR|GH_ER|20260303103000||ORU^R01^ORU_R01|MSG00001|P|2.5.1
+PID|1||123456^^^GH^MR||Duck^Donald||19850515|M|||123 Main St^^Metropolis^NY^10001^USA||(555)555-1234
+PV1|1|E|ER^01^01^GH|||1234^Smith^Emily^A^^MD|||||||||||V123456
+ORC|RE|ORD1001|||
+OBR|1|ORD1001||57021-8^CBC panel^LN|||20260303100000||||||||1234^Smith^Emily^A^^MD|||||||F
+MSH|^~\\&|LIS|GH_LAB|EMR|GH_ER|20260303103000||ORU^R01^ORU_R01|MSG00001|P|2.5.1
+PID|1||123456^^^GH^MR||Duck^Donald||19850515|M|||123 Main St^^Metropolis^NY^10001^USA||(555)555-1234
+PV1|1|E|ER^01^01^GH|||1234^Smith^Emily^A^^MD|||||||||||V123456
+ORC|RE|ORD1001|||
+OBR|1|ORD1001||57021-8^CBC panel^LN|||20260303100000||||||||1234^Smith^Emily^A^^MD|||||||F
+OBR|1|ORD1001||57021-8^CBC panel^LN|||20260303100000||||||||1234^Smith^Emily^A^^MD|||||||F
+OBX|1|NM|6690-2^Leukocytes [#/volume] in Blood^LN||12.5|10^3/uL|4.0-11.0|H|||F|||20260303100000
+OBX|2|NM|789-8^Erythrocytes [#/volume] in Blood^LN||4.8|10^6/uL|4.5-5.9|||F|||20260303100000
+OBX|3|NM|718-7^Hemoglobin [Mass/volume] in Blood^LN||13.8|g/dL|13.5-17.5|||F|||20260303100000
+OBX|4|NM|4544-3^Hematocrit [Volume Fraction] of Blood^LN||41|%|41-53|||F|||20260303100000
+OBX|5|NM|787-2^MCV [Entitic volume]^LN||88|fL|80-100|||F|||20260303100000
+OBX|6|NM|777-3^Platelets [#/volume] in Blood^LN||210|10^3/uL|150-450|||F|||20260303100000

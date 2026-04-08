@@ -115,6 +115,34 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
             return
         }
 
+        const extractHl7Text = (value) => {
+            const trimmed = String(value ?? '').trim()
+            if (!trimmed) return ''
+            if (!trimmed.startsWith('{')) return trimmed
+            try {
+                const parsed = JSON.parse(trimmed)
+                if (typeof parsed?.HL7Content === 'string') return parsed.HL7Content
+                if (typeof parsed?.content === 'string') return parsed.content
+                if (typeof parsed?.message === 'string') return parsed.message
+                return trimmed
+            } catch {
+                return trimmed
+            }
+        }
+
+        // HL7 to SDA: CONTENT2 may be raw HL7 or JSON like {"HL7Content":"MSH|..."}. Validate the extracted payload's first segment.
+        // if (labels.pageTitle === "HL7 to SDA Transforms Tester") {
+        //     const hl7Body = extractHl7Text(texAreaOne).replace(/^\uFEFF/, '').trim()
+        //     const firstSegment =
+        //         hl7Body.split(/\r\n|\r|\n/).find((line) => line.trim().length > 0)?.trim() ?? ''
+        //     if (!/^MSH\|/.test(firstSegment)) {
+        //         setTexAreaTwo(
+        //             'Your HL7 message is invalid. Expected an MSH segment (raw HL7 or JSON with HL7Content).'
+        //         )
+        //         return
+        //     }
+        // }
+
         //console.log("Starting post request v5:03pm");
         
         const formdata = new FormData();
@@ -338,13 +366,24 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
         }
     }
 
-    const clear = () => {
+    const clearTextareaOne = () => {
         setTexAreaOne('')
+        setViewer(false)
+        setLoaderOne(false)
+        setSearchOne('')
+        if (inputRef.current) {
+            inputRef.current.value = ''
+        }
+    }
+
+    const clearTextareaTwo = () => {
         setTexAreaTwo('')
         setParsedSdaContent(null)
         setParsedCcdContent(null)
         setParsedFhirContent(null)
         setOutputViewMode('raw')
+        setSearchTwo('')
+        setHl7OutputActive('sda')
     }
 
     const getOutputDisplayValue = () =>
@@ -395,29 +434,75 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
         setInputOne((prev) => (prev === '' ? trimmed : prev))
     }, [options])
 
-    const findInTextarea = (which, direction, outputContent) => {
-        const isInput = which === 1
-        const ref = isInput ? inputTextareaRef : outputTextareaRef
-        const content = isInput ? texAreaOne : (outputContent !== undefined ? outputContent : texAreaTwo)
-        const term = (isInput ? searchOne : searchTwo).trim()
-        if (!ref.current || !term) return
-        const text = content
-        const len = term.length
-        if (!len) return
-        const haystack = text.toLowerCase()
-        const needle = term.toLowerCase()
-        const fromNext = ref.current.selectionEnd
-        const fromPrev = ref.current.selectionStart - 1
-        let idx = direction === 'next'
-            ? haystack.indexOf(needle, fromNext)
-            : haystack.lastIndexOf(needle, fromPrev)
-        if (direction === 'next' && idx < 0) idx = haystack.indexOf(needle, 0)
-        if (direction === 'prev' && idx < 0) idx = haystack.lastIndexOf(needle, haystack.length)
-        if (idx < 0) return
-        ref.current.setSelectionRange(idx, idx + len)
-        ref.current.focus()
-        ref.current.scrollTop = ref.current.scrollHeight * (idx / text.length) - ref.current.clientHeight / 2
-    }
+    const findInTextarea = (which, direction) => {
+        const isInput = which === 1;
+        const ref = isInput ? inputTextareaRef : outputTextareaRef;
+        
+        // 1. Get the current text directly from the DOM ref
+        const text = ref.current?.value || ""; 
+        const term = (isInput ? searchOne : searchTwo).trim();
+    
+        if (!ref.current || !term) return;
+    
+        const haystack = text.toLowerCase();
+        const needle = term.toLowerCase();
+        const len = term.length;
+    
+        // 2. Capture the current cursor position from the DOM
+        const selectionStart = ref.current.selectionStart;
+        const selectionEnd = ref.current.selectionEnd;
+    
+        let idx = -1;
+    
+        if (direction === 'next') {
+            // Start searching from the end of the current selection
+            idx = haystack.indexOf(needle, selectionEnd);
+            // Wrap around to start if not found
+            if (idx < 0) idx = haystack.indexOf(needle, 0);
+        } else {
+            // Start searching backwards from just before the current selection
+            idx = haystack.lastIndexOf(needle, selectionStart - 1);
+            // Wrap around to end if not found
+            if (idx < 0) idx = haystack.lastIndexOf(needle, haystack.length);
+        }
+    
+        if (idx < 0) return;
+    
+        // 3. Update the DOM
+        ref.current.setSelectionRange(idx, idx + len);
+        ref.current.focus();
+    
+        // 4. More reliable scrolling logic
+        // Calculate the percentage of the text length and apply it to scrollHeight
+        const scrollPercentage = idx / text.length;
+        const targetScroll = (ref.current.scrollHeight * scrollPercentage) - (ref.current.clientHeight / 2);
+        
+        ref.current.scrollTop = targetScroll;
+    };
+
+    // const findInTextarea = (which, direction, outputContent) => {
+    //     const isInput = which === 1
+    //     const ref = isInput ? inputTextareaRef : outputTextareaRef
+    //     const content = isInput ? texAreaOne : (outputContent !== undefined ? outputContent : texAreaTwo)
+    //     const term = (isInput ? searchOne : searchTwo).trim()
+    //     if (!ref.current || !term) return
+    //     const text = content
+    //     const len = term.length
+    //     if (!len) return
+    //     const haystack = text.toLowerCase()
+    //     const needle = term.toLowerCase()
+    //     const fromNext = ref.current.selectionEnd
+    //     const fromPrev = ref.current.selectionStart - 1
+    //     let idx = direction === 'next'
+    //         ? haystack.indexOf(needle, fromNext)
+    //         : haystack.lastIndexOf(needle, fromPrev)
+    //     if (direction === 'next' && idx < 0) idx = haystack.indexOf(needle, 0)
+    //     if (direction === 'prev' && idx < 0) idx = haystack.lastIndexOf(needle, haystack.length)
+    //     if (idx < 0) return
+    //     ref.current.setSelectionRange(idx, idx + len)
+    //     ref.current.focus()
+    //     ref.current.scrollTop = ref.current.scrollHeight * (idx / text.length) - ref.current.clientHeight / 2
+    // }
 
     const outputDisplayValue = getOutputDisplayValue()
     const showHl7OutputPills = labels.pageTitle === 'HL7 to SDA Transforms Tester'
@@ -511,7 +596,7 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
                         <h2 className='big-col subTitle text-gray-900 dark:text-white'>{labels.inputLabelTwo}</h2>
                         <div className='flex'>
                             <input type="file" hidden ref={inputRef} onChange={handleFile} className="border bg-slate-600 z-40" />
-                            <button onClick={() => clear()} className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-2 py-0.5 rounded-md transition-colors duration-200 ml-2">
+                            <button onClick={() => clearTextareaOne()} className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-2 py-0.5 rounded-md transition-colors duration-200 ml-2">
                               Clear
                             </button>
                             <button onClick={() => copy()} className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-2 py-0.5 rounded-md transition-colors duration-200 ml-2">Copy</button>
@@ -531,7 +616,7 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
                         <h2 className='big-col subTitle text-gray-900 dark:text-white'>{outputLabelWithType}</h2>
                         <div className='flex'>
 
-                            <button onClick={() => clear()} className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-2 py-0.5 rounded-md transition-colors duration-200 ml-2">
+                            <button onClick={() => clearTextareaTwo()} className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-2 py-0.5 rounded-md transition-colors duration-200 ml-2">
                               Clear
                             </button>
                             <button onClick={() => copy()} className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-2 py-0.5 rounded-md transition-colors duration-200 ml-2">Copy</button>

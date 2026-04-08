@@ -250,6 +250,192 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "FHIR Transform SDA to FHIR Test - Patient SDA",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "SYS",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "_system",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "multipart/form-data",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "CONTENT1",
+							"value": "{\"TransformName\": \"SDAToFHIR\"\n}",
+							"description": "Transform Name",
+							"type": "text"
+						},
+						{
+							"key": "CONTENT2",
+							"value": "<Container><Patient><Name><FamilyName>Chalmers</FamilyName><GivenName>Peter; James</GivenName><Type>Legal</Type></Name><Aliases><Name><GivenName>Jim</GivenName><Type>Display</Type></Name><Name><FamilyName>Windsor</FamilyName><GivenName>Peter; James</GivenName><Type>Maiden</Type></Name></Aliases><Gender><Code>M</Code></Gender><SupportContacts><SupportContact><Name><FamilyName>du Marché</FamilyName><GivenName>Bénédicte</GivenName></Name><Gender><Code>F</Code></Gender><Address><FromTime>1974-12-25T00:00:00</FromTime><Street>534 Erewhon St</Street><City><Code>PleasantVille</Code><Description>PleasantVille</Description></City><State><Code>Vic</Code><Description>Vic</Description></State><Zip><Code>3999</Code><Description>3999</Description></Zip><County><Code>Rainbow</Code><Description>Rainbow</Description></County></Address><ContactInfo><HomePhoneNumber>+33 (237) 998327</HomePhoneNumber></ContactInfo><ContactType><Code>N</Code></ContactType></SupportContact></SupportContacts><BirthTime>1974-12-25T00:00:00</BirthTime><IsDead>false</IsDead><PatientNumbers><PatientNumber><FromTime>2001-05-06T00:00:00</FromTime><Number>12345</Number><NumberType>MRN</NumberType><ISOAssigningAuthority>urn:oid:1.2.36.146.595.217.0.1</ISOAssigningAuthority></PatientNumber></PatientNumbers><Addresses><Address><FromTime>1974-12-25T00:00:00</FromTime><Street>534 Erewhon St</Street><City><Code>PleasantVille</Code><Description>PleasantVille</Description></City><State><Code>Vic</Code><Description>Vic</Description></State><Zip><Code>3999</Code><Description>3999</Description></Zip><County><Code>Rainbow</Code><Description>Rainbow</Description></County></Address></Addresses><ContactInfo><WorkPhoneNumber>(03) 5555 6473</WorkPhoneNumber><MobilePhoneNumber>(03) 3410 5613</MobilePhoneNumber></ContactInfo></Patient><UpdateECRDemographics>true</UpdateECRDemographics><SendingFacility>FHIR</SendingFacility></Container>\n",
+							"description": "SDA content",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:62773/csp/visualizer/service/sdafhirtransform/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "62773",
+					"path": [
+						"csp",
+						"visualizer",
+						"service",
+						"sdafhirtransform",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "HL7 Transform to SDA",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "SYS",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "_system",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "multipart/form-data",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "CONTENT1",
+							"value": "{\"TransformName\": \"HL7ToSDA\"}\n",
+							"description": "Transform Name",
+							"type": "text"
+						},
+						{
+							"key": "CONTENT2",
+							"value": "{\"HL7Content\":\"MSH|^~\\\\&|MESA_ADT|XYZ_ADMITTING|iFW|ZYX_HOSPITAL|||ADT^A04|103102|P|2.4||||||||\\r\\nEVN||200007010800||||200007010800\\r\\nPID|||583295^^^ADT1||DUCK^DAISY||19610615|M-||2106-3|123 MAIN STREET^^GREENSBORO^NC^27401-1020|GL|(919)379-1212|(919)271-3434~(919)277-3114||S||PATID12345001^2^M10|123456789|9-87654^NC\\r\\nNK1|1|BATES^RONALD^L|SPO|||||20011105\\r\\nPV1||E||||||5101^NELL^FREDERICK^P^^DR|||||||||||V1295^^^ADT1|||||||||||||||||||||||||200007010800||||||||\\r\\nPV2|||^ABDOMINAL PAIN\\r\\nOBX|1|HD|SR Instance UID||1.123456.2.2000.31.2.1||||||F||||||\\r\\nAL1|1||^PENICILLIN||PRODUCES HIVES~RASH\\r\\nAL1|2||^CAT DANDER\\r\\nDG1|001|I9|1550|MAL NEO LIVER, PRIMARY|19880501103005|F||\\r\\nPR1|2234|M11|111^CODE151|COMMON PROCEDURES|198809081123\\r\\nROL|45^RECORDER^ROLE MASTER LIST|AD|CP|KATE^SMITH^ELLEN|199505011201\\r\\nGT1|1122|1519|BILL^GATES^A\\r\\nIN1|001|A357|1234|BCMD|||||132987\\r\\nIN2|ID1551001|SSN12345678\"}\n",
+							"description": "HL7 message as JSON wrapper (HL7Content)",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:62773/csp/visualizer/service/hl7sdatransform/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "62773",
+					"path": [
+						"csp",
+						"visualizer",
+						"service",
+						"hl7sdatransform",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "HL7 Transform to ALL (SDA, CCD, FHIR)",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "SYS",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "_system",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "multipart/form-data",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "CONTENT1",
+							"value": "{\"TransformName\": \"HL7ToAll\"}\n",
+							"description": "Transform Name",
+							"type": "text"
+						},
+						{
+							"key": "CONTENT2",
+							"value": "{\"HL7Content\":\"MSH|^~\\\\&|MESA_ADT|XYZ_ADMITTING|iFW|ZYX_HOSPITAL|||ADT^A04|103102|P|2.4||||||||\\r\\nEVN||200007010800||||200007010800\\r\\nPID|||583295^^^ADT1||DUCK^DAISY||19610615|M-||2106-3|123 MAIN STREET^^GREENSBORO^NC^27401-1020|GL|(919)379-1212|(919)271-3434~(919)277-3114||S||PATID12345001^2^M10|123456789|9-87654^NC\\r\\nNK1|1|BATES^RONALD^L|SPO|||||20011105\\r\\nPV1||E||||||5101^NELL^FREDERICK^P^^DR|||||||||||V1295^^^ADT1|||||||||||||||||||||||||200007010800||||||||\\r\\nPV2|||^ABDOMINAL PAIN\\r\\nOBX|1|HD|SR Instance UID||1.123456.2.2000.31.2.1||||||F||||||\\r\\nAL1|1||^PENICILLIN||PRODUCES HIVES~RASH\\r\\nAL1|2||^CAT DANDER\\r\\nDG1|001|I9|1550|MAL NEO LIVER, PRIMARY|19880501103005|F||\\r\\nPR1|2234|M11|111^CODE151|COMMON PROCEDURES|198809081123\\r\\nROL|45^RECORDER^ROLE MASTER LIST|AD|CP|KATE^SMITH^ELLEN|199505011201\\r\\nGT1|1122|1519|BILL^GATES^A\\r\\nIN1|001|A357|1234|BCMD|||||132987\\r\\nIN2|ID1551001|SSN12345678\"}\n",
+							"description": "HL7 message as JSON wrapper (HL7Content)",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:62773/csp/visualizer/service/hl7toall/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "62773",
+					"path": [
+						"csp",
+						"visualizer",
+						"service",
+						"hl7toall",
+						""
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }
