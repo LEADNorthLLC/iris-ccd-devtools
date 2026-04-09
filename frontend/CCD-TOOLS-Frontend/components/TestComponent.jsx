@@ -601,7 +601,7 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
                             </button>
                             <button onClick={() => copy()} className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-2 py-0.5 rounded-md transition-colors duration-200 ml-2">Copy</button>
                             <button onClick={() => fileUploadAction()} className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-2 py-0.5 rounded-md transition-colors duration-200 ml-2">Import</button>
-                            {(labels.pageTitle === "FHIR to SDA Transforms Tester" || labels.pageTitle === "SDA to FHIR Transforms Tester" || labels.pageTitle === "CCDA to SDA Transforms Tester" || labels.pageTitle === "XSL Template Tester") && (
+                            {(labels.pageTitle === "SDA to FHIR Transforms Tester" || labels.pageTitle === "CCDA to SDA Transforms Tester" || labels.pageTitle === "XSL Template Tester") && (
                             <button onClick={() => load(1)} className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-2 py-0.5 rounded-md transition-colors duration-200 ml-2"> {viewer ? 'Raw' : 'XML'}</button>
                             )}
                             {(labels.pageTitle === "HL7 to SDA Transforms Tester") && (
@@ -644,8 +644,9 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
                 </div>
 
                 <div className="flex justify-around mb-2 gap-4">
+                  
                     <div className="big-col flex items-center gap-2 flex-1">
-                        {!viewer && (
+                    {!viewer && (
                             <>
                                 <input
                                     type="text"
@@ -657,10 +658,13 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
                                 />
                                 <button type="button" onClick={() => findInTextarea(1, 'prev')} className="text-xs px-2 py-1 rounded border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 shrink-0">Prev</button>
                                 <button type="button" onClick={() => findInTextarea(1, 'next')} className="text-xs px-2 py-1 rounded border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 shrink-0">Next</button>
-                            </>
+                                </>
                         )}
                     </div>
+                   
                     <div className="col flex-shrink-0 w-18" />
+
+        
                     <div className="big-col flex items-center gap-2 flex-1">
                         {showHl7OutputPills && (
                                     <div className="flex rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 p-0.5 shrink-0" role="group" aria-label="Output view">
@@ -717,6 +721,7 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
                             </>
                         )}
                     </div>
+
                 </div>
 
                 <div className='flex'>
@@ -741,6 +746,8 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
                             }
                         </div>
                     </div>
+
+
                     <div className='col relative h-full flex justify-start'>
                         <div className={`btn h-full flex ${labels.pageTitle === 'HL7 to SDA Transforms Tester' ? 'flex-col items-center gap-3' : ''}`}>
                             {(labels.pageTitle === 'HL7 to SDA Transforms Tester') && (
@@ -775,11 +782,14 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
                             <button onClick={() => postReqest()} className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg transition-colors duration-200 h-8 flex items-center justify-center z-50 transformBtn">Submit</button>
                         </div>
                     </div>
+
+
+                    
                     <div className='big-col relative xml1 h-full'>
                         {outputViewMode === 'xml' ? (
-                                            <div className='w-full xml2 bg-white dark:bg-gray-700 dark:border-white border rounded-lg p-4'>
-                                                <XMLViewer collapsible xml={outputDisplayValue} />
-                                            </div>
+                            <div className='w-full xml1 pr-4 pl-4'>
+                                         <XMLSearchableContainer xmlData={outputDisplayValue} />
+                                 </div>  
                         ) : outputViewMode === 'json' ? (
                                             <div className='w-full xml2 bg-white dark:bg-gray-700 dark:border-white border rounded-lg p-4'>
                                                 {outputJsonTreeValue != null ? (

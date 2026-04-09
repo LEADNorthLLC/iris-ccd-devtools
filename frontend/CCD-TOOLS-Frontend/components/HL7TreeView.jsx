@@ -312,7 +312,7 @@ export function HL7TreeView({ message, embedded = false }) {
 
   const treeHeight = 300;
   const tree = (
-    <div className={embedded ? 'w-full h-full min-h-[300px]' : 'w-full min-h-[300px]'}>
+    <div className={embedded ? 'w-full h-full' : 'w-full'}>
       <div className="flex h-full flex-col gap-2 pl-2 dark:bg-gray-700 text-gray-900 dark:text-white">
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-1 text-xs mt-1">

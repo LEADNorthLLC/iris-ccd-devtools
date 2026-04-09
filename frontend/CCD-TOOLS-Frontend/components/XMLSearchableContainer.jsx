@@ -72,7 +72,7 @@ const XMLSearchableContainer = ({ xmlData, collapsible = true }) => {
   };
 
   return (
-    <div className="flex h-full min-h-[300px] flex-col gap-4">
+    <div className="flex h-full flex-col gap-4">
       {/* Search Header */}
       <div className="flex shrink-0 items-center gap-2 dark:bg-gray-800 p-2 rounded-t-lg border-b border-gray-200 dark:border-gray-600">
         <input
@@ -114,7 +114,7 @@ const XMLSearchableContainer = ({ xmlData, collapsible = true }) => {
       <div className="flex min-h-0 flex-1 flex-col">
         <div
           ref={viewerRef}
-          className="min-h-[300px] flex-1 overflow-auto rounded-lg border border-gray-200 bg-white p-4 text-gray-900 dark:border-gray-700 dark:bg-gray-700 dark:text-white"
+          className="flex-1 overflow-auto rounded-lg border border-gray-200 bg-white p-4 text-gray-900 dark:border-gray-700 dark:bg-gray-700 dark:text-white"
         >
           <XMLViewer collapsible={collapsible} xml={xmlData ?? ''} />
         </div>
