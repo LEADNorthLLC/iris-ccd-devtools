@@ -19,10 +19,14 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
     const [inputOne, setInputOne] = useState('')
     const [texAreaOne, setTexAreaOne] = useState('')
     const [texAreaTwo, setTexAreaTwo] = useState('')
-    const [viewer, setViewer] = useState(false)
-    const [loaderOne, setLoaderOne] = useState(false)
+    /** Input pane: raw textarea vs structured view (page-specific: json | xml | tree). */
+    const [inputViewMode, setInputViewMode] = useState('raw') // 'raw' | 'json' | 'xml' | 'tree'
+    /** After paint, commit structured input mode (spinner shows while non-null). */
+    const [inputStructurePending, setInputStructurePending] = useState(null) // null | 'json' | 'xml' | 'tree'
     /** Output pane: plain text vs XML viewer vs JSON tree (HL7 ALL + FHIR pill only for json). */
     const [outputViewMode, setOutputViewMode] = useState('raw') // 'raw' | 'xml' | 'json'
+    /** After paint, commit structured output mode (spinner shows while non-null). */
+    const [outputStructurePending, setOutputStructurePending] = useState(null) // null | 'json' | 'xml'
     const [searchOne, setSearchOne] = useState('')
     const [searchTwo, setSearchTwo] = useState('')
     const [selectedHl7Sample, setSelectedHl7Sample] = useState(hl7Samples[0]?.value ?? '')
@@ -377,8 +381,8 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
 
     const clearTextareaOne = () => {
         setTexAreaOne('')
-        setViewer(false)
-        setLoaderOne(false)
+        setInputViewMode('raw')
+        setInputStructurePending(null)
         setSearchOne('')
         if (inputRef.current) {
             inputRef.current.value = ''
@@ -391,6 +395,7 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
         setParsedCcdContent(null)
         setParsedFhirContent(null)
         setOutputViewMode('raw')
+        setOutputStructurePending(null)
         setSearchTwo('')
         setHl7OutputActive('sda')
     }
@@ -410,28 +415,86 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
         navigator.clipboard.writeText(getOutputDisplayValue())
     }
 
-    const load = (opt) => {
-        if (texAreaOne === '' && opt === 1) return
-
-        if (opt === 1) {
-            setLoaderOne(true)
-            setTimeout(() => {
-                setLoaderOne(false)
-                setViewer(!viewer)
-            }, 2000)
+    /** Toggle input raw ↔ structured. Defer structured mount so the browser can paint a real spinner first. */
+    const toggleInputStructuredMode = (structuredMode) => {
+        if (inputStructurePending != null) return
+        if (inputViewMode !== 'raw') {
+            setInputViewMode('raw')
+            return
         }
+        setInputStructurePending(structuredMode)
     }
 
     useEffect(() => {
+        if (inputStructurePending == null) return
+        let cancelled = false
+        let raf2 = 0
+        const raf1 = requestAnimationFrame(() => {
+            raf2 = requestAnimationFrame(() => {
+                if (cancelled) return
+                setInputViewMode(inputStructurePending)
+                setInputStructurePending(null)
+            })
+        })
+        return () => {
+            cancelled = true
+            cancelAnimationFrame(raf1)
+            if (raf2) cancelAnimationFrame(raf2)
+        }
+    }, [inputStructurePending])
+
+    /** Output Raw - JSON/XML with the same paint-then-mount pattern as input. */
+    const toggleOutputStructuredMode = (targetMode) => {
+        if (outputStructurePending != null) return
+        if (outputViewMode === targetMode) {
+            setOutputViewMode('raw')
+            return
+        }
+        if (outputViewMode === 'raw') {
+            setOutputStructurePending(targetMode)
+            return
+        }
         setOutputViewMode('raw')
+        setOutputStructurePending(targetMode)
+    }
+
+    useEffect(() => {
+        if (outputStructurePending == null) return
+        let cancelled = false
+        let raf2 = 0
+        const raf1 = requestAnimationFrame(() => {
+            raf2 = requestAnimationFrame(() => {
+                if (cancelled) return
+                setOutputViewMode(outputStructurePending)
+                setOutputStructurePending(null)
+            })
+        })
+        return () => {
+            cancelled = true
+            cancelAnimationFrame(raf1)
+            if (raf2) cancelAnimationFrame(raf2)
+        }
+    }, [outputStructurePending])
+
+    useEffect(() => {
+        setOutputViewMode('raw')
+        setOutputStructurePending(null)
     }, [hl7OutputActive])
 
     useEffect(() => {
         if (hl7TransformType !== 'sdaAndCcd') {
             setOutputViewMode('raw')
+            setOutputStructurePending(null)
             setHl7OutputActive('sda')
         }
     }, [hl7TransformType])
+
+    useEffect(() => {
+        setInputViewMode('raw')
+        setInputStructurePending(null)
+        setOutputViewMode('raw')
+        setOutputStructurePending(null)
+    }, [labels.pageTitle])
 
     /** When the server/config exposes exactly one transform, select it so the user does not have to. */
     useEffect(() => {
@@ -494,10 +557,12 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
         && hl7TransformType === 'sdaAndCcd'
         && (parsedSdaContent != null || parsedCcdContent != null || parsedFhirContent != null)
 
-    const hideOutputStructuring =
-        labels.pageTitle === 'FHIR to SDA Transforms Tester'
+    const hideOutputStructuring = labels.pageTitle === 'XPath Evaluator'
+
+    /** Output JSON tree vs XML viewer: HL7 ALL+FHIR pill, or SDA→FHIR (FHIR JSON output). */
+    const showOutputJsonToggle =
+        (showHl7OutputPills && hl7OutputActive === 'fhir')
         || labels.pageTitle === 'SDA to FHIR Transforms Tester'
-        || labels.pageTitle === 'XPath Evaluator'
 
     const outputJsonTreeValue = useMemo(() => {
         const s = String(outputDisplayValue ?? '').trim()
@@ -508,6 +573,16 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
             return null
         }
     }, [outputDisplayValue])
+
+    const inputJsonTreeValue = useMemo(() => {
+        const s = String(texAreaOne ?? '').trim()
+        if (!s) return null
+        try {
+            return JSON.parse(s)
+        } catch {
+            return null
+        }
+    }, [texAreaOne])
 
     const outputLabelWithType =
         showHl7OutputPills
@@ -586,16 +661,20 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
                             </button>
                             <button onClick={() => copy()} className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-2 py-0.5 rounded-md transition-colors duration-200 ml-2">Copy</button>
                             <button onClick={() => fileUploadAction()} className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-2 py-0.5 rounded-md transition-colors duration-200 ml-2">Import</button>
-                            {(labels.pageTitle === "SDA to FHIR Transforms Tester" || labels.pageTitle === "CCDA to SDA Transforms Tester" || labels.pageTitle === "XSL Template Tester") && (
-                            <button onClick={() => load(1)} className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-2 py-0.5 rounded-md transition-colors duration-200 ml-2"> {viewer ? 'Raw' : 'XML'}</button>
+                            {(labels.pageTitle === "SDA to FHIR Transforms Tester" || labels.pageTitle === "CCDA to SDA Transforms Tester" || labels.pageTitle === "XSL Template Tester" || labels.pageTitle === "XPath Evaluator") && (
+                            <button type="button" disabled={inputStructurePending != null} onClick={() => toggleInputStructuredMode('xml')} className="bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed text-white text-xs px-2 py-0.5 rounded-md transition-colors duration-200 ml-2">
+                                {inputViewMode === 'raw' ? 'XML' : 'Raw'}
+                            </button>
                             )}
                             {(labels.pageTitle === "HL7 to SDA Transforms Tester") && (
-                            <button onClick={() => load(1)} className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-2 py-0.5 rounded-md transition-colors duration-200 ml-2">
-                              {viewer ? 'Raw' : 'Tree'}
+                            <button type="button" disabled={inputStructurePending != null} onClick={() => toggleInputStructuredMode('tree')} className="bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed text-white text-xs px-2 py-0.5 rounded-md transition-colors duration-200 ml-2">
+                                {inputViewMode === 'raw' ? 'Tree' : 'Raw'}
                             </button>
                             )}
                             {(labels.pageTitle === "FHIR to SDA Transforms Tester") && (
-                            <button onClick={() => load(1)} className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-2 py-0.5 rounded-md transition-colors duration-200 ml-2"> {viewer ? 'Raw' : 'JSON'}</button>
+                            <button type="button" disabled={inputStructurePending != null} onClick={() => toggleInputStructuredMode('json')} className="bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed text-white text-xs px-2 py-0.5 rounded-md transition-colors duration-200 ml-2">
+                                {inputViewMode === 'raw' ? 'JSON' : 'Raw'}
+                            </button>
                             )}
                         </div>
                     </div>
@@ -609,19 +688,21 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
                             </button>
                             <button onClick={() => copy()} className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-2 py-0.5 rounded-md transition-colors duration-200 ml-2">Copy</button>
                             <button onClick={() => download()} className='bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-2 py-0.5 rounded-md transition-colors duration-200 ml-2'>Export</button>
-                            {!hideOutputStructuring && (showHl7OutputPills && hl7OutputActive === 'fhir' ? (
+                            {!hideOutputStructuring && (showOutputJsonToggle ? (
                             <button
                                 type="button"
-                                onClick={() => setOutputViewMode((m) => (m === 'json' ? 'raw' : 'json'))}
-                                className='bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-4 py-2 rounded-lg transition-colors duration-200 ml-2'
+                                disabled={outputStructurePending != null}
+                                onClick={() => toggleOutputStructuredMode('json')}
+                                className='bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed text-white text-xs px-4 py-2 rounded-lg transition-colors duration-200 ml-2'
                             >
                                 {outputViewMode === 'json' ? 'Raw' : 'JSON'}
                             </button>
                             ) : (
                             <button
                                 type="button"
-                                onClick={() => setOutputViewMode((m) => (m === 'xml' ? 'raw' : 'xml'))}
-                                className='bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-4 py-2 rounded-lg transition-colors duration-200 ml-2'
+                                disabled={outputStructurePending != null}
+                                onClick={() => toggleOutputStructuredMode('xml')}
+                                className='bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed text-white text-xs px-4 py-2 rounded-lg transition-colors duration-200 ml-2'
                             >
                                 {outputViewMode === 'xml' ? 'Raw' : 'XML'}
                             </button>
@@ -634,7 +715,7 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
                 <div className="flex justify-around mb-2 gap-4">
                   
                     <div className="big-col flex items-center gap-2 flex-1">
-                    {!viewer && (
+                    {inputViewMode === 'raw' && inputStructurePending == null && (
                             <>
                                 <input
                                     type="text"
@@ -694,7 +775,7 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
                                 )}
                                
                           
-                        {outputViewMode === 'raw' && (
+                        {outputViewMode === 'raw' && outputStructurePending == null && (
                             <>
                                 <input
                                     type="text"
@@ -715,23 +796,26 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
                 <div className='flex'>
                     <div className='big-col relative h-full'>
                         <div className='w-full xml1'>
-                            {
-                                loaderOne ?
-                                    <div className='flex justify-center content-center align-middle h-64'>
-                                        <div className='loader'></div>
-                                    </div>
-                                    :
-                                    (
-                                        viewer ? (
-                                            labels.pageTitle === 'HL7 to SDA Transforms Tester'
-                                                ? <HL7TreeView message={texAreaOne}  /> 
-                                                : <XMLSearchableContainer xmlData={texAreaOne} /> 
-                                                  
-                                        ) : (
-                                            <textarea ref={inputTextareaRef} rows={15} className='border w-full h-full p-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg' placeholder={labels.exInputLabelTwo} value={texAreaOne} onChange={(e) => setTexAreaOne(e.target.value)} />
-                                        )
-                                    )
-                            }
+                            {inputStructurePending != null ? (
+                                <div className='flex flex-col items-center justify-center gap-2 min-h-[16rem] bg-white dark:bg-gray-800'>
+                                    <div className='loader' aria-hidden />
+                                    <p className='text-xs text-gray-600 dark:text-gray-400'>Preparing structured view...</p>
+                                </div>
+                            ) : inputViewMode === 'raw' ? (
+                                <textarea ref={inputTextareaRef} rows={15} className='border w-full h-full p-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg' placeholder={labels.exInputLabelTwo} value={texAreaOne} onChange={(e) => setTexAreaOne(e.target.value)} />
+                            ) : labels.pageTitle === 'HL7 to SDA Transforms Tester' && inputViewMode === 'tree' ? (
+                                <HL7TreeView message={texAreaOne} />
+                            ) : labels.pageTitle === 'FHIR to SDA Transforms Tester' && inputViewMode === 'json' ? (
+                                <div className='w-full xml2 bg-white dark:bg-gray-700 dark:border-white border rounded-lg p-4 min-h-[240px]'>
+                                    {inputJsonTreeValue != null ? (
+                                        <JsonView value={inputJsonTreeValue} />
+                                    ) : (
+                                        <p className="text-sm text-red-600 dark:text-red-400">Input is not valid JSON. Switch to Raw to edit.</p>
+                                    )}
+                                </div>
+                            ) : (
+                                <XMLSearchableContainer xmlData={texAreaOne} />
+                            )}
                         </div>
                     </div>
 
@@ -774,7 +858,12 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
 
                     
                     <div className='big-col relative xml1 h-full'>
-                        {outputViewMode === 'xml' ? (
+                        {outputStructurePending != null ? (
+                            <div className='flex flex-col items-center justify-center gap-2 min-h-[16rem] bg-white dark:bg-gray-800'>
+                                <div className='loader' aria-hidden />
+                                <p className='text-xs text-gray-600 dark:text-gray-400'>Preparing structured view…</p>
+                            </div>
+                        ) : outputViewMode === 'xml' ? (
                             <div className='w-full xml1 pr-4 pl-4'>
                                 <XMLSearchableContainer xmlData={outputDisplayValue} />
                              </div>  
