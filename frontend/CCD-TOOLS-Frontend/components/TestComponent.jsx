@@ -4,7 +4,7 @@ import React from 'react'
 import { useState, useRef, useEffect, useMemo } from "react";
 import { saveAs } from 'file-saver';
 import JSZip from 'jszip';
-import XMLViewer from 'react-xml-viewer'
+//import XMLViewer from 'react-xml-viewer'
 import JsonView from '@uiw/react-json-view';
 import XMLSearchableContainer from './XMLSearchableContainer'
 import { HL7TreeView } from './HL7TreeView'
@@ -279,6 +279,15 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
                     }
                  }
 
+                 if(labels.pageTitle === 'CCDA to SDA Transforms Tester') {
+                    const xslContentString =
+                        rawResult.match(/<SDAContent>\s*<!\[CDATA\[([\s\S]*?)\]\]>\s*<\/SDAContent>/)
+                        || rawResult.match(/<SDAContentXML>\s*<!\[CDATA\[([\s\S]*?)\]\]>\s*<\/SDAContentXML>/)
+                    if(xslContentString) {
+                        tempProcessedResult = xslContentString[1].trim()
+                    }
+                 }
+
                 let outputText = labels.pageTitle === 'FHIR to SDA Transforms Tester'
                     || labels.pageTitle === 'CCDA to SDA Transforms Tester'
                     || labels.pageTitle === 'HL7 to SDA Transforms Tester'
@@ -480,30 +489,6 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
         ref.current.scrollTop = targetScroll;
     };
 
-    // const findInTextarea = (which, direction, outputContent) => {
-    //     const isInput = which === 1
-    //     const ref = isInput ? inputTextareaRef : outputTextareaRef
-    //     const content = isInput ? texAreaOne : (outputContent !== undefined ? outputContent : texAreaTwo)
-    //     const term = (isInput ? searchOne : searchTwo).trim()
-    //     if (!ref.current || !term) return
-    //     const text = content
-    //     const len = term.length
-    //     if (!len) return
-    //     const haystack = text.toLowerCase()
-    //     const needle = term.toLowerCase()
-    //     const fromNext = ref.current.selectionEnd
-    //     const fromPrev = ref.current.selectionStart - 1
-    //     let idx = direction === 'next'
-    //         ? haystack.indexOf(needle, fromNext)
-    //         : haystack.lastIndexOf(needle, fromPrev)
-    //     if (direction === 'next' && idx < 0) idx = haystack.indexOf(needle, 0)
-    //     if (direction === 'prev' && idx < 0) idx = haystack.lastIndexOf(needle, haystack.length)
-    //     if (idx < 0) return
-    //     ref.current.setSelectionRange(idx, idx + len)
-    //     ref.current.focus()
-    //     ref.current.scrollTop = ref.current.scrollHeight * (idx / text.length) - ref.current.clientHeight / 2
-    // }
-
     const outputDisplayValue = getOutputDisplayValue()
     const showHl7OutputPills = labels.pageTitle === 'HL7 to SDA Transforms Tester'
         && hl7TransformType === 'sdaAndCcd'
@@ -608,6 +593,9 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
                             <button onClick={() => load(1)} className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-2 py-0.5 rounded-md transition-colors duration-200 ml-2">
                               {viewer ? 'Raw' : 'Tree'}
                             </button>
+                            )}
+                            {(labels.pageTitle === "FHIR to SDA Transforms Tester") && (
+                            <button onClick={() => load(1)} className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-2 py-0.5 rounded-md transition-colors duration-200 ml-2"> {viewer ? 'Raw' : 'JSON'}</button>
                             )}
                         </div>
                     </div>
@@ -788,8 +776,8 @@ const TestComponent = ({ options, url, labels, largeInput, baseUrl = "http://loc
                     <div className='big-col relative xml1 h-full'>
                         {outputViewMode === 'xml' ? (
                             <div className='w-full xml1 pr-4 pl-4'>
-                                         <XMLSearchableContainer xmlData={outputDisplayValue} />
-                                 </div>  
+                                <XMLSearchableContainer xmlData={outputDisplayValue} />
+                             </div>  
                         ) : outputViewMode === 'json' ? (
                                             <div className='w-full xml2 bg-white dark:bg-gray-700 dark:border-white border rounded-lg p-4'>
                                                 {outputJsonTreeValue != null ? (
